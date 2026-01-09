@@ -30,7 +30,7 @@ include 'layout/header.php';
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line text-danger"></i> Meter Ops Dashboard</h3>
+            <h3 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line text-danger"></i> Master Dashboard</h3>
             <p class="text-muted small mb-0">Overview for <strong><?php echo date('F Y'); ?></strong></p>
         </div>
         <div><span class="badge bg-light text-dark border px-3 py-2"><i class="fas fa-user-tie"></i> <?php echo $current_officer; ?></span></div>

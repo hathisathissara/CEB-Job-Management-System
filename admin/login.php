@@ -21,6 +21,8 @@ if (!isset($_SESSION['admin_logged_in']) && isset($_COOKIE['ceb_remember_token']
         $_SESSION['full_name'] = $row['full_name'];
         $_SESSION['role'] = $row['role'];
 
+        // --- NEW LINE: GET THEME ---
+        $_SESSION['theme'] = $row['theme']; // Save user's theme preference
         // Add log
         include 'functions.php';
         if (function_exists('addLog')) addLog($conn, $row['full_name'], 'LOGIN', 'Auto-logged in via Remember Me');

@@ -232,7 +232,7 @@
                 <div class="ceb-logo"><i class="fas fa-bolt"></i></div>
                 <h2 class="system-title">CEB OFFICE<br>PORTAL</h2>
                 <p class="system-desc">
-                    Meter Removal & Job Management System.<br>
+                    Job Management System.<br>
                     <span class="badge bg-danger mt-2">Internal Use Only</span>
                 </p>
                 <div class="footer-credits">

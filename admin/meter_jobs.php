@@ -139,212 +139,232 @@ include 'layout/header.php';
         </div>
     </div>
 
-    <!-- TABLE -->
+    <!-- 2. DATA TABLE & PAGINATION -->
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-dark">
                     <tr>
-                        <th>Job No</th>
+                        <th>Job Info (Edit)</th>
                         <th>Account Info</th>
                         <th>Status</th>
-                        <th>Note</th>
+                        <th>Results</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
+                    // --- PAGINATION SETTINGS ---
+                    $results_per_page = 10;
+                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    if ($page < 1) $page = 1; // Correction
+                    $offset = ($page - 1) * $results_per_page;
+
+                    // Build WHERE clause based on filters
                     $w = "WHERE 1=1";
                     if (!empty($s)) $w .= " AND (job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR meter_no LIKE '%$s%')";
                     if (!empty($f)) $w .= " AND status='$f'";
                     if (!empty($d1) && !empty($d2)) $w .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
 
-                    $res = $conn->query("SELECT * FROM meter_removal $w ORDER BY id DESC LIMIT 50");
+                    // Get Total Count for Pagination Logic
+                    $total_res = $conn->query("SELECT COUNT(*) as t FROM meter_removal $w")->fetch_assoc()['t'];
+                    $total_pages = ceil($total_res / $results_per_page);
+
+                    // Fetch Actual Data (LIMIT added)
+                    $sql_final = "SELECT * FROM meter_removal $w ORDER BY id DESC LIMIT $results_per_page OFFSET $offset";
+                    $res = $conn->query($sql_final);
 
                     if ($res->num_rows > 0) {
                         while ($row = $res->fetch_assoc()) {
 
-                            // --- NEW: COUNT OTHER JOBS FOR THIS ACC NO ---
-                            $ac = $row['acc_no'];
-                            // Get all jobs for this account except current one
-                            $q_jobs = $conn->query("SELECT job_no FROM meter_removal WHERE acc_no='$ac' AND id != {$row['id']}");
-
-                            $other_count = $q_jobs->num_rows; // 0, 1, 2...
-
-                            // Generate Tooltip text (comma separated jobs)
-                            $job_list = [];
-                            while ($jb = $q_jobs->fetch_assoc()) {
-                                $job_list[] = $jb['job_no'];
-                            }
-                            $tooltip_txt = "Other Jobs: " . implode(", ", $job_list);
-
-                            // Determine Color
+                            // (Badge Colors)
                             $bg = 'bg-secondary';
                             if ($row['status'] == 'Pending') $bg = 'bg-warning text-dark';
                             if ($row['status'] == 'Removed') $bg = 'bg-danger';
                             if ($row['status'] == 'Returned - Paid') $bg = 'bg-success';
+
+                            // Tooltip Logic
+                            $ac = $row['acc_no'];
+                            $qj = $conn->query("SELECT job_no FROM meter_removal WHERE acc_no='$ac' AND id!={$row['id']}");
+                            $oc = $qj->num_rows;
+                            $jl = [];
+                            while ($jx = $qj->fetch_assoc()) {
+                                $jl[] = $jx['job_no'];
+                            }
+                            $tt = "Others: " . implode(", ", $jl);
                     ?>
                             <tr>
                                 <td>
-                                    <a href="#" onclick="edit(<?php echo htmlspecialchars(json_encode($row)); ?>)" class="fw-bold text-decoration-none fs-5 comp-ref">
-                                        <?php echo $row['job_no']; ?>
-                                    </a><br>
+                                    <a href="#" onclick="edit(<?php echo htmlspecialchars(json_encode($row)); ?>)" class="fw-bold text-decoration-none fs-5 comp-ref"><?php echo $row['job_no']; ?></a><br>
                                     <small class="text-muted"><?php echo date('Y-m-d', strtotime($row['created_at'])); ?></small>
                                 </td>
                                 <td>
                                     <b>Acc: <?php echo $row['acc_no']; ?></b>
-
-                                    <!-- SHOW COUNT BADGE IF HAS MORE THAN 0 OTHER JOBS -->
-                                    <?php if ($other_count > 0): ?>
-                                        <span class="badge bg-dark rounded-pill ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo htmlspecialchars($tooltip_txt); ?>" style="cursor:help;">
-                                            +<?php echo $other_count; ?> More
-                                        </span>
-                                    <?php endif; ?>
-
-                                    <br>
-                                    <small class="text-muted">Meter: <?php echo $row['meter_no'] ? $row['meter_no'] : '-'; ?></small>
+                                    <?php if ($oc > 0) echo "<span class='badge bg-dark ms-2' data-bs-toggle='tooltip' title='$tt'>+{$oc} More</span>"; ?>
+                                    <br><small class="text-muted">Met: <?php echo $row['meter_no'] ?: '-'; ?></small>
                                 </td>
                                 <td><span class="badge <?php echo $bg; ?> rounded-pill px-3"><?php echo $row['status']; ?></span></td>
                                 <td>
                                     <?php if ($row['status'] != 'Pending'): ?>
                                         <ul class="list-unstyled small mb-0 text-muted">
-                                            <?php if ($row['status'] == 'Removed'): ?>
-                                                <li>Read: <b class="text-dark"><?php echo $row['meter_reading']; ?></b></li>
-                                            <?php endif; ?>
-                                            <li>Done By: <?php echo $row['done_by']; ?></li>
-                                            <?php if ($row['officer_note']): ?>
-                                                <li class="text-danger mt-1 fst-italic">"<?php echo $row['officer_note']; ?>"</li>
-                                            <?php endif; ?>
+                                            <?php if ($row['status'] == 'Removed') echo "<li>Read: <b class='text-dark'>{$row['meter_reading']}</b></li>"; ?>
+                                            <?php if ($row['done_by']) echo "<li>Done: {$row['done_by']}</li>"; ?>
+                                            <?php if ($row['officer_note']) echo "<li class='text-danger mt-1 fst-italic'>\"{$row['officer_note']}\"</li>"; ?>
                                         </ul>
-                                    <?php else: ?>
-                                        <span class="text-muted small">...</span>
-                                    <?php endif; ?>
+                                    <?php else: echo '<span class="text-muted small">---</span>';
+                                    endif; ?>
                                 </td>
                             </tr>
                     <?php
                         }
                     } else {
-                        echo "<tr><td colspan='4' class='text-center py-5 text-muted'>No Records Found</td></tr>";
+                        echo "<tr><td colspan='4' class='text-center py-5'>No Records Found</td></tr>";
                     }
                     ?>
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
 
-<!-- ADD MODAL -->
-<div class="modal fade" id="addJobModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title">New Job</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3"><label class="fw-bold">Job No</label><input type="text" name="job_no" class="form-control" required></div>
-                    <div class="mb-3"><label class="fw-bold">Acc No</label><input type="text" name="acc_no" class="form-control" required></div>
-                    <div class="mb-3"><label class="fw-bold">Meter No</label><input type="text" name="meter_no" class="form-control"></div>
-                </div>
-                <div class="modal-footer"><button type="submit" name="add_job" class="btn btn-dark w-100">Create</button></div>
-            </form>
+        <!-- 3. PAGINATION BUTTONS (Smart Links) -->
+        <?php if ($total_pages > 1): ?>
+            <nav class="p-3 border-top bg-white">
+                <ul class="pagination justify-content-center mb-0">
+
+                    <!-- PREVIOUS LINK -->
+                    <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
+                        <a class="page-link" href="<?php echo "?page=" . ($page - 1) . "&s=" . urlencode($s) . "&f=$f&d1=$d1&d2=$d2"; ?>">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    </li>
+
+                    <!-- INFO TEXT -->
+                    <li class="page-item disabled"><span class="page-link text-dark fw-bold">Page <?php echo $page; ?> / <?php echo $total_pages; ?> (Total: <?php echo $total_res; ?>)</span></li>
+
+                    <!-- NEXT LINK -->
+                    <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
+                        <a class="page-link" href="<?php echo "?page=" . ($page + 1) . "&s=" . urlencode($s) . "&f=$f&d1=$d1&d2=$d2"; ?>">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        <?php endif; ?>
+
+    </div>
+
+    <!-- ADD MODAL -->
+    <div class="modal fade" id="addJobModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title">New Job</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3"><label class="fw-bold">Job No</label><input type="text" name="job_no" class="form-control" required></div>
+                        <div class="mb-3"><label class="fw-bold">Acc No</label><input type="text" name="acc_no" class="form-control" required></div>
+                        <div class="mb-3"><label class="fw-bold">Meter No</label><input type="text" name="meter_no" class="form-control"></div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" name="add_job" class="btn btn-dark w-100">Create</button></div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- 2. UPDATE MODAL (Full Edit Access) -->
-<div class="modal fade" id="updModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Edit Job Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
+    <!-- 2. UPDATE MODAL (Full Edit Access) -->
+    <div class="modal fade" id="updModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Edit Job Details</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
 
-                <div class="modal-body">
-                    <input type="hidden" name="job_id" id="u_id">
+                    <div class="modal-body">
+                        <input type="hidden" name="job_id" id="u_id">
 
-                    <!-- EDITABLE BASIC INFO -->
-                    <div class="p-2 border rounded bg-light mb-3">
-                        <small class="text-secondary fw-bold text-uppercase">Basic Information (Editable)</small>
-                        <div class="row g-2 mt-1">
-                            <div class="col-md-6">
-                                <label class="small fw-bold">Job No:</label>
-                                <input type="text" name="e_job" id="u_job_input" class="form-control form-control-sm" required>
+                        <!-- EDITABLE BASIC INFO -->
+                        <div class="p-2 border rounded bg-light mb-3">
+                            <small class="text-secondary fw-bold text-uppercase">Basic Information (Editable)</small>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="small fw-bold">Job No:</label>
+                                    <input type="text" name="e_job" id="u_job_input" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small fw-bold">Acc No:</label>
+                                    <input type="text" name="e_acc" id="u_acc" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="small fw-bold">Meter No:</label>
+                                    <input type="text" name="e_met" id="u_met" class="form-control form-control-sm">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="small fw-bold">Acc No:</label>
-                                <input type="text" name="e_acc" id="u_acc" class="form-control form-control-sm" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="small fw-bold">Meter No:</label>
-                                <input type="text" name="e_met" id="u_met" class="form-control form-control-sm">
+                        </div>
+
+                        <hr>
+
+                        <!-- STATUS & WORK DETAILS -->
+                        <div class="mb-3">
+                            <label class="fw-bold text-primary mb-1">Current Status</label>
+                            <select name="status_opt" id="u_st" class="form-select border-primary" onchange="toggleFields()">
+                                <option value="Pending">Pending</option>
+                                <option value="Removed">Removed</option>
+                                <option value="Returned - Paid">Returned / Paid</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="p-3 bg-light rounded border mb-3">
+                            <label class="small fw-bold text-muted mb-1">Done By (Officer):</label>
+                            <input type="text" name="done_by" id="u_done" class="form-control form-control-sm mb-2">
+
+                            <label class="small fw-bold text-muted mb-1">Notes:</label>
+                            <textarea name="officer_note" id="u_note" rows="2" class="form-control form-control-sm"></textarea>
+                        </div>
+
+                        <!-- REMOVED SPECIFIC FIELDS -->
+                        <div id="remove_fields" style="display:none;">
+                            <div class="row">
+                                <div class="col-6"><label class="small">Reading:</label><input type="text" name="reading" id="u_read" class="form-control form-control-sm"></div>
+                                <div class="col-6"><label class="small">Remove Date:</label><input type="date" name="rem_date" id="u_rem" class="form-control form-control-sm"></div>
                             </div>
                         </div>
                     </div>
 
-                    <hr>
-
-                    <!-- STATUS & WORK DETAILS -->
-                    <div class="mb-3">
-                        <label class="fw-bold text-primary mb-1">Current Status</label>
-                        <select name="status_opt" id="u_st" class="form-select border-primary" onchange="toggleFields()">
-                            <option value="Pending">Pending</option>
-                            <option value="Removed">Removed</option>
-                            <option value="Returned - Paid">Returned / Paid</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
+                    <div class="modal-footer">
+                        <button name="update_job" class="btn btn-primary w-100 fw-bold">Save All Changes</button>
                     </div>
-
-                    <div class="p-3 bg-light rounded border mb-3">
-                        <label class="small fw-bold text-muted mb-1">Done By (Officer):</label>
-                        <input type="text" name="done_by" id="u_done" class="form-control form-control-sm mb-2">
-
-                        <label class="small fw-bold text-muted mb-1">Notes:</label>
-                        <textarea name="officer_note" id="u_note" rows="2" class="form-control form-control-sm"></textarea>
-                    </div>
-
-                    <!-- REMOVED SPECIFIC FIELDS -->
-                    <div id="remove_fields" style="display:none;">
-                        <div class="row">
-                            <div class="col-6"><label class="small">Reading:</label><input type="text" name="reading" id="u_read" class="form-control form-control-sm"></div>
-                            <div class="col-6"><label class="small">Remove Date:</label><input type="date" name="rem_date" id="u_rem" class="form-control form-control-sm"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button name="update_job" class="btn btn-primary w-100 fw-bold">Save All Changes</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    function edit(d) {
-        document.getElementById('u_id').value = d.id;
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function edit(d) {
+            document.getElementById('u_id').value = d.id;
 
-        // New Fields Filling
-        document.getElementById('u_job_input').value = d.job_no;
-        document.getElementById('u_acc').value = d.acc_no;
-        document.getElementById('u_met').value = d.meter_no || '';
+            // New Fields Filling
+            document.getElementById('u_job_input').value = d.job_no;
+            document.getElementById('u_acc').value = d.acc_no;
+            document.getElementById('u_met').value = d.meter_no || '';
 
-        // Existing Fields
-        document.getElementById('u_st').value = d.status;
-        document.getElementById('u_done').value = d.done_by || '';
-        document.getElementById('u_note').value = d.officer_note || '';
-        document.getElementById('u_read').value = d.meter_reading || '';
-        document.getElementById('u_rem').value = d.removing_date || '';
+            // Existing Fields
+            document.getElementById('u_st').value = d.status;
+            document.getElementById('u_done').value = d.done_by || '';
+            document.getElementById('u_note').value = d.officer_note || '';
+            document.getElementById('u_read').value = d.meter_reading || '';
+            document.getElementById('u_rem').value = d.removing_date || '';
 
-        toggleFields();
-        new bootstrap.Modal(document.getElementById('updModal')).show();
-    }
+            toggleFields();
+            new bootstrap.Modal(document.getElementById('updModal')).show();
+        }
 
-    function toggleFields() {
-        var st = document.getElementById('u_st').value;
-        document.getElementById('remove_fields').style.display = (st === 'Removed') ? 'block' : 'none';
-    }
-</script>
-<?php include 'layout/footer.php'; ?>
+        function toggleFields() {
+            var st = document.getElementById('u_st').value;
+            document.getElementById('remove_fields').style.display = (st === 'Removed') ? 'block' : 'none';
+        }
+    </script>
+    <?php include 'layout/footer.php'; ?>

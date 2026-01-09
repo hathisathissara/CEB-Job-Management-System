@@ -1,0 +1,1 @@
+ALTER TABLE users ADD theme ENUM('light', 'dark') DEFAULT 'light';
