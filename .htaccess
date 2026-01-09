@@ -1,0 +1,14 @@
+Options +FollowSymLinks -MultiViews
+RewriteEngine On
+RewriteBase /ceb/
+
+
+RewriteRule ^home/?$ index.php [L]
+
+RewriteRule ^status/?$ check_status.php [L]
+
+RewriteRule ^job/?$ meter_request.php [L]
+
+RewriteRule ^admin/?$ admin/login [R=301,L]
+
+ErrorDocument 404 /ceb/404.php

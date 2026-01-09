@@ -1,0 +1,32 @@
+/* Full screen loader overlay */
+#loader-wrapper {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #fff;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-out;
+}
+
+/* Spinner Design */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #d11212; /* CEB Red */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Spinner Animation Keyframes */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Hide body scroll while loading */
+body.loading {
+    overflow: hidden;
+}

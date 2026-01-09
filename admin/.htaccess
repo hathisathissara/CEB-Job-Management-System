@@ -1,0 +1,21 @@
+Options +FollowSymLinks -MultiViews
+RewriteEngine On
+RewriteBase /ceb/admin/
+
+
+RewriteRule ^login/?$ login.php [L]
+
+
+RewriteRule ^dashboard/?$ index.php [L]
+
+
+RewriteRule ^complain/?$ complaints_list.php [QSA,L]
+
+RewriteRule ^meter_jobs/?$ meter_jobs.php [QSA,L]
+
+RewriteRule ^settings/?$ settings.php [L]
+
+RewriteRule ^logs/?$ activity_logs.php [L]
+
+
+RewriteRule ^logout/?$ logout.php [L]
