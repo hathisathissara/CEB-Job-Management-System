@@ -76,3 +76,11 @@ COMMIT;
 -- username: admin
 -- password: ceb123 
 -- this is hashed using bcrypt for test purpose
+
+CREATE TABLE system_settings (
+    id INT PRIMARY KEY,
+    notice_text VARCHAR(255) DEFAULT 'System maintenance scheduled.',
+    is_active BOOLEAN DEFAULT 0 -- 0=OFF, 1=ON
+);
+
+INSERT INTO system_settings (id, notice_text, is_active) VALUES (1, 'System Update in Progress...', 0);

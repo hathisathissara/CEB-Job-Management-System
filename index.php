@@ -1,3 +1,4 @@
+<?php include 'db_conn.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEB Office Portal</title>
+    <link rel="icon" href="https://img.icons8.com/color/48/d11212/flash-on.png" type="image/png">
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -31,7 +33,6 @@
             height: 60px;
             border: 5px solid #f3f3f3;
             border-top: 5px solid #d11212;
-            /* CEB Red */
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -56,11 +57,12 @@
             font-family: 'Segoe UI', sans-serif;
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            /* වැදගත්ම වෙනස (සිරස් අතට පේලිය ගැසීම) */
             margin: 0;
         }
 
+        /* මැද තිබෙන කොටුව හරි මැදට ගැනීමට Auto Margin භාවිතා කිරීම */
         .main-box {
             background: white;
             border-radius: 20px;
@@ -69,6 +71,15 @@
             width: 95%;
             overflow: hidden;
             display: flex;
+            margin: auto;
+            /* මෙය නිසා කොටුව ස්වයංක්‍රීයව හරි මැදට එයි */
+        }
+
+        /* Make sure notification is full width */
+        .system-notification-bar {
+            width: 100%;
+            flex-shrink: 0;
+            /* ප්‍රමාණය කුඩා වීම වලක්වයි */
         }
 
         .row-fix {
@@ -193,7 +204,6 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 20px 0;
                 display: block;
                 overflow-y: auto;
                 height: auto;
@@ -223,7 +233,11 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- 1. NOTIFICATION (දැන් මෙය හරි ඉහලින් වැටෙනු ඇත) -->
+    <!-- (check correct filename, commonly 'notification.php') -->
+    <?php include 'notification_component.php'; ?>
+
+    <!-- 2. MAIN CONTENT (Box) -->
     <div class="main-box animate__animated animate__fadeIn">
         <div class="row row-fix">
 
@@ -238,7 +252,7 @@
                 <div class="footer-credits">
                     <p class="mb-1">&copy; <?php echo date('Y'); ?> Ceylon Electricity Board</p>
                     <small>Version 3.0</small><br>
-                    Developed by <a href="https://hathisathissara.unaux.com/" target="_blank">Hathisa Thissara</a>
+                    Developed by <a href="#" target="_blank">Your Name</a>
                 </div>
             </div>
 
