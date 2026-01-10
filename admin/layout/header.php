@@ -1,14 +1,14 @@
 <?php
 // Ensure DB Connection Exists
 if (!isset($conn)) {
-    include __DIR__ . '/../../db_conn.php';
+    if (file_exists('../db_conn.php')) include '../db_conn.php';
+    else include '../../db_conn.php';
 }
 
-/// --- THEME SYNC LOGIC ---
+// --- THEME SYNC ---
 if (isset($_SESSION['user_id'])) {
     $uid_theme = $_SESSION['user_id'];
     $res_theme = $conn->query("SELECT theme FROM users WHERE id='$uid_theme'");
-
     if ($res_theme && $res_theme->num_rows > 0) {
         $row_theme = $res_theme->fetch_assoc();
         $_SESSION['theme'] = $row_theme['theme'];
@@ -51,6 +51,8 @@ if ($theme == 'dark') {
     <title>CEB Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ANIMATE CSS For Notification -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
         :root {
@@ -64,6 +66,45 @@ if ($theme == 'dark') {
             --table-strip: <?php echo $table_strip; ?>;
         }
 
+        /* --- LOADER STYLES (ADDED) --- */
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-body);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #d11212;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* --- MAIN STYLES --- */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
@@ -71,7 +112,6 @@ if ($theme == 'dark') {
             transition: 0.2s;
         }
 
-        /* --- THEME OVERRIDES --- */
         .card,
         .modal-content,
         .list-group-item {
@@ -88,15 +128,13 @@ if ($theme == 'dark') {
             background-color: var(--bg-card) !important;
         }
 
-        /* Force Text Colors */
         h1,
         h2,
         h3,
         h4,
         h5,
         h6,
-        .card-title,
-        .modal-title {
+        .card-title {
             color: var(--text-main) !important;
         }
 
@@ -112,7 +150,6 @@ if ($theme == 'dark') {
             border-color: var(--border-col) !important;
         }
 
-        /* Tables */
         .table {
             color: var(--text-main);
             --bs-table-border-color: var(--border-col);
@@ -124,7 +161,6 @@ if ($theme == 'dark') {
         }
 
         .table-hover tbody tr:hover>* {
-            color: var(--text-main);
             background-color: var(--border-col);
         }
 
@@ -135,7 +171,6 @@ if ($theme == 'dark') {
             border-color: var(--border-col);
         }
 
-        /* Forms */
         .form-control,
         .form-select {
             background-color: var(--input-bg);
@@ -143,8 +178,7 @@ if ($theme == 'dark') {
             color: var(--text-main);
         }
 
-        .form-control:focus,
-        .form-select:focus {
+        .form-control:focus {
             background-color: var(--input-bg);
             color: var(--text-main);
             border-color: #d11212;
@@ -156,7 +190,7 @@ if ($theme == 'dark') {
             opacity: 0.7;
         }
 
-        /* --- FIX COLORED BORDERS --- */
+        /* Colors fix */
         .border-primary {
             border-color: #0d6efd !important;
         }
@@ -181,11 +215,6 @@ if ($theme == 'dark') {
             border-color: #0dcaf0 !important;
         }
 
-        .border-dark {
-            border-color: #212529 !important;
-        }
-
-        /* --- FIX TEXT COLORS IN DARK MODE --- */
         <?php if ($theme == 'dark'): ?>.text-danger {
             color: #ff6b6b !important;
         }
@@ -208,7 +237,7 @@ if ($theme == 'dark') {
 
         <?php endif; ?>
 
-        /* --- SIDEBAR STYLES --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             height: 100vh;
             position: fixed;
@@ -249,13 +278,20 @@ if ($theme == 'dark') {
             text-align: center;
         }
 
+        /* --- MAIN CONTENT LAYOUT --- */
         .main-content {
             margin-left: 250px;
-            padding: 30px;
+            padding: 0;
             transition: 0.3s;
         }
 
-        /* --- MOBILE RESPONSIVE --- */
+        .content-body {
+            padding: 30px;
+        }
+
+        /* New wrapper for spacing */
+
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
             .sidebar {
                 left: -250px;
@@ -270,7 +306,7 @@ if ($theme == 'dark') {
 
             .main-content {
                 margin-left: 0;
-                padding-top: 80px;
+                padding-top: 60px;
             }
 
             .mobile-head {
@@ -285,64 +321,51 @@ if ($theme == 'dark') {
                 justify-content: space-between;
                 align-items: center;
                 border-bottom: 1px solid var(--border-col);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             }
         }
-
 
         .mobile-head {
             display: none;
         }
+
+        /* NOTIFICATION FIX (Sticky Top) */
+        .system-notification-bar {
+            width: 100%;
+            z-index: 999;
+            position: sticky;
+            top: 0;
+        }
     </style>
 </head>
 
+<body class="loading">
 
-<body>
-    <?php include __DIR__ . '/../../notification_component.php'; ?>
+    <!-- 1. LOADER -->
+    <div id="loader-wrapper">
+        <div class="spinner"></div>
+    </div>
+
     <!-- MOBILE HEADER -->
     <div class="mobile-head shadow-sm text-white">
-
         <span class="fw-bold"><i class="fas fa-bolt text-danger"></i> ADMIN</span>
-
         <button class="btn btn-sm btn-outline-secondary border-0 text-white" onclick="toggleMenu()"><i class="fas fa-bars fa-lg"></i></button>
-
     </div>
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-
         <h4 class="text-center text-white mb-4 d-none d-md-block pt-4 fw-bold" style="letter-spacing:1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">
             <i class="fas fa-bolt text-danger"></i> CEB ADMIN
         </h4>
-
-        <a href="dashboard" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_panel.php' ? 'active' : ''; ?>">
-            <i class="fas fa-chart-line me-2"></i> Dashboard
-        </a>
-        <a href="meter_jobs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_jobs.php' ? 'active' : ''; ?>">
-            <i class="fas fa-tools me-2"></i> Meter Jobs
-        </a>
-
+        <a href="dashboard" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_panel.php' ? 'active' : ''; ?>"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+        <a href="meter_jobs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_jobs.php' ? 'active' : ''; ?>"><i class="fas fa-tools me-2"></i> Meter Jobs</a>
         <div class="mt-4 px-3 mb-2 small text-uppercase fw-bold" style="color:var(--text-muted); opacity:0.6;">System</div>
-
-        <a href="settings" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
-            <i class="fas fa-cog me-2"></i> Settings
-        </a>
-
+        <a href="settings" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>"><i class="fas fa-cog me-2"></i> Settings</a>
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Super Admin'): ?>
-            <a href="logs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>">
-                <i class="fas fa-history me-2"></i> Audit Logs
-            </a>
+            <a href="logs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>"><i class="fas fa-history me-2"></i> Audit Logs</a>
         <?php endif; ?>
-
         <div class="mt-auto p-3">
-            <a href="logout" class="text-danger fw-bold text-decoration-none small text-center d-block py-2 border border-danger rounded hover-red">
-                <i class="fas fa-sign-out-alt me-2"></i> Log Out
-            </a>
+            <a href="logout" class="text-danger fw-bold text-decoration-none small text-center d-block py-2 border border-danger rounded hover-red"><i class="fas fa-sign-out-alt me-2"></i> Log Out</a>
         </div>
     </div>
-
-    <script>
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-    </script>
+    <div class="main-content">
+        <?php include '../notification_component.php'; ?>

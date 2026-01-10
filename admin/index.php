@@ -25,7 +25,7 @@ include 'layout/header.php';
 <!-- Charts Lib (Optional, keeping in case you add charts later) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div class="main-content">
+
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">

@@ -10,7 +10,7 @@ $current_officer = $_SESSION['full_name'];
 include 'layout/header.php';
 ?>
 
-<div class="main-content">
+
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0 text-secondary"><i class="fas fa-history text-dark"></i> System Activity Logs</h3>

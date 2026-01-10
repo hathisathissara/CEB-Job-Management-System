@@ -69,7 +69,7 @@ $mj_ret  = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Retu
 include 'layout/header.php';
 ?>
 
-<div class="main-content">
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold text-dark"><i class="fas fa-tools text-danger"></i> Meter Removal Jobs</h3>
         <button class="btn btn-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#addJobModal"><i class="fas fa-plus-circle"></i> Add Job</button>

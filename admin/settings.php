@@ -67,7 +67,7 @@ if (isset($_POST['update_notice']) && $my_role == 'Super Admin') {
 include 'layout/header.php';
 ?>
 
-<div class="main-content">
+
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
