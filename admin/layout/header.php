@@ -362,9 +362,11 @@ if ($theme == 'dark') {
         <div class="mt-4 px-3 mb-2 small text-uppercase fw-bold" style="color:var(--text-muted); opacity:0.6;">System</div>
         
         <a href="settings" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>"><i class="fas fa-cog me-2"></i> Settings</a>
+
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Super Admin'): ?>
             <a href="logs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>"><i class="fas fa-history me-2"></i> Audit Logs</a>
         <?php endif; ?>
+        
         <div class="mt-auto p-3">
             <a href="logout" class="text-danger fw-bold text-decoration-none small text-center d-block py-2 border border-danger rounded hover-red"><i class="fas fa-sign-out-alt me-2"></i> Log Out</a>
         </div>
