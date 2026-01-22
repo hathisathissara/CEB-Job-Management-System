@@ -116,7 +116,7 @@
                                 <label class="form-label fw-bold text-secondary">Job Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light"><i class="fas fa-file-contract"></i></span>
-                                    <input type="text" name="job_no" class="form-control form-control-lg" placeholder="Ex: JOB-1005" required>
+                                    <input type="text" name="job_no" class="form-control form-control-lg" placeholder="Ex: RC/I/26/123" value="RC/I/26/" required>
                                 </div>
                             </div>
 

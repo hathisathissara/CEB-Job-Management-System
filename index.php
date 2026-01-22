@@ -252,7 +252,7 @@
                 <div class="footer-credits">
                     <p class="mb-1">&copy; <?php echo date('Y'); ?> Ceylon Electricity Board</p>
                     <small>Version 3.0</small><br>
-                    Developed by <a href="#" target="_blank">Your Name</a>
+                    Developed by <a href="https://hathisathissara.unaux.com/" target="_blank">Hathisa Thissara</a>
                 </div>
             </div>
 
