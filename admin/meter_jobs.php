@@ -99,9 +99,9 @@ include 'layout/header.php';
             <?php endif; ?>
         </div>
         <div>
-            <a href="export_meter.php?s=<?php echo urlencode($s);?>&f=<?php echo $f;?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&dup=<?php echo $dup;?>" class="btn btn-success btn-sm fw-bold shadow-sm">
-                <i class="fas fa-file-excel me-1"></i> Export CSV
-            </a>
+           <a href="export_meter.php?s=<?php echo urlencode($s); ?>&f=<?php echo urlencode($f); ?>&d1=<?php echo $d1; ?>&d2=<?php echo $d2; ?>&dup=<?php echo $dup; ?>" class="btn btn-success btn-sm fw-bold shadow-sm">
+    <i class="fas fa-file-excel me-1"></i> Export CSV
+</a>
         </div>
     </div>
 
