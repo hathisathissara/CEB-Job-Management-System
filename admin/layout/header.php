@@ -66,45 +66,6 @@ if ($theme == 'dark') {
             --table-strip: <?php echo $table_strip; ?>;
         }
 
-        /* --- LOADER STYLES (ADDED) --- */
-        #loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-body);
-            z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease-out;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(0, 0, 0, 0.1);
-            border-top: 5px solid #d11212;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        body.loading {
-            overflow: hidden;
-        }
-
-        /* --- MAIN STYLES --- */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
@@ -112,139 +73,66 @@ if ($theme == 'dark') {
             transition: 0.2s;
         }
 
-        .card,
-        .modal-content,
-        .list-group-item {
-            background-color: var(--bg-card) !important;
-            color: var(--text-main) !important;
-            border-color: var(--border-col) !important;
+        /* --- DARK MODE OVERRIDES --- */
+        .card, .modal-content, .list-group-item { 
+            background-color: var(--bg-card) !important; 
+            border-color: var(--border-col) !important; 
+            color: var(--text-main) !important; 
+        }
+        .bg-light { background-color: var(--bg-body) !important; }
+        .bg-white { background-color: var(--bg-card) !important; }
+        
+        /* Force Text Colors */
+        h1, h2, h3, h4, h5, h6, .card-title, .modal-title, label, td, th { color: var(--text-main) !important; }
+        .text-muted { color: var(--text-muted) !important; }
+        .border { border-color: var(--border-col) !important; }
+
+        /* Tables */
+        .table { color: var(--text-main) !important; --bs-table-border-color: var(--border-col); }
+        .table-striped>tbody>tr:nth-of-type(odd)>* { color: var(--text-main); background-color: var(--table-strip); }
+        .table-hover tbody tr:hover>* { color: var(--text-main); background-color: var(--border-col); }
+        
+        /* FIX: Header Row Background */
+        .table-light, .table-light th { 
+            background-color: var(--sidebar-bg) !important; 
+            color: var(--text-main) !important; 
+            border-color: var(--border-col); 
         }
 
-        .bg-light {
-            background-color: var(--bg-body) !important;
-        }
+        /* Forms */
+        .form-control, .form-select { background-color: var(--input-bg); border-color: var(--border-col); color: var(--text-main); }
+        .form-control:focus, .form-select:focus { background-color: var(--input-bg); color: var(--text-main); border-color: #d11212; box-shadow: none; }
+        ::placeholder { color: var(--text-muted) !important; opacity: 0.7; }
 
-        .bg-white {
-            background-color: var(--bg-card) !important;
-        }
+        /* --- FIX COLORED BORDERS --- */
+        .border-primary { border-color: #0d6efd !important; }
+        .border-secondary { border-color: #6c757d !important; }
+        .border-success { border-color: #198754 !important; }
+        .border-danger { border-color: #dc3545 !important; }
+        .border-warning { border-color: #ffc107 !important; }
+        .border-info { border-color: #0dcaf0 !important; }
+        .border-dark { border-color: #212529 !important; }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        .card-title {
-            color: var(--text-main) !important;
-        }
-
-        .text-dark {
-            color: var(--text-main) !important;
-        }
-
-        .text-muted {
-            color: var(--text-muted) !important;
-        }
-
-        .border {
-            border-color: var(--border-col) !important;
-        }
-
-        .table {
-            color: var(--text-main);
-            --bs-table-border-color: var(--border-col);
-        }
-
-        .table-striped>tbody>tr:nth-of-type(odd)>* {
-            color: var(--text-main);
-            background-color: var(--table-strip);
-        }
-
-        .table-hover tbody tr:hover>* {
-            background-color: var(--border-col);
-        }
-
-        .table-light,
-        .table-light th {
-            background-color: var(--sidebar-bg);
-            color: var(--text-main);
-            border-color: var(--border-col);
-        }
-
-        .form-control,
-        .form-select {
-            background-color: var(--input-bg);
-            border-color: var(--border-col);
-            color: var(--text-main);
-        }
-
-        .form-control:focus {
-            background-color: var(--input-bg);
-            color: var(--text-main);
-            border-color: #d11212;
-            box-shadow: none;
-        }
-
-        ::placeholder {
-            color: var(--text-muted) !important;
-            opacity: 0.7;
-        }
-
-        /* Colors fix */
-        .border-primary {
-            border-color: #0d6efd !important;
-        }
-
-        .border-secondary {
-            border-color: #6c757d !important;
-        }
-
-        .border-success {
-            border-color: #198754 !important;
-        }
-
-        .border-danger {
-            border-color: #dc3545 !important;
-        }
-
-        .border-warning {
-            border-color: #ffc107 !important;
-        }
-
-        .border-info {
-            border-color: #0dcaf0 !important;
-        }
-
-        <?php if ($theme == 'dark'): ?>.text-danger {
-            color: #ff6b6b !important;
-        }
-
-        .text-success {
-            color: #51cf66 !important;
-        }
-
-        .text-primary {
-            color: #4dabf7 !important;
-        }
-
-        .text-warning {
-            color: #fcc419 !important;
-        }
-
-        .text-dark {
-            color: #e0e0e0 !important;
-        }
-
+        /* --- FIX TEXT COLORS IN DARK MODE --- */
+        <?php if($theme == 'dark'): ?>
+            /* This is the key fix: text-dark becomes white in dark mode */
+            .text-dark { color: #e0e0e0 !important; } 
+            
+            .text-danger { color: #ff6b6b !important; }
+            .text-success { color: #51cf66 !important; }
+            .text-primary { color: #4dabf7 !important; }
+            .text-warning { color: #fcc419 !important; }
+        <?php else: ?>
+            .text-dark { color: #212529 !important; }
         <?php endif; ?>
 
-        /* --- SIDEBAR --- */
+        /* --- SIDEBAR STYLES --- */
         .sidebar {
             height: 100vh;
             position: fixed;
             width: 250px;
             background: var(--sidebar-bg);
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             z-index: 1000;
             transition: 0.3s;
             border-right: 1px solid var(--border-col);
@@ -253,88 +141,21 @@ if ($theme == 'dark') {
             padding-top: 0;
         }
 
-        .sidebar a {
-            padding: 15px 20px;
-            color: #999;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            border-left: 4px solid transparent;
-        }
+        .sidebar a { padding: 15px 20px; color: #999; text-decoration: none; display: flex; align-items: center; border-left: 4px solid transparent; }
+        .sidebar a:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+        .sidebar a.active { border-left: 4px solid #d11212; color: #fff; background: rgba(209, 18, 18, 0.15); }
+        .sidebar i { width: 30px; text-align: center; }
 
-        .sidebar a:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .main-content { margin-left: 250px; padding: 30px; transition: 0.3s; }
 
-        .sidebar a.active {
-            border-left: 4px solid #d11212;
-            color: #fff;
-            background: rgba(209, 18, 18, 0.15);
-        }
-
-        .sidebar i {
-            width: 30px;
-            text-align: center;
-        }
-
-        /* --- MAIN CONTENT LAYOUT --- */
-        .main-content {
-            margin-left: 250px;
-            padding: 0;
-            transition: 0.3s;
-        }
-
-        .content-body {
-            padding: 30px;
-        }
-
-        /* New wrapper for spacing */
-
-        /* --- MOBILE --- */
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
-            .sidebar {
-                left: -250px;
-                top: 60px;
-                height: calc(100vh - 60px);
-            }
-
-            .sidebar.active {
-                left: 0;
-                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding-top: 60px;
-            }
-
-            .mobile-head {
-                display: flex !important;
-                position: fixed;
-                top: 0;
-                width: 100%;
-                height: 60px;
-                background: var(--sidebar-bg);
-                z-index: 1001;
-                padding: 0 20px;
-                justify-content: space-between;
-                align-items: center;
-                border-bottom: 1px solid var(--border-col);
-            }
+            .sidebar { left: -250px; top: 60px; height: calc(100vh - 60px); }
+            .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5); }
+            .main-content { margin-left: 0; padding-top: 80px; }
+            .mobile-head { display: flex !important; position: fixed; top: 0; width: 100%; height: 60px; background: var(--sidebar-bg); z-index: 1001; padding: 0 20px; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-col); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
         }
-
-        .mobile-head {
-            display: none;
-        }
-
-        /* NOTIFICATION FIX (Sticky Top) */
-        .system-notification-bar {
-            width: 100%;
-            z-index: 999;
-            position: sticky;
-            top: 0;
-        }
+        .mobile-head { display: none; }
     </style>
 </head>
 

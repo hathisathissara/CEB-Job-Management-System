@@ -1,143 +1,112 @@
 <?php
 session_start();
-// Security
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php");
-    exit();
-}
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) { header("Location: login.php"); exit(); }
 include '../db_conn.php';
 $current_officer = $_SESSION['full_name'];
 
-// --- COUNTS (METER JOBS ONLY) ---
-// Pending Unique Accounts (Locations)
+// --- STATS LOGIC ---
 $r_mloc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'");
 $mj_loc = ($r_mloc) ? $r_mloc->fetch_assoc()['c'] : 0;
-
-// Job Cards Statuses
 $mj_pend = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
 $mj_rem  = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Removed'")->fetch_assoc()['c'];
 $mj_ret  = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Returned - Paid'")->fetch_assoc()['c'];
-$mj_canc = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Cancelled'")->fetch_assoc()['c'];
+
+// --- WEEKLY TREND CHART DATA ---
+$week_data = []; $week_labels = [];
+$date_start = date('Y-m-d', strtotime('-6 days'));
+$q_trend = $conn->query("SELECT DATE(created_at) as d, COUNT(*) as c FROM meter_removal WHERE created_at >= '$date_start' GROUP BY d");
+while($row = $q_trend->fetch_assoc()) { $week_labels[] = date('D', strtotime($row['d'])); $week_data[] = $row['c']; }
+
+// --- GET ACTIVE NOTICE ---
+$notice = $conn->query("SELECT notice_text FROM system_settings WHERE is_active=1 AND id=1")->fetch_assoc();
 
 include 'layout/header.php';
 ?>
 
-<!-- Charts Lib (Optional, keeping in case you add charts later) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
-    <!-- Header -->
+    <!-- WELCOME HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line text-danger"></i> Master Dashboard</h3>
+            <h3 class="mb-0 fw-bold text-dark"><i class="fas fa-chart-line text-danger"></i> Meter Ops Dashboard</h3>
             <p class="text-muted small mb-0">Overview for <strong><?php echo date('F Y'); ?></strong></p>
         </div>
-        <div><span class="badge bg-light text-dark border px-3 py-2"><i class="fas fa-user-tie"></i> <?php echo $current_officer; ?></span></div>
-    </div>
-
-    <!-- MAIN SECTION: METER JOBS OVERVIEW -->
-    <h6 class="text-secondary fw-bold text-uppercase border-bottom pb-2 mb-3"><i class="fas fa-tools text-dark"></i> Meter Removal Operations</h6>
-
-    <!-- STAT CARDS (ROW 1) -->
-    <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-        <!-- 1. PENDING LOCATIONS -->
-        <div class="col">
-            <div class="card shadow-sm bg-white h-100 p-2 border-start border-4 border-danger">
-                <div class="card-body p-2 text-center">
-                    <h2 class="mb-0 fw-bold text-danger"><?php echo $mj_loc; ?></h2>
-                    <small class="text-muted fw-bold">PENDING LOCATIONS</small>
-                </div>
-            </div>
-        </div>
-        <!-- 2. TOTAL PENDING CARDS -->
-        <div class="col">
-            <div class="card shadow-sm bg-white h-100 p-2 border-start border-4 border-warning">
-                <div class="card-body p-2 text-center">
-                    <h2 class="mb-0 fw-bold text-dark"><?php echo $mj_pend; ?></h2>
-                    <small class="text-muted fw-bold">PENDING CARDS</small>
-                </div>
-            </div>
-        </div>
-        <!-- 3. REMOVED -->
-        <div class="col">
-            <div class="card shadow-sm bg-white h-100 p-2 border-start border-4 border-primary">
-                <div class="card-body p-2 text-center">
-                    <h2 class="mb-0 fw-bold text-dark"><?php echo $mj_rem; ?></h2>
-                    <small class="text-muted fw-bold">METERS REMOVED</small>
-                </div>
-            </div>
-        </div>
-        <!-- 4. PAID / RETURNED -->
-        <div class="col">
-            <div class="card shadow-sm bg-white h-100 p-2 border-start border-4 border-success">
-                <div class="card-body p-2 text-center">
-                    <h2 class="mb-0 fw-bold text-dark"><?php echo $mj_ret; ?></h2>
-                    <small class="text-muted fw-bold">PAID / RETURNED</small>
-                </div>
-            </div>
+        <div>
+            <span class="badge bg-white text-dark border px-3 py-2 shadow-sm"><i class="fas fa-user-circle text-success me-2"></i> <?php echo $current_officer; ?></span>
         </div>
     </div>
 
-    <!-- Quick Links Section (Keeping the design filled) -->
+    
+
+    <!-- STATS ROW -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-danger h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">PENDING LOCATIONS</h6><h2 class="fw-bold text-danger mb-0"><?php echo $mj_loc; ?></h2></div><div class="bg-danger bg-opacity-10 p-3 rounded-circle"><i class="fas fa-map-marker-alt fa-2x text-danger"></i></div></div></div></div>
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-warning h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">PENDING CARDS</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_pend; ?></h2></div><div class="bg-warning bg-opacity-10 p-3 rounded-circle"><i class="fas fa-layer-group fa-2x text-warning"></i></div></div></div></div>
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-primary h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">METERS REMOVED</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_rem; ?></h2></div><div class="bg-primary bg-opacity-10 p-3 rounded-circle"><i class="fas fa-screwdriver fa-2x text-primary"></i></div></div></div></div>
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-success h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">PAID / RETURNED</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_ret; ?></h2></div><div class="bg-success bg-opacity-10 p-3 rounded-circle"><i class="fas fa-check-circle fa-2x text-success"></i></div></div></div></div>
+    </div>
+
+    <!-- CHARTS & TABLES -->
     <div class="row g-3">
-        <!-- 1. Recent Meter Activity Table (Just top 5 latest meter jobs) -->
+        
+        <!-- 1. WEEKLY TREND CHART -->
         <div class="col-md-8">
             <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white fw-bold py-2 d-flex justify-content-between">
-                    <span><i class="fas fa-history text-secondary"></i> Recently Added Jobs</span>
-                    <a href="meter_jobs" class="btn btn-sm btn-link text-decoration-none p-0">View All</a>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0 text-center" style="font-size:13px;">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Job No</th>
-                                    <th>Account</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $rr = $conn->query("SELECT * FROM meter_removal ORDER BY id DESC LIMIT 5");
-                                if ($rr->num_rows > 0) {
-                                    while ($w = $rr->fetch_assoc()) {
-                                        $bg = 'bg-secondary';
-                                        if ($w['status'] == 'Pending') $bg = 'bg-warning text-dark';
-                                        if ($w['status'] == 'Removed') $bg = 'bg-danger';
-                                        if ($w['status'] == 'Returned - Paid') $bg = 'bg-success';
-
-                                        echo "<tr>
-                                        <td class='fw-bold text-danger'>{$w['job_no']}</td>
-                                        <td>{$w['acc_no']}</td>
-                                        <td>" . date('m-d', strtotime($w['created_at'])) . "</td>
-                                        <td><span class='badge rounded-pill $bg'>{$w['status']}</span></td>
-                                    </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='4' class='text-muted py-3'>No recent data</td></tr>";
-                                } ?>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="card-header bg-white fw-bold py-3"><i class="fas fa-chart-area text-secondary me-2"></i> Job Intake (Last 7 Days)</div>
+                <div class="card-body">
+                    <canvas id="trendChart" style="max-height: 250px;"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- 2. Action Area -->
+        <!-- 2. RECENT ACTIVITY -->
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 bg-white">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <i class="fas fa-laptop-medical fa-3x text-secondary mb-3 opacity-50"></i>
-                    <h5 class="fw-bold">Ready for New Tools?</h5>
-                    <p class="small text-muted mb-4">You can integrate other modules here.</p>
-                    <a href="meter_jobs" class="btn btn-outline-dark w-100">Go to Meter Jobs</a>
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between">
+                    <span><i class="fas fa-history text-secondary me-2"></i> Recent</span>
+                    <a href="meter_jobs" class="text-decoration-none small fw-bold">View All</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    <?php 
+                    $rec = $conn->query("SELECT * FROM meter_removal ORDER BY id DESC LIMIT 5");
+                    if($rec->num_rows > 0) {
+                        while($r = $rec->fetch_assoc()) {
+                            $badge = ($r['status']=='Pending') ? 'bg-warning' : (($r['status']=='Removed') ? 'bg-danger' : 'bg-success');
+                            echo "<div class='list-group-item d-flex justify-content-between align-items-center small'>
+                                    <div><span class='fw-bold text-dark'>{$r['job_no']}</span><br><span class='text-muted'>{$r['acc_no']}</span></div>
+                                    <span class='badge $badge rounded-pill'>{$r['status']}</span>
+                                  </div>";
+                        }
+                    } else { echo "<div class='p-4 text-center text-muted'>No recent activity</div>"; }
+                    ?>
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>
+
+<!-- CHART SCRIPT -->
+<script>
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($week_labels); ?>,
+            datasets: [{
+                label: 'New Jobs',
+                data: <?php echo json_encode($week_data); ?>,
+                borderColor: '#d11212',
+                backgroundColor: 'rgba(209, 18, 18, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+</script>
 
 <?php include 'layout/footer.php'; ?>

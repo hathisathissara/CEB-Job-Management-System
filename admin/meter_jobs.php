@@ -24,6 +24,7 @@ if (isset($_POST['update_job'])) {
     $nj=$_POST['e_job']; $na=$_POST['e_acc']; $nm=$_POST['e_met'];
     $st=$_POST['status_opt']; $rd=$_POST['reading']; $nt=$_POST['officer_note']; $dn=$_POST['done_by'];
     $rm_d = !empty($_POST['rem_date']) ? "'".$_POST['rem_date']."'" : "NULL";
+
     if($conn->query("UPDATE meter_removal SET job_no='$nj', acc_no='$na', meter_no='$nm', meter_reading='$rd', removing_date=$rm_d, done_by='$dn', officer_note='$nt', status='$st' WHERE id=$id")){
         addLog($conn, $current_officer, 'UPDATE JOB', "Updated $nj ($st)"); $msg="Updated Successfully!";
     }
@@ -38,82 +39,90 @@ $mj_ret  = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Retu
 include 'layout/header.php';
 ?>
 
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold text-dark"><i class="fas fa-tools text-danger"></i> Meter Removal Jobs</h3>
-        <button class="btn btn-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#addJobModal"><i class="fas fa-plus-circle"></i> Add Job</button>
+        <div>
+            <h3 class="fw-bold text-dark mb-0"><i class="fas fa-tools text-danger"></i> Meter Removal Operations</h3>
+            <span class="text-muted small">Manage job cards and history</span>
+        </div>
+        <button class="btn btn-dark shadow-sm px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#addJobModal">
+            <i class="fas fa-plus-circle me-2"></i> New Job
+        </button>
     </div>
 
-    <!-- STATS -->
-    <div class="row g-2 mb-4">
-        <div class="col-md-3"><div class="card shadow-sm border-start border-4 border-danger h-100 p-2"><div class="card-body p-1"><h6 class="text-secondary small fw-bold">PENDING VISITS</h6><h2 class="fw-bold text-danger mb-0"><?php echo $mj_loc; ?></h2></div></div></div>
-        <div class="col-md-3"><div class="card shadow-sm border-start border-4 border-warning h-100 p-2"><div class="card-body p-1"><h6 class="text-secondary small fw-bold">TOTAL JOBS</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_pend; ?></h2></div></div></div>
-        <div class="col-md-3"><div class="card shadow-sm border-start border-4 border-primary h-100 p-2"><div class="card-body p-1"><h6 class="text-secondary small fw-bold">REMOVED</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_rem; ?></h2></div></div></div>
-        <div class="col-md-3"><div class="card shadow-sm border-start border-4 border-success h-100 p-2"><div class="card-body p-1"><h6 class="text-secondary small fw-bold">RETURNED</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_ret; ?></h2></div></div></div>
+    <?php if($msg) echo "<div class='alert alert-success shadow-sm alert-dismissible fade show'>$msg <button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>"; ?>
+    <?php if($err) echo "<div class='alert alert-danger shadow-sm alert-dismissible fade show'>$err <button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>"; ?>
+
+    <!-- STATS CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-danger h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">PENDING LOCATIONS</h6><h2 class="fw-bold text-danger mb-0"><?php echo $mj_loc; ?></h2></div><i class="fas fa-map-marker-alt fa-2x text-danger opacity-25"></i></div></div></div>
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-warning h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">TOTAL CARDS</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_pend; ?></h2></div><i class="fas fa-layer-group fa-2x text-warning opacity-25"></i></div></div></div>
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-primary h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">REMOVED</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_rem; ?></h2></div><i class="fas fa-screwdriver fa-2x text-primary opacity-25"></i></div></div></div>
+        <div class="col-md-3"><div class="card shadow-sm border-0 border-bottom border-4 border-success h-100 p-3"><div class="d-flex justify-content-between align-items-center"><div><h6 class="text-secondary small fw-bold mb-1">RETURNED</h6><h2 class="fw-bold text-dark mb-0"><?php echo $mj_ret; ?></h2></div><i class="fas fa-check-circle fa-2x text-success opacity-25"></i></div></div></div>
     </div>
 
     <!-- FILTER SECTION -->
-    <div class="card shadow-sm border-0 mb-3">
-        <div class="card-body bg-light rounded shadow-inner">
-            <form method="GET" class="row g-2 align-items-center">
-                <?php $s=$_GET['s']??''; $f=$_GET['f']??''; $d1=$_GET['d1']??''; $d2=$_GET['d2']??''; $dup=isset($_GET['dup'])?1:0; ?>
-                <div class="col-md-3"><input type="text" name="s" class="form-control" placeholder="Search..." value="<?php echo htmlspecialchars($s); ?>"></div>
-                <div class="col-md-2"><input type="date" name="d1" class="form-control" value="<?php echo $d1; ?>"></div>
-                <div class="col-md-2"><input type="date" name="d2" class="form-control" value="<?php echo $d2; ?>"></div>
-                <div class="col-md-2"><select name="f" class="form-select"><option value="">All Status</option><option value="Pending" <?php if($f=='Pending')echo'selected';?>>Pending</option><option value="Removed" <?php if($f=='Removed')echo'selected';?>>Removed</option><option value="Returned - Paid" <?php if($f=='Returned - Paid')echo'selected';?>>Returned</option></select></div>
-                <div class="col-md-2 d-flex align-items-center bg-white border rounded p-1"><div class="form-check ms-2"><input class="form-check-input" type="checkbox" name="dup" value="1" id="dCheck" <?php if($dup)echo'checked';?>><label class="form-check-label small fw-bold text-danger" for="dCheck">Duplicates</label></div></div>
-                <div class="col-md-1"><button class="btn btn-primary w-100" name="btn_filter"><i class="fas fa-filter"></i></button></div>
+    <div class="card shadow-sm border-0 mb-4 bg-white">
+        <div class="card-body p-4 bg-light rounded shadow-inner">
+            <form method="GET" class="row g-2 align-items-end">
+                <?php 
+                    $s=$_GET['s']??''; $f=$_GET['f']??''; $d1=$_GET['d1']??''; $d2=$_GET['d2']??''; 
+                    $nodup = (isset($_GET['nodup']) && $_GET['nodup'] == '1') ? 1 : 0; 
+                ?>
+                <div class="col-md-4"><label class="small fw-bold text-muted mb-1">Search Keywords</label><div class="input-group"><span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span><input type="text" name="s" class="form-control border-start-0 ps-0" placeholder="Job No / Acc No / Meter..." value="<?php echo htmlspecialchars($s); ?>"></div></div>
+                <div class="col-md-3"><label class="small fw-bold text-muted mb-1">Date Range</label><div class="input-group"><input type="date" name="d1" class="form-control form-control-sm" value="<?php echo $d1; ?>"><span class="input-group-text bg-white border-0">-</span><input type="date" name="d2" class="form-control form-control-sm" value="<?php echo $d2; ?>"></div></div>
+                <div class="col-md-2"><label class="small fw-bold text-muted mb-1">Status</label><select name="f" class="form-select"><option value="">All Status</option><option value="Pending" <?php if($f=='Pending')echo'selected';?>>Pending</option><option value="Removed" <?php if($f=='Removed')echo'selected';?>>Removed</option><option value="Returned - Paid" <?php if($f=='Returned - Paid')echo'selected';?>>Returned</option></select></div>
+                <div class="col-md-2"><div class="form-check mb-2"><input class="form-check-input" type="checkbox" name="nodup" value="1" id="ndCheck" <?php if($nodup==1)echo'checked';?>><label class="form-check-label small fw-bold text-dark" for="ndCheck">Group by Account<br><span class="text-muted" style="font-size:10px;">(Hide Duplicates)</span></label></div></div>
+                <div class="col-md-1"><button class="btn btn-dark w-100"><i class="fas fa-filter"></i></button></div>
+                <div class="col-md-1 text-end"><a href="export_meter.php?s=<?php echo urlencode($s);?>&f=<?php echo urlencode($f);?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&nodup=<?php echo $nodup;?>" class="btn btn-success w-100" title="Export CSV"><i class="fas fa-file-download"></i></a></div>
             </form>
+            <?php if(isset($_GET['f'])) echo '<div class="mt-2"><a href="meter_jobs" class="text-danger small fw-bold text-decoration-none"><i class="fas fa-times"></i> Clear Filters</a></div>'; ?>
         </div>
     </div>
 
+    <!-- RESULT COUNTER & QUERY -->
     <?php
-    // --- FILTER & QUERY LOGIC ---
     $sql_base = "SELECT * FROM meter_removal WHERE 1=1";
-    if($dup) { $sql_base = "SELECT t1.* FROM meter_removal t1 INNER JOIN (SELECT acc_no FROM meter_removal GROUP BY acc_no HAVING COUNT(id)>1) t2 ON t1.acc_no=t2.acc_no WHERE 1=1"; }
+    if($nodup == 1) { $sql_base = "SELECT t1.* FROM meter_removal t1 INNER JOIN (SELECT acc_no FROM meter_removal GROUP BY acc_no HAVING COUNT(id)>1) t2 ON t1.acc_no=t2.acc_no WHERE 1=1"; }
     if(!empty($s)) $sql_base .= " AND (job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR meter_no LIKE '%$s%')";
     if(!empty($f)) $sql_base .= " AND status='$f'";
     if(!empty($d1) && !empty($d2)) {
-        if($f == 'Removed') $sql_base .= " AND removing_date BETWEEN '$d1' AND '$d2'";
-        else $sql_base .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
+        $col = ($f == 'Removed') ? 'removing_date' : 'created_at';
+        $sql_base .= " AND $col BETWEEN '$d1' AND '$d2 23:59:59'";
     }
 
-    // 1. Get Filtered Total Results
-    $c_q = str_replace("SELECT *", "SELECT COUNT(*) as t", str_replace("SELECT t1.*", "SELECT COUNT(*) as t", $sql_base));
-    $tot_res = $conn->query($c_q)->fetch_assoc()['t'];
-
-    // Pagination Settings
     $results_per_page=10; $page=isset($_GET['page'])&&is_numeric($_GET['page'])?(int)$_GET['page']:1; if($page<1)$page=1; $offset=($page-1)*$results_per_page;
+    
+    if($nodup == 1) {
+        $c_res = $conn->query("SELECT COUNT(*) as t FROM ($sql_base) as subquery"); $tot_res = $c_res ? $c_res->fetch_assoc()['t'] : 0;
+    } else {
+        $c_q = str_replace("SELECT *", "SELECT COUNT(*) as t", $sql_base); $tot_res = $conn->query($c_q)->fetch_assoc()['t'];
+    }
     $tot_pages = ceil($tot_res/$results_per_page);
+    
+    $sql_base .= " ORDER BY id DESC LIMIT $results_per_page OFFSET $offset";
+    $res = $conn->query($sql_base);
     ?>
 
-    <!-- 2. RESULT COUNTER DISPLAY -->
-    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
         <div>
-            <?php if(isset($_GET['btn_filter']) || !empty($s) || !empty($f) || $dup): ?>
-                <span class="badge bg-info text-dark shadow-sm py-2 px-3">
-                    <i class="fas fa-search me-1"></i> Found <b><?php echo $tot_res; ?></b> Matching Records
-                </span>
-                <a href="meter_jobs" class="text-danger small fw-bold text-decoration-none ms-2">Clear Filters</a>
+            <?php if(!empty($s) || !empty($f) || $nodup==1 || !empty($d1)): ?>
+                <span class="badge bg-primary shadow-sm p-2 px-3"><i class="fas fa-search me-1"></i> Found: <?php echo $tot_res; ?></span>
+                <a href="meter_jobs" class="text-danger fw-bold small text-decoration-none ms-2"><i class="fas fa-times-circle"></i> Clear</a>
             <?php else: ?>
-                <span class="text-muted small">Showing latest jobs (Total: <?php echo $tot_res; ?>)</span>
+                <span class="text-muted small fw-bold"><i class="fas fa-list-ul me-1"></i> Total Records: <?php echo $mj_pend+$mj_rem+$mj_ret; ?></span>
             <?php endif; ?>
-        </div>
-        <div>
-           <a href="export_meter.php?s=<?php echo urlencode($s); ?>&f=<?php echo urlencode($f); ?>&d1=<?php echo $d1; ?>&d2=<?php echo $d2; ?>&dup=<?php echo $dup; ?>" class="btn btn-success btn-sm fw-bold shadow-sm">
-    <i class="fas fa-file-excel me-1"></i> Export CSV
-</a>
         </div>
     </div>
 
-    <!-- 3. DATA TABLE -->
+    <!-- DATA TABLE -->
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-dark"><tr><th>Job Info (Edit)</th><th>Account Info</th><th>Status</th><th>Results</th></tr></thead>
+                <thead class="table-dark text-uppercase small"><tr><th width="20%">Job Details</th><th width="25%">Account Info & History</th><th width="15%">Status</th><th width="40%">Officer Remarks</th></tr></thead>
                 <tbody>
                     <?php
-                    $sql_base .= " ORDER BY id DESC LIMIT $results_per_page OFFSET $offset";
-                    $res = $conn->query($sql_base);
+
 
                     if($res->num_rows>0){
                         while($row=$res->fetch_assoc()){
@@ -122,24 +131,42 @@ include 'layout/header.php';
                             if($row['status']=='Removed')$bg='bg-danger';
                             if($row['status']=='Returned - Paid')$bg='bg-success';
                             
-                            $ac=$row['acc_no']; $qj=$conn->query("SELECT job_no FROM meter_removal WHERE acc_no='$ac' AND id!={$row['id']}");
-                            $oc=$qj->num_rows; $jl=[]; while($jx=$qj->fetch_assoc()){$jl[]=$jx['job_no'];} $tt="Others: ".implode(", ",$jl);
+                            $ac=$row['acc_no']; 
+                            $qj=$conn->query("SELECT job_no FROM meter_removal WHERE acc_no='$ac' AND id!={$row['id']}");
+                            $oc=$qj->num_rows; $jl=[]; while($jx=$qj->fetch_assoc()){$jl[]=$jx['job_no'];} $tt="Other Jobs: ".implode(", ",$jl);
+
+                            // HISTORY ALERT (DARK MODE FIXED)
+                            $hist_alert = "";
+                            if($row['status'] == 'Pending') {
+                                $qh = $conn->query("SELECT job_no, removing_date FROM meter_removal WHERE acc_no='$ac' AND status='Removed' AND id < {$row['id']} ORDER BY id DESC LIMIT 1");
+                                if($qh->num_rows > 0) {
+                                    $hdata = $qh->fetch_assoc();
+                                    $hist_alert = "<div class='mt-2 p-2 rounded border border-danger shadow-sm' style='font-size:10px; background-color:var(--bg-card); color:var(--text-danger);'><i class='fas fa-history me-1'></i> <span class='fw-bold'>PREVIOUSLY REMOVED:</span><br>Job: <b>{$hdata['job_no']}</b><br>Date: {$hdata['removing_date']}</div>";
+                                }
+                            }
                     ?>
                     <tr>
                         <td>
                             <a href="#" onclick="edit(<?php echo htmlspecialchars(json_encode($row)); ?>)" class="fw-bold text-decoration-none fs-5 comp-ref"><?php echo $row['job_no']; ?></a><br>
-                            <small class="text-muted"><?php echo date('Y-m-d H:i',strtotime($row['created_at'])); ?></small>
+                            <small class="text-muted"><i class="far fa-clock me-1"></i> <?php echo date('Y-m-d H:i',strtotime($row['created_at'])); ?></small>
                         </td>
-                        <td><b><?php echo $row['acc_no']; ?></b><?php if($oc>0) echo "<span class='badge bg-dark ms-2' data-bs-toggle='tooltip' title='$tt'>+{$oc} Dup</span>"; ?><br><small class="text-muted">Met: <?php echo $row['meter_no']?:'-'; ?></small></td>
-                        <td><span class="badge <?php echo $bg; ?> rounded-pill px-3"><?php echo $row['status']; ?></span></td>
+                        <td class="align-top pt-3">
+                            <b class="text-dark fs-6"><?php echo $row['acc_no']; ?></b>
+                            <?php if($oc>0) echo "<span class='badge bg-dark ms-2' data-bs-toggle='tooltip' title='$tt'>+{$oc} Jobs</span>"; ?>
+                            <br><small class="text-secondary">Meter: <?php echo $row['meter_no']?:'-'; ?></small>
+                            <?php echo $hist_alert; ?>
+                        </td>
+                        <td><span class="badge <?php echo $bg; ?> rounded-pill px-3 shadow-sm"><?php echo $row['status']; ?></span></td>
                         <td>
                             <?php if($row['status']!='Pending'): ?>
-                                <ul class="list-unstyled small mb-0 text-muted">
-                                    <?php if($row['status']=='Removed') echo "<li>Read: <b class='text-dark'>{$row['meter_reading']}</b></li><li>Date: {$row['removing_date']}</li>"; ?>
-                                    <?php if($row['done_by']) echo "<li>By: {$row['done_by']}</li>"; ?>
-                                    <?php if($row['officer_note']) echo "<li class='text-danger'>\"{$row['officer_note']}\"</li>"; ?>
-                                </ul>
-                            <?php else: echo '<span class="text-muted small">---</span>'; endif; ?>
+                                <div class="bg-light p-2 rounded border border-light">
+                                    <ul class="list-unstyled small mb-0 text-secondary">
+                                        <?php if($row['status']=='Removed') echo "<li class='mb-1'><i class='fas fa-tachometer-alt me-2 text-primary'></i>Reading: <b class='text-dark'>{$row['meter_reading']}</b></li> <li class='mb-1'><i class='far fa-calendar-check me-2 text-primary'></i>Date: <b>{$row['removing_date']}</b></li>"; ?>
+                                        <?php if($row['done_by']) echo "<li class='mb-1'><i class='fas fa-user-check me-2'></i>Done: {$row['done_by']}</li>"; ?>
+                                        <?php if($row['officer_note']) echo "<li class='text-danger mt-1 fst-italic border-top pt-1'>\"{$row['officer_note']}\"</li>"; ?>
+                                    </ul>
+                                </div>
+                            <?php else: echo '<span class="text-muted small fst-italic">Waiting for action...</span>'; endif; ?>
                         </td>
                     </tr>
                     <?php } } else { echo "<tr><td colspan='4' class='text-center py-5 text-muted'>No Records Found</td></tr>"; } ?>
@@ -147,12 +174,11 @@ include 'layout/header.php';
             </table>
         </div>
         
-        <!-- PAGINATION -->
         <?php if($tot_pages > 1): ?>
         <nav class="p-3 border-top bg-white"><ul class="pagination justify-content-center mb-0">
-            <li class="page-item <?php if($page<=1)echo'disabled';?>"><a class="page-link" href="?page=<?php echo $page-1;?>&s=<?php echo urlencode($s);?>&f=<?php echo $f;?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&dup=<?php echo $dup;?>">Previous</a></li>
+            <li class="page-item <?php if($page<=1)echo'disabled';?>"><a class="page-link" href="?page=<?php echo $page-1;?>&s=<?php echo urlencode($s);?>&f=<?php echo $f;?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&nodup=<?php echo $nodup;?>">Previous</a></li>
             <li class="page-item disabled"><span class="page-link text-dark fw-bold">Page <?php echo $page; ?> / <?php echo $tot_pages; ?></span></li>
-            <li class="page-item <?php if($page>=$tot_pages)echo'disabled';?>"><a class="page-link" href="?page=<?php echo $page+1;?>&s=<?php echo urlencode($s);?>&f=<?php echo $f;?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&dup=<?php echo $dup;?>">Next</a></li>
+            <li class="page-item <?php if($page>=$tot_pages)echo'disabled';?>"><a class="page-link" href="?page=<?php echo $page+1;?>&s=<?php echo urlencode($s);?>&f=<?php echo $f;?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&nodup=<?php echo $nodup;?>">Next</a></li>
         </ul></nav>
         <?php endif; ?>
     </div>
