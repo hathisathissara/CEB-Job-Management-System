@@ -33,8 +33,9 @@ if (isset($_POST['update_job'])) {
 // DASHBOARD COUNTS
 $mj_loc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
 $mj_pend = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
-$mj_rem  = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Removed'")->fetch_assoc()['c'];
-$mj_ret  = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Returned - Paid'")->fetch_assoc()['c'];
+// Count Unique Accounts Only
+$mj_rem = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Removed'")->fetch_assoc()['c'];
+$mj_ret = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Returned - Paid'")->fetch_assoc()['c'];
 
 include 'layout/header.php';
 ?>
@@ -73,7 +74,7 @@ include 'layout/header.php';
                 <div class="col-md-3"><label class="small fw-bold text-muted mb-1">Date Range</label><div class="input-group"><input type="date" name="d1" class="form-control form-control-sm" value="<?php echo $d1; ?>"><span class="input-group-text bg-white border-0">-</span><input type="date" name="d2" class="form-control form-control-sm" value="<?php echo $d2; ?>"></div></div>
                 <div class="col-md-2"><label class="small fw-bold text-muted mb-1">Status</label><select name="f" class="form-select"><option value="">All Status</option><option value="Pending" <?php if($f=='Pending')echo'selected';?>>Pending</option><option value="Removed" <?php if($f=='Removed')echo'selected';?>>Removed</option><option value="Returned - Paid" <?php if($f=='Returned - Paid')echo'selected';?>>Returned</option></select></div>
                 <div class="col-md-2"><div class="form-check mb-2"><input class="form-check-input" type="checkbox" name="nodup" value="1" id="ndCheck" <?php if($nodup==1)echo'checked';?>><label class="form-check-label small fw-bold text-dark" for="ndCheck">Group by Account<br><span class="text-muted" style="font-size:10px;">(Hide Duplicates)</span></label></div></div>
-                <div class="col-md-1"><button class="btn btn-dark w-100"><i class="fas fa-filter"></i></button></div>
+                <div class="col-md-1"><button class="btn btn-primary w-100"><i class="fas fa-filter"></i></button></div>
                 <div class="col-md-1 text-end"><a href="export_meter.php?s=<?php echo urlencode($s);?>&f=<?php echo urlencode($f);?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>&nodup=<?php echo $nodup;?>" class="btn btn-success w-100" title="Export CSV"><i class="fas fa-file-download"></i></a></div>
             </form>
             <?php if(isset($_GET['f'])) echo '<div class="mt-2"><a href="meter_jobs" class="text-danger small fw-bold text-decoration-none"><i class="fas fa-times"></i> Clear Filters</a></div>'; ?>

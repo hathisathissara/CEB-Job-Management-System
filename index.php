@@ -278,6 +278,15 @@
                     </div>
                 </a>
 
+                <!-- OPTION 3: METER CHANGE -->
+                <a href="change" class="menu-btn">
+                    <div class="btn-icon text-warning" style="background:#fff3cd;"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="btn-text-group">
+                        <span class="btn-title">Meter Change</span>
+                        <span class="btn-desc">Request for Meter Replacement</span>
+                    </div>
+                </a>
+
                 <!-- Placeholder Link -->
                 <div class="menu-btn" style="opacity: 0.6; cursor: not-allowed; border-style: dashed;">
                     <div class="btn-icon text-muted"><i class="fas fa-plus"></i></div>

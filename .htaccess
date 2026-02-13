@@ -11,6 +11,8 @@ RewriteRule ^job/?$ meter_request.php [L]
 
 RewriteRule ^admin/?$ admin/login [R=301,L]
 
+RewriteRule ^change/?$ meter_change_request.php [L]
+
 ErrorDocument 404 /ceb/404.php
 
 <IfModule mod_deflate.c>

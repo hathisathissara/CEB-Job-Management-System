@@ -179,6 +179,7 @@ if ($theme == 'dark') {
         </h4>
         <a href="dashboard" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_panel.php' ? 'active' : ''; ?>"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
         <a href="meter_jobs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_jobs.php' ? 'active' : ''; ?>"><i class="fas fa-tools me-2"></i> Meter Jobs</a>
+        <a href="meter_change" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_change.php' ? 'active' : ''; ?>"><i class="fas fa-exchange-alt me-2"></i> Meter Change</a>
 
         <div class="mt-4 px-3 mb-2 small text-uppercase fw-bold" style="color:var(--text-muted); opacity:0.6;">System</div>
         
