@@ -50,6 +50,14 @@ if (isset($_POST['update_mc_job'])) {
         addLog($conn, $current_officer, 'UPDATE MC JOB', "Updated Job $ej ($st)"); $msg="Updated Successfully!";
     }
 }
+if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
+    $del_id = intval($_GET['del']);
+    $jn = $conn->query("SELECT job_no FROM meter_change WHERE id=$del_id")->fetch_assoc()['job_no'];
+    if ($conn->query("DELETE FROM meter_change WHERE id=$del_id")) {
+        addLog($conn, $current_officer, 'DELETE MC JOB', "Deleted Change Job: $jn");
+        $msg = "Job Deleted!";
+    }
+}
 
 // --- DASHBOARD COUNTS ---
 function countMC($conn, $where="1=1") { return $conn->query("SELECT COUNT(*) c FROM meter_change WHERE $where")->fetch_assoc()['c']; }
@@ -188,7 +196,14 @@ include 'layout/header.php';
                                 <small class="text-muted">By: <?php echo $row['done_by']; ?></small>
                             <?php else: echo '<span class="text-muted small">Not Installed</span>'; endif; ?>
                         </td>
-                        <td><span class="badge <?php echo $bg; ?> rounded-pill"><?php echo $row['status']; ?></span></td>
+                        <td><span class="badge <?php echo $bg; ?> rounded-pill"><?php echo $row['status']; ?></span>
+                    <!-- DELETE BUTTON -->
+                            <?php if($_SESSION['role'] == 'Super Admin'): ?>
+                                <a href="meter_change.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Delete Job?');" class="text-danger ms-2" style="font-size:0.9rem;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            <?php endif; ?>
+                    </td>
                     </tr>
                     <?php } } else { echo "<tr><td colspan='5' class='text-center py-4'>No Data</td></tr>"; } ?>
                 </tbody>

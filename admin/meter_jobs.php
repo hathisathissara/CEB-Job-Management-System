@@ -30,6 +30,17 @@ if (isset($_POST['update_job'])) {
     }
 }
 
+// --- 3. DELETE JOB (Super Admin Only) ---
+if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
+    $del_id = intval($_GET['del']);
+    // Get Job No for Log
+    $jn = $conn->query("SELECT job_no FROM meter_removal WHERE id=$del_id")->fetch_assoc()['job_no'];
+    
+    if ($conn->query("DELETE FROM meter_removal WHERE id=$del_id")) {
+        addLog($conn, $current_officer, 'DELETE JOB', "Deleted Removal Job: $jn");
+        $msg = "Job Deleted Successfully!";
+    }
+}
 // DASHBOARD COUNTS
 $mj_loc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
 $mj_pend = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
@@ -168,6 +179,14 @@ include 'layout/header.php';
                                     </ul>
                                 </div>
                             <?php else: echo '<span class="text-muted small fst-italic">Waiting for action...</span>'; endif; ?>
+
+                            <?php if($_SESSION['role'] == 'Super Admin'): ?>
+                                <div class="mt-2 text-end">
+                                    <a href="meter_jobs.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete Job <?php echo $row['job_no']; ?>?');" class="btn btn-sm btn-outline-danger py-0 px-2" title="Delete Job">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php } } else { echo "<tr><td colspan='4' class='text-center py-5 text-muted'>No Records Found</td></tr>"; } ?>
