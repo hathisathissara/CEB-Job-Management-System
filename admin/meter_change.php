@@ -67,7 +67,8 @@ $pend_3ph = countMC($conn, "status='Pending' AND phase_type='Three Phase'");
 $comp_all = countMC($conn, "status='Completed'");
 $comp_1ph = countMC($conn, "status='Completed' AND phase_type='Single Phase'");
 $comp_3ph = countMC($conn, "status='Completed' AND phase_type='Three Phase'");
-$new_today = countMC($conn, "DATE(created_at) = CURDATE()");
+$today_date=date('Y-m-d');
+$new_today = countMC($conn, "DATE(created_at) = '$today_date'");
 
 include 'layout/header.php';
 ?>
@@ -154,7 +155,7 @@ include 'layout/header.php';
                 <div class="col-md-1"><button class="btn btn-primary w-100"><i class="fas fa-filter"></i></button></div>
                 <div class="col-md-1 text-end"><a href="export_change.php?s=<?php echo urlencode($s);?>&f=<?php echo $f;?>&p=<?php echo $p;?>&d1=<?php echo $d1;?>&d2=<?php echo $d2;?>" class="btn btn-success w-100" title="Export CSV"><i class="fas fa-file-download"></i></a></div>
             </form>
-            <?php if(isset($_GET['s'])) echo '<div class="mt-2"><a href="meter_change.php" class="text-danger small fw-bold">Clear Filters</a></div>'; ?>
+            <?php if(isset($_GET['s'])) echo '<div class="mt-2"><a href="meter_change" class="text-danger small fw-bold">Clear Filters</a></div>'; ?>
         </div>
     </div>
 
