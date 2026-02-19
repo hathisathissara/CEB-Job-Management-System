@@ -193,11 +193,7 @@ include 'layout/header.php';
             <div class="col-md-1">
                 <button class="btn btn-primary w-100"><i class="fas fa-filter"></i></button>
             </div>
-            <div class="col-md-1 text-end">
-                <a href="export_meter.php?s=<?php echo urlencode($s); ?>&f=<?php echo urlencode($f); ?>&d1=<?php echo $d1; ?>&d2=<?php echo $d2; ?>&nodup=<?php echo $nodup; ?>" class="btn btn-success w-100" title="Export CSV">
-                    <i class="fas fa-file-download"></i>
-                </a>
-            </div>
+            
         </form>
         <?php if (isset($_GET['f'])): ?>
             <div class="mt-2">
