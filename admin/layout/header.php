@@ -53,7 +53,14 @@ if ($theme == 'dark') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- ANIMATE CSS For Notification -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-
+    <link rel="manifest" href="/ceb/manifest.json">
+    <!-- SERVICE WORKER REGISTRATION -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/ceb/sw.js')
+                .then(() => console.log('Service Worker Registered'));
+        }
+    </script>  
     <style>
         :root {
             --bg-body: <?php echo $bg_body; ?>;
