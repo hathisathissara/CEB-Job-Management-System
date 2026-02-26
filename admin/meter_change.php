@@ -67,7 +67,7 @@ if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
     $del_id = intval($_GET['del']);
     $jn_query = $conn->query("SELECT job_no FROM meter_change WHERE id=$del_id");
     $jn = ($jn_query && $jn_query->num_rows > 0) ? $jn_query->fetch_assoc()['job_no'] : 'Unknown';
-    
+
     if ($conn->query("DELETE FROM meter_change WHERE id=$del_id")) {
         addLog($conn, $current_officer, 'DELETE MC JOB', "Deleted Change Job: $jn");
         $msg = "Job Deleted!";
@@ -75,7 +75,8 @@ if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
 }
 
 // --- DASHBOARD COUNTS ---
-function countMC($conn, $where = "1=1") {
+function countMC($conn, $where = "1=1")
+{
     return $conn->query("SELECT COUNT(*) c FROM meter_change WHERE $where")->fetch_assoc()['c'];
 }
 
@@ -211,7 +212,7 @@ include 'layout/header.php';
             <div class="col-md-1">
                 <button class="btn btn-primary w-100"><i class="fas fa-filter"></i></button>
             </div>
-           
+
         </form>
         <?php if (isset($_GET['s'])): ?>
             <div class="mt-2">
@@ -300,7 +301,7 @@ include 'layout/header.php';
             </tbody>
         </table>
     </div>
-    
+
     <!-- PAGINATION -->
     <?php if ($tot_pages > 1): ?>
         <nav class="p-3 border-top bg-white">

@@ -193,7 +193,7 @@ include 'layout/header.php';
             <div class="col-md-1">
                 <button class="btn btn-primary w-100"><i class="fas fa-filter"></i></button>
             </div>
-            
+
         </form>
         <?php if (isset($_GET['f'])): ?>
             <div class="mt-2">
@@ -207,37 +207,40 @@ include 'layout/header.php';
 
 <!-- RESULT COUNTER & QUERY -->
 <?php
-    // BUILD WHERE CLAUSE
-    $clauses = ["1=1"];
-    if(!empty($s)) $clauses[] = "(job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR meter_no LIKE '%$s%')";
-    if(!empty($f)) $clauses[] = "status='$f'";
-    if(!empty($d1) && !empty($d2)) {
-        $col = ($f == 'Removed') ? 'removing_date' : 'created_at';
-        $clauses[] = "$col BETWEEN '$d1' AND '$d2 23:59:59'";
-    }
-    $where_sql = implode(' AND ', $clauses);
+// BUILD WHERE CLAUSE
+$clauses = ["1=1"];
+if (!empty($s)) $clauses[] = "(job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR meter_no LIKE '%$s%')";
+if (!empty($f)) $clauses[] = "status='$f'";
+if (!empty($d1) && !empty($d2)) {
+    $col = ($f == 'Removed') ? 'removing_date' : 'created_at';
+    $clauses[] = "$col BETWEEN '$d1' AND '$d2 23:59:59'";
+}
+$where_sql = implode(' AND ', $clauses);
 
-    // PAGINATION
-    $results_per_page=10; $page=isset($_GET['page'])&&is_numeric($_GET['page'])?(int)$_GET['page']:1; if($page<1)$page=1; $offset=($page-1)*$results_per_page;
+// PAGINATION
+$results_per_page = 10;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $results_per_page;
 
-    // QUERY CONSTRUCTION
-    if($nodup == 1) {
-        // Show Latest Job per Account
-        $sql_base = "SELECT * FROM meter_removal WHERE id IN (SELECT MAX(id) FROM meter_removal WHERE $where_sql GROUP BY acc_no)";
-        $count_sql = "SELECT COUNT(DISTINCT acc_no) as t FROM meter_removal WHERE $where_sql";
-    } else {
-        $sql_base = "SELECT * FROM meter_removal WHERE $where_sql";
-        $count_sql = "SELECT COUNT(*) as t FROM meter_removal WHERE $where_sql";
-    }
+// QUERY CONSTRUCTION
+if ($nodup == 1) {
+    // Show Latest Job per Account
+    $sql_base = "SELECT * FROM meter_removal WHERE id IN (SELECT MAX(id) FROM meter_removal WHERE $where_sql GROUP BY acc_no)";
+    $count_sql = "SELECT COUNT(DISTINCT acc_no) as t FROM meter_removal WHERE $where_sql";
+} else {
+    $sql_base = "SELECT * FROM meter_removal WHERE $where_sql";
+    $count_sql = "SELECT COUNT(*) as t FROM meter_removal WHERE $where_sql";
+}
 
-    // EXECUTE COUNT
-    $tot_res = $conn->query($count_sql)->fetch_assoc()['t'];
-    $tot_pages = ceil($tot_res/$results_per_page);
-    
-    // EXECUTE MAIN QUERY
-    $sql_base .= " ORDER BY id DESC LIMIT $results_per_page OFFSET $offset";
-    $res = $conn->query($sql_base);
-    ?>
+// EXECUTE COUNT
+$tot_res = $conn->query($count_sql)->fetch_assoc()['t'];
+$tot_pages = ceil($tot_res / $results_per_page);
+
+// EXECUTE MAIN QUERY
+$sql_base .= " ORDER BY id DESC LIMIT $results_per_page OFFSET $offset";
+$res = $conn->query($sql_base);
+?>
 
 <div class="d-flex justify-content-between align-items-center mb-3 px-2">
     <div>

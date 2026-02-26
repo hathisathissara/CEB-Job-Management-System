@@ -54,13 +54,14 @@ if ($theme == 'dark') {
     <!-- ANIMATE CSS For Notification -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="manifest" href="/ceb/manifest.json">
+    <link rel="stylesheet" href="../loader.css">
     <!-- SERVICE WORKER REGISTRATION -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/ceb/sw.js')
                 .then(() => console.log('Service Worker Registered'));
         }
-    </script>  
+    </script>
     <style>
         :root {
             --bg-body: <?php echo $bg_body; ?>;
@@ -81,56 +82,147 @@ if ($theme == 'dark') {
         }
 
         /* --- DARK MODE OVERRIDES --- */
-        .card, .modal-content, .list-group-item { 
-            background-color: var(--bg-card) !important; 
-            border-color: var(--border-col) !important; 
-            color: var(--text-main) !important; 
+        .card,
+        .modal-content,
+        .list-group-item {
+            background-color: var(--bg-card) !important;
+            border-color: var(--border-col) !important;
+            color: var(--text-main) !important;
         }
-        .bg-light { background-color: var(--bg-body) !important; }
-        .bg-white { background-color: var(--bg-card) !important; }
-        
+
+        .bg-light {
+            background-color: var(--bg-body) !important;
+        }
+
+        .bg-white {
+            background-color: var(--bg-card) !important;
+        }
+
         /* Force Text Colors */
-        h1, h2, h3, h4, h5, h6, .card-title, .modal-title, label, td, th { color: var(--text-main) !important; }
-        .text-muted { color: var(--text-muted) !important; }
-        .border { border-color: var(--border-col) !important; }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .card-title,
+        .modal-title,
+        label,
+        td,
+        th {
+            color: var(--text-main) !important;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .border {
+            border-color: var(--border-col) !important;
+        }
 
         /* Tables */
-        .table { color: var(--text-main) !important; --bs-table-border-color: var(--border-col); }
-        .table-striped>tbody>tr:nth-of-type(odd)>* { color: var(--text-main); background-color: var(--table-strip); }
-        .table-hover tbody tr:hover>* { color: var(--text-main); background-color: var(--border-col); }
-        
+        .table {
+            color: var(--text-main) !important;
+            --bs-table-border-color: var(--border-col);
+        }
+
+        .table-striped>tbody>tr:nth-of-type(odd)>* {
+            color: var(--text-main);
+            background-color: var(--table-strip);
+        }
+
+        .table-hover tbody tr:hover>* {
+            color: var(--text-main);
+            background-color: var(--border-col);
+        }
+
         /* FIX: Header Row Background */
-        .table-light, .table-light th { 
-            background-color: var(--sidebar-bg) !important; 
-            color: var(--text-main) !important; 
-            border-color: var(--border-col); 
+        .table-light,
+        .table-light th {
+            background-color: var(--sidebar-bg) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-col);
         }
 
         /* Forms */
-        .form-control, .form-select { background-color: var(--input-bg); border-color: var(--border-col); color: var(--text-main); }
-        .form-control:focus, .form-select:focus { background-color: var(--input-bg); color: var(--text-main); border-color: #d11212; box-shadow: none; }
-        ::placeholder { color: var(--text-muted) !important; opacity: 0.7; }
+        .form-control,
+        .form-select {
+            background-color: var(--input-bg);
+            border-color: var(--border-col);
+            color: var(--text-main);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border-color: #d11212;
+            box-shadow: none;
+        }
+
+        ::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.7;
+        }
 
         /* --- FIX COLORED BORDERS --- */
-        .border-primary { border-color: #0d6efd !important; }
-        .border-secondary { border-color: #6c757d !important; }
-        .border-success { border-color: #198754 !important; }
-        .border-danger { border-color: #dc3545 !important; }
-        .border-warning { border-color: #ffc107 !important; }
-        .border-info { border-color: #0dcaf0 !important; }
-        .border-dark { border-color: #212529 !important; }
+        .border-primary {
+            border-color: #0d6efd !important;
+        }
+
+        .border-secondary {
+            border-color: #6c757d !important;
+        }
+
+        .border-success {
+            border-color: #198754 !important;
+        }
+
+        .border-danger {
+            border-color: #dc3545 !important;
+        }
+
+        .border-warning {
+            border-color: #ffc107 !important;
+        }
+
+        .border-info {
+            border-color: #0dcaf0 !important;
+        }
+
+        .border-dark {
+            border-color: #212529 !important;
+        }
 
         /* --- FIX TEXT COLORS IN DARK MODE --- */
-        <?php if($theme == 'dark'): ?>
-            /* This is the key fix: text-dark becomes white in dark mode */
-            .text-dark { color: #e0e0e0 !important; } 
-            
-            .text-danger { color: #ff6b6b !important; }
-            .text-success { color: #51cf66 !important; }
-            .text-primary { color: #4dabf7 !important; }
-            .text-warning { color: #fcc419 !important; }
-        <?php else: ?>
-            .text-dark { color: #212529 !important; }
+        <?php if ($theme == 'dark'): ?>
+
+        /* This is the key fix: text-dark becomes white in dark mode */
+        .text-dark {
+            color: #e0e0e0 !important;
+        }
+
+        .text-danger {
+            color: #ff6b6b !important;
+        }
+
+        .text-success {
+            color: #51cf66 !important;
+        }
+
+        .text-primary {
+            color: #4dabf7 !important;
+        }
+
+        .text-warning {
+            color: #fcc419 !important;
+        }
+
+        <?php else: ?>.text-dark {
+            color: #212529 !important;
+        }
+
         <?php endif; ?>
 
         /* --- SIDEBAR STYLES --- */
@@ -139,7 +231,8 @@ if ($theme == 'dark') {
             position: fixed;
             width: 250px;
             background: var(--sidebar-bg);
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             z-index: 1000;
             transition: 0.3s;
             border-right: 1px solid var(--border-col);
@@ -148,21 +241,74 @@ if ($theme == 'dark') {
             padding-top: 0;
         }
 
-        .sidebar a { padding: 15px 20px; color: #999; text-decoration: none; display: flex; align-items: center; border-left: 4px solid transparent; }
-        .sidebar a:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
-        .sidebar a.active { border-left: 4px solid #d11212; color: #fff; background: rgba(209, 18, 18, 0.15); }
-        .sidebar i { width: 30px; text-align: center; }
+        .sidebar a {
+            padding: 15px 20px;
+            color: #999;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+        }
 
-        .main-content { margin-left: 250px; padding: 30px; transition: 0.3s; }
+        .sidebar a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar a.active {
+            border-left: 4px solid #d11212;
+            color: #fff;
+            background: rgba(209, 18, 18, 0.15);
+        }
+
+        .sidebar i {
+            width: 30px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            transition: 0.3s;
+        }
 
         /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
-            .sidebar { left: -250px; top: 60px; height: calc(100vh - 60px); }
-            .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5); }
-            .main-content { margin-left: 0; padding-top: 80px; }
-            .mobile-head { display: flex !important; position: fixed; top: 0; width: 100%; height: 60px; background: var(--sidebar-bg); z-index: 1001; padding: 0 20px; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-col); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+            .sidebar {
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+            }
+
+            .sidebar.active {
+                left: 0;
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-top: 80px;
+            }
+
+            .mobile-head {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                height: 60px;
+                background: var(--sidebar-bg);
+                z-index: 1001;
+                padding: 0 20px;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border-col);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
         }
-        .mobile-head { display: none; }
+
+        .mobile-head {
+            display: none;
+        }
     </style>
 </head>
 
@@ -190,13 +336,13 @@ if ($theme == 'dark') {
         <a href="reports" class="<?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>"><i class="fas fa-file-alt me-2"></i> Reports Center</a>
 
         <div class="mt-4 px-3 mb-2 small text-uppercase fw-bold" style="color:var(--text-muted); opacity:0.6;">System</div>
-        
+
         <a href="settings" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>"><i class="fas fa-cog me-2"></i> Settings</a>
 
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Super Admin'): ?>
             <a href="logs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>"><i class="fas fa-history me-2"></i> Audit Logs</a>
         <?php endif; ?>
-        
+
         <div class="mt-auto p-3">
             <a href="logout" class="text-danger fw-bold text-decoration-none small text-center d-block py-2 border border-danger rounded hover-red"><i class="fas fa-sign-out-alt me-2"></i> Log Out</a>
         </div>

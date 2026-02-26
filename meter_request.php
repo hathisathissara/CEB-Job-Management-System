@@ -12,7 +12,7 @@
     <!-- CSS Links -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="loader.css">
     <style>
         body {
             background: #f4f6f8;
@@ -50,7 +50,9 @@
 </head>
 
 <body>
-
+    <div id="loader-wrapper">
+        <div class="spinner"></div>
+    </div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container">
@@ -77,7 +79,7 @@
                             $job = trim($_POST['job_no']);
                             $acc = trim($_POST['acc_no']);
                             $met = trim($_POST['meter_no']);
-                            
+
                             // 1. Get Device Time from Hidden Input
                             $dev_time = !empty($_POST['device_time']) ? $_POST['device_time'] : date('Y-m-d H:i:s');
 
@@ -116,7 +118,7 @@
 
                         <!-- JS Function Hook Added to Form -->
                         <form method="POST" onsubmit="setDeviceTime()">
-                            
+
                             <!-- Hidden Input to store JS time -->
                             <input type="hidden" name="device_time" id="d_time">
 
@@ -174,10 +176,22 @@
             const h = String(now.getHours()).padStart(2, '0');
             const i = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
-            
+
             const formattedTime = `${y}-${m}-${d} ${h}:${i}:${s}`;
             document.getElementById('d_time').value = formattedTime;
         }
+
+        window.addEventListener('load', function() {
+            var loader = document.getElementById('loader-wrapper');
+            // Slight delay for smooth feeling
+            setTimeout(function() {
+                loader.style.opacity = '0';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                    document.body.classList.remove('loading');
+                }, 500);
+            }, 300);
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

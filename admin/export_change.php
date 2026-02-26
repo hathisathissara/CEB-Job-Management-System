@@ -5,7 +5,7 @@ include '../db_conn.php';
 
 // Headers
 header('Content-Type: text/csv; charset=utf-8');
-header('Content-Disposition: attachment; filename=Meter_Change_Report_'.date('Y-m-d_Hi').'.csv');
+header('Content-Disposition: attachment; filename=Meter_Change_Report_' . date('Y-m-d_Hi') . '.csv');
 
 $out = fopen('php://output', 'w');
 fputcsv($out, array('ID', 'Job No', 'Account No', 'Phase', 'Old Meter No', 'Old Reading', 'Status', 'Date Added', 'Done By', 'Done Date', 'New Meter No', 'New Reading', 'Note'));
@@ -42,13 +42,13 @@ $res = $conn->query($sql);
 if ($res && $res->num_rows > 0) {
     while ($r = $res->fetch_assoc()) {
         fputcsv($out, array(
-            $r['id'], 
-            $r['job_no'], 
-            $r['acc_no'], 
+            $r['id'],
+            $r['job_no'],
+            $r['acc_no'],
             $r['phase_type'],
             $r['old_meter_no'],
             $r['old_reading'],
-            $r['status'], 
+            $r['status'],
             $r['created_at'],
             $r['done_by'],
             $r['done_date'],
@@ -61,4 +61,3 @@ if ($res && $res->num_rows > 0) {
 
 fclose($out);
 exit();
-?>

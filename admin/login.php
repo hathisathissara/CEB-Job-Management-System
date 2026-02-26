@@ -95,7 +95,7 @@ if (isset($_POST['login'])) {
     <title>CEB Portal Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="../loader.css">
     <style>
         body {
             background-color: #e9ecef;
@@ -121,7 +121,9 @@ if (isset($_POST['login'])) {
 </head>
 
 <body>
-
+    <div id="loader-wrapper">
+        <div class="spinner"></div>
+    </div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-5 col-lg-4">
@@ -164,5 +166,18 @@ if (isset($_POST['login'])) {
     </div>
 
 </body>
+<script>
+    window.addEventListener('load', function() {
+        var loader = document.getElementById('loader-wrapper');
+        // Slight delay for smooth feeling
+        setTimeout(function() {
+            loader.style.opacity = '0';
+            setTimeout(function() {
+                loader.style.display = 'none';
+                document.body.classList.remove('loading');
+            }, 500);
+        }, 300);
+    });
+</script>
 
 </html>

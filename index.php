@@ -20,32 +20,8 @@
                 .then(() => console.log('Service Worker Registered'));
         }
     </script>
-
+    <link rel="stylesheet" href="loader.css">
     <style>
-        /* LOADER STYLES */
-        #loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #fff;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease-out;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #d11212;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
