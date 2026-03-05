@@ -34,21 +34,28 @@ if (isset($_POST['add_job'])) {
     }
 }
 
-// --- 2. UPDATE JOB ---
+// 2. UPDATE JOB
 if (isset($_POST['update_job'])) {
-    $id = intval($_POST['job_id']);
-    $nj = $_POST['e_job'];
-    $na = $_POST['e_acc'];
-    $nm = $_POST['e_met'];
-    $st = $_POST['status_opt'];
-    $rd = $_POST['reading'];
-    $nt = $_POST['officer_note'];
-    $dn = $_POST['done_by'];
-    $rm_d = !empty($_POST['rem_date']) ? "'" . $_POST['rem_date'] . "'" : "NULL";
+    $id = intval($_POST['job_id']); 
+    
+    // Escape Strings (වැදගත්ම කොටස)
+    $nj = $conn->real_escape_string($_POST['e_job']);
+    $na = $conn->real_escape_string($_POST['e_acc']);
+    $nm = $conn->real_escape_string($_POST['e_met']);
+    $st = $conn->real_escape_string($_POST['status_opt']);
+    $rd = $conn->real_escape_string($_POST['reading']);
+    $nt = $conn->real_escape_string($_POST['officer_note']); // දැන් සිංහල හෝ ' ලකුණු දැම්මත් අවුලක් නෑ
+    $dn = $conn->real_escape_string($_POST['done_by']);
+    
+    $rm_d = !empty($_POST['rem_date']) ? "'".$conn->real_escape_string($_POST['rem_date'])."'" : "NULL";
 
-    if ($conn->query("UPDATE meter_removal SET job_no='$nj', acc_no='$na', meter_no='$nm', meter_reading='$rd', removing_date=$rm_d, done_by='$dn', officer_note='$nt', status='$st' WHERE id=$id")) {
-        addLog($conn, $current_officer, 'UPDATE JOB', "Updated $nj ($st)");
-        $msg = "Updated Successfully!";
+    $sql = "UPDATE meter_removal SET job_no='$nj', acc_no='$na', meter_no='$nm', meter_reading='$rd', removing_date=$rm_d, done_by='$dn', officer_note='$nt', status='$st' WHERE id=$id";
+
+    if($conn->query($sql)){
+        addLog($conn, $current_officer, 'UPDATE JOB', "Updated $nj ($st)"); 
+        $msg="Updated Successfully!";
+    } else {
+        $err = "Update Failed: " . $conn->error; // Error එකක් ආවොත් බලාගන්න
     }
 }
 
