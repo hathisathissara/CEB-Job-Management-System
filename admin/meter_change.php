@@ -239,7 +239,11 @@ include 'layout/header.php';
                 <?php
                 // --- FILTER QUERY ---
                 $w = "WHERE 1=1";
-                if (!empty($s)) $w .= " AND (job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR old_meter_no LIKE '%$s%' OR new_meter_no LIKE '%$s%')";
+                if(!empty($_GET['s'])) {
+                        // FIX: Escape String to prevent SQL Error with '
+                        $s = $conn->real_escape_string($_GET['s']); 
+                        $w .= " AND (job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR old_meter_no LIKE '%$s%' OR new_meter_no LIKE '%$s%')";
+                    }
                 if (!empty($f)) $w .= " AND status='$f'";
                 if (!empty($p)) $w .= " AND phase_type='$p'";
                 if (!empty($d1) && !empty($d2)) $w .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
