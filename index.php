@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEB Office Portal</title>
+    <title>EDL Office Portal</title>
     <link rel="icon" href="https://img.icons8.com/color/48/d11212/flash-on.png" type="image/png">
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -229,13 +229,13 @@
             <!-- LEFT: Branding -->
             <div class="col-md-5 brand-side">
                 <div class="ceb-logo"><i class="fas fa-bolt"></i></div>
-                <h2 class="system-title">CEB OFFICE<br>PORTAL</h2>
+                <h2 class="system-title">EDL OFFICE<br>PORTAL</h2>
                 <p class="system-desc">
                     Job Management System.<br>
                     <span class="badge bg-danger mt-2">Internal Use Only</span>
                 </p>
                 <div class="footer-credits">
-                    <p class="mb-1">&copy; <?php echo date('Y'); ?> Ceylon Electricity Board</p>
+                    <p class="mb-1">&copy; <?php echo date('Y'); ?> Electricity Distribution Lanka pvt ltd</p>
                     <small>Version 3.0</small><br>
                     Developed by <a href="https://hathisathissara.unaux.com/" target="_blank">Hathisa Thissara</a>
                 </div>
