@@ -223,88 +223,112 @@ include 'layout/header.php';
 </div>
 
 <!-- TABLE -->
-<div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th>Job Info (Click)</th>
-                    <th>Account / Phase</th>
-                    <th>Old Meter</th>
-                    <th>New Details</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // --- FILTER QUERY ---
-                $w = "WHERE 1=1";
-                if(!empty($_GET['s'])) {
+<!-- DATA TABLE -->
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark text-uppercase small" style="letter-spacing: 0.5px;">
+                    <tr>
+                        <th style="width: 20%;">Job Info</th>
+                        <th style="width: 25%;">Account / Phase</th>
+                        <th style="width: 20%;">Old Meter</th>
+                        <th style="width: 25%;">New Installation Details</th>
+                        <th style="width: 10%; text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // --- FILTER QUERY ---
+                    $w = "WHERE 1=1";
+                    if(!empty($_GET['s'])) {
                         // FIX: Escape String to prevent SQL Error with '
                         $s = $conn->real_escape_string($_GET['s']); 
                         $w .= " AND (job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR old_meter_no LIKE '%$s%' OR new_meter_no LIKE '%$s%')";
                     }
-                if (!empty($f)) $w .= " AND status='$f'";
-                if (!empty($p)) $w .= " AND phase_type='$p'";
-                if (!empty($d1) && !empty($d2)) $w .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
+                    if (!empty($f)) $w .= " AND status='$f'";
+                    if (!empty($p)) $w .= " AND phase_type='$p'";
+                    if (!empty($d1) && !empty($d2)) $w .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
 
-                // Pagination
-                $results_per_page = 10;
-                $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                if ($page < 1) $page = 1;
-                $offset = ($page - 1) * $results_per_page;
+                    // Pagination
+                    $results_per_page = 10;
+                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                    if ($page < 1) $page = 1;
+                    $offset = ($page - 1) * $results_per_page;
 
-                $tot_res_query = $conn->query("SELECT COUNT(*) as t FROM meter_change $w");
-                $tot_res = $tot_res_query ? $tot_res_query->fetch_assoc()['t'] : 0;
-                $tot_pages = ceil($tot_res / $results_per_page);
+                    $tot_res_query = $conn->query("SELECT COUNT(*) as t FROM meter_change $w");
+                    $tot_res = $tot_res_query ? $tot_res_query->fetch_assoc()['t'] : 0;
+                    $tot_pages = ceil($tot_res / $results_per_page);
 
-                $res = $conn->query("SELECT * FROM meter_change $w ORDER BY id DESC LIMIT $results_per_page OFFSET $offset");
+                    $res = $conn->query("SELECT * FROM meter_change $w ORDER BY id DESC LIMIT $results_per_page OFFSET $offset");
 
-                if ($res && $res->num_rows > 0) {
-                    while ($row = $res->fetch_assoc()) {
-                        $bg = ($row['status'] == 'Pending') ? 'bg-warning text-dark' : 'bg-success';
-                ?>
-                        <tr>
-                            <td>
-                                <a href="#" onclick='edit(<?php echo htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>)' class="fw-bold text-decoration-none fs-5 comp-ref"><?php echo $row['job_no']; ?></a><br>
-                                <small class="text-muted"><?php echo date('Y-m-d', strtotime($row['created_at'])); ?></small>
-                            </td>
-                            <td>
-                                <b><?php echo $row['acc_no']; ?></b><br>
-                                <span class="badge bg-secondary"><?php echo $row['phase_type']; ?></span>
-                            </td>
-                            <td>
-                                Serial: <b><?php echo $row['old_meter_no']; ?></b><br>
-                                <small>Final: <?php echo $row['old_reading'] ?: '-'; ?></small>
-                            </td>
-                            <td>
-                                <?php if ($row['status'] == 'Completed'): ?>
-                                    <small class="text-primary fw-bold">New: <?php echo $row['new_meter_no']; ?></small><br>
-                                    <small>Init: <?php echo $row['new_reading']; ?></small><br>
-                                    <small class="text-muted">By: <?php echo $row['done_by']; ?></small>
-                                <?php else: ?>
-                                    <span class="text-muted small">Not Installed</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <span class="badge <?php echo $bg; ?> rounded-pill"><?php echo $row['status']; ?></span>
-                                <!-- DELETE BUTTON -->
-                                <?php if ($_SESSION['role'] == 'Super Admin'): ?>
-                                    <a href="meter_change.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Delete Job?');" class="text-danger ms-2" style="font-size:0.9rem;">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                <?php
+                    if ($res && $res->num_rows > 0) {
+                        while ($row = $res->fetch_assoc()) {
+                            // Consistent Badge Colors
+                            $bg = ($row['status'] == 'Pending') ? 'bg-warning text-dark' : 'bg-success';
+                    ?>
+                            <tr>
+                                <!-- COLUMN 1: Job Info -->
+                                <td>
+                                    <a href="#" onclick='edit(<?php echo htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>)' class="fw-bold text-decoration-none fs-5 comp-ref">
+                                        <?php echo $row['job_no']; ?>
+                                    </a><br>
+                                    <small class="text-secondary"><i class="far fa-clock me-1"></i> <?php echo date('Y-m-d h:i A', strtotime($row['created_at'])); ?></small>
+                                </td>
+                                
+                                <!-- COLUMN 2: Account Info -->
+                                <td>
+                                    <b class="text-dark fs-6"><?php echo $row['acc_no']; ?></b><br>
+                                    <span class="badge bg-secondary opacity-75 mt-1"><?php echo $row['phase_type']; ?></span>
+                                </td>
+                                
+                                <!-- COLUMN 3: Old Meter -->
+                                <td>
+                                    <div class="text-secondary small">
+                                        <span class="d-block mb-1">Serial: <b class="text-dark"><?php echo $row['old_meter_no']; ?></b></span>
+                                        <span class="d-block">Final Read: <b class="text-dark"><?php echo $row['old_reading'] ?: '-'; ?></b></span>
+                                    </div>
+                                </td>
+                                
+                                <!-- COLUMN 4: New Details -->
+                                <td>
+                                    <?php if ($row['status'] == 'Completed'): ?>
+                                        <div class="bg-light p-2 rounded border border-light shadow-sm">
+                                            <ul class="list-unstyled small mb-0 text-secondary">
+                                                <li class='mb-1'><i class='fas fa-tachometer-alt me-2 text-dark opacity-75'></i>New Meter: <b class="text-primary"><?php echo $row['new_meter_no']; ?></b></li>
+                                                <li class='mb-1'><i class='fas fa-file-invoice me-2 text-dark opacity-75'></i>Init Read: <b class="text-dark"><?php echo $row['new_reading']; ?></b></li>
+                                                <li class='mt-1 pt-1 border-top border-secondary'><i class='fas fa-user-check me-2 text-dark opacity-75'></i>Done by: <span class="text-dark"><?php echo $row['done_by'] ?: '-'; ?></span></li>
+                                            </ul>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-secondary small fst-italic">Waiting for installation...</span>
+                                    <?php endif; ?>
+                                </td>
+                                
+                                <!-- COLUMN 5: Status & Action -->
+                                <td class="text-center align-middle">
+                                    <span class="badge <?php echo $bg; ?> rounded-pill px-3 py-2 shadow-sm d-inline-block mb-2 w-100">
+                                        <?php echo $row['status']; ?>
+                                    </span>
+                                    
+                                    <!-- DELETE BUTTON (ADMIN ONLY) -->
+                                    <?php if ($_SESSION['role'] == 'Super Admin'): ?>
+                                        <div class="mt-1">
+                                            <a href="meter_change.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this Job?');" class="text-danger small text-decoration-none hover-underline">
+                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                    <?php
+                        }
+                    } else {
+                        echo "<tr><td colspan='5' class='text-center py-5 text-secondary'>No Records Found</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='5' class='text-center py-4'>No Data</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
+                    ?>
+                </tbody>
+            </table>
+        </div>
 
     <!-- PAGINATION -->
     <?php if ($tot_pages > 1): ?>

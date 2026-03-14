@@ -190,30 +190,67 @@ include 'layout/header.php';
                     </div>
                 </div>
 
-                <!-- Existing Users Table -->
+               <!-- Existing Users Table -->
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-2"><small class="fw-bold text-muted">EXISTING ACCOUNTS</small></div>
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                        <small class="fw-bold text-muted text-uppercase"><i class="fas fa-users text-primary me-2"></i> Existing Accounts</small>
+                        <span class="badge bg-light text-dark border shadow-sm">
+                            <?php echo $conn->query("SELECT COUNT(*) c FROM users")->fetch_assoc()['c']; ?> Users
+                        </span>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 text-center small">
-                            <thead class="table-light">
+                        <table class="table table-hover align-middle mb-0 text-center">
+                            <thead class="table-dark text-uppercase small" style="letter-spacing: 0.5px;">
                                 <tr>
-                                    <th>Name</th>
-                                    <th>User</th>
-                                    <th>Role</th>
-                                    <th>Action</th>
+                                    <th class="text-start ps-4" style="width: 40%;">Officer Name</th>
+                                    <th style="width: 25%;">Username</th>
+                                    <th style="width: 20%;">Access Level</th>
+                                    <th style="width: 15%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $res = $conn->query("SELECT * FROM users ORDER BY role DESC");
+                                <?php 
+                                $res = $conn->query("SELECT * FROM users ORDER BY role ASC, full_name ASC");
                                 while ($rw = $res->fetch_assoc()) {
+                                    // Badge Colors
                                     $role_bg = ($rw['role'] == 'Super Admin') ? 'bg-danger' : 'bg-secondary';
-                                    $btn_del = ($rw['id'] == $current_user_id) ? '<span class="text-muted">-</span>' : "<a href='settings.php?del={$rw['id']}&t=3' onclick=\"return confirm('Delete user?');\" class='text-danger'><i class='fas fa-trash'></i></a>";
+                                    
+                                    // Delete Button Logic
+                                    if ($rw['id'] == $current_user_id) {
+                                        $btn_del = '<span class="badge bg-light text-muted border px-2 py-1"><i class="fas fa-user-check me-1"></i> Current</span>';
+                                    } else {
+                                        $btn_del = "<a href='settings.php?del={$rw['id']}&t=3' onclick=\"return confirm('Are you sure you want to completely remove this user?');\" class='btn btn-sm btn-outline-danger py-0 px-2' title='Delete User'>
+                                                        <i class='fas fa-trash-alt'></i>
+                                                    </a>";
+                                    }
                                 ?>
                                     <tr>
-                                        <td class="fw-bold text-start ps-4"><?php echo $rw['full_name']; ?></td>
-                                        <td><?php echo $rw['username']; ?></td>
-                                        <td><span class="badge <?php echo $role_bg; ?>"><?php echo $rw['role']; ?></span></td>
-                                        <td><?php echo $btn_del; ?></td>
+                                        <!-- Column 1: Name -->
+                                        <td class="text-start ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center border shadow-sm me-3" style="width: 35px; height: 35px;">
+                                                    <i class="fas fa-user text-secondary"></i>
+                                                </div>
+                                                <span class="fw-bold text-dark fs-6"><?php echo $rw['full_name']; ?></span>
+                                            </div>
+                                        </td>
+                                        
+                                        <!-- Column 2: Username -->
+                                        <td>
+                                            <span class="text-secondary fw-bold">@<?php echo $rw['username']; ?></span>
+                                        </td>
+                                        
+                                        <!-- Column 3: Role -->
+                                        <td>
+                                            <span class="badge <?php echo $role_bg; ?> rounded-pill px-3 py-1 shadow-sm">
+                                                <?php echo $rw['role']; ?>
+                                            </span>
+                                        </td>
+                                        
+                                        <!-- Column 4: Action -->
+                                        <td>
+                                            <?php echo $btn_del; ?>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

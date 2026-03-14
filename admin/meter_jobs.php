@@ -130,62 +130,114 @@ include 'layout/header.php';
         </div>
     </div>
 
-    <!-- TABLE -->
+   <!-- DATA TABLE -->
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-dark text-uppercase small"><tr><th>Job Info</th><th>Account Info</th><th>Status</th><th>Note</th></tr></thead>
+                <thead class="table-dark text-uppercase small" style="letter-spacing: 0.5px;">
+                    <tr>
+                        <th style="width: 25%;">Job Info</th> <!-- Job No and Date -->
+                        <th style="width: 30%;">Account Info & History</th> <!-- Acc No and Tooltip/Alert -->
+                        <th style="width: 30%;">Notes & Results</th> <!-- Officer Remarks -->
+                        <th style="width: 15%; text-align: center;">Status</th> <!-- Status Badge -->
+                    </tr>
+                </thead>
                 <tbody>
                     <?php
-                    if($res->num_rows>0){
-                        while($row=$res->fetch_assoc()){
-                            $bg='bg-secondary';
-                            if($row['status']=='Pending')$bg='bg-warning text-dark';
-                            if($row['status']=='Removed')$bg='bg-danger';
-                            if($row['status']=='Returned - Paid')$bg='bg-success';
+                    // --- QUERY EXECUTION IS ABOVE IN YOUR SCRIPT ---
+                    if($res->num_rows > 0) {
+                        while($row = $res->fetch_assoc()) {
                             
-                            $ac=$row['acc_no']; 
-                            $qj=$conn->query("SELECT job_no FROM meter_removal WHERE acc_no='$ac' AND id!={$row['id']}");
-                            $oc=$qj->num_rows; $jl=[]; while($jx=$qj->fetch_assoc()){$jl[]=$jx['job_no'];} $tt="Other Jobs: ".implode(", ",$jl);
+                            // Badge Colors (Consistent)
+                            $bg = 'bg-secondary';
+                            if($row['status'] == 'Pending') $bg = 'bg-warning text-dark';
+                            if($row['status'] == 'Removed') $bg = 'bg-danger';
+                            if($row['status'] == 'Returned - Paid') $bg = 'bg-success';
+                            
+                            // Tooltip Logic
+                            $ac = $row['acc_no']; 
+                            $qj = $conn->query("SELECT job_no FROM meter_removal WHERE acc_no='$ac' AND id != {$row['id']}");
+                            $oc = $qj->num_rows; 
+                            $jl = []; 
+                            while($jx = $qj->fetch_assoc()){ $jl[] = $jx['job_no']; } 
+                            $tt = "Other Jobs: " . implode(", ", $jl);
 
-                            // HISTORY ALERT
+                            // History Alert Logic
                             $hist_alert = "";
                             if($row['status'] == 'Pending') {
                                 $qh = $conn->query("SELECT job_no, removing_date FROM meter_removal WHERE acc_no='$ac' AND status='Removed' AND id < {$row['id']} ORDER BY id DESC LIMIT 1");
                                 if($qh->num_rows > 0) {
                                     $hdata = $qh->fetch_assoc();
-                                    $hist_alert = "<div class='mt-1 p-1 rounded border border-danger text-danger bg-white shadow-sm' style='font-size:10px;'><i class='fas fa-exclamation-triangle'></i> Prev: <b>{$hdata['job_no']}</b> ({$hdata['removing_date']})</div>";
+                                    $hist_alert = "<div class='mt-2 p-1 rounded border border-danger shadow-sm' style='font-size:11px; background-color:var(--bg-card); color:var(--text-danger);'><i class='fas fa-exclamation-triangle'></i> Prev: <b>{$hdata['job_no']}</b> ({$hdata['removing_date']})</div>";
                                 }
                             }
                     ?>
                     <tr>
+                        <!-- COLUMN 1: Job Info -->
                         <td>
-                            <a href="#" onclick="edit(<?php echo htmlspecialchars(json_encode($row)); ?>)" class="fw-bold text-decoration-none fs-5 comp-ref"><?php echo $row['job_no']; ?></a><br>
-                            <small class="text-muted"><i class="far fa-clock me-1"></i> <?php echo date('Y-m-d H:i',strtotime($row['created_at'])); ?></small>
+                            <a href="#" onclick="edit(<?php echo htmlspecialchars(json_encode($row)); ?>)" class="fw-bold text-decoration-none fs-5 comp-ref">
+                                <?php echo $row['job_no']; ?>
+                            </a><br>
+                            <!-- Date made soft secondary -->
+                            <small class="text-secondary"><i class="far fa-clock me-1"></i> <?php echo date('Y-m-d h:i A', strtotime($row['created_at'])); ?></small>
                         </td>
+
+                        <!-- COLUMN 2: Account Info -->
                         <td class="align-top pt-3">
                             <b class="text-dark fs-6"><?php echo $row['acc_no']; ?></b>
-                            <?php if($oc>0) echo "<span class='badge bg-dark ms-2' data-bs-toggle='tooltip' title='$tt'>+{$oc} Jobs</span>"; ?>
-                            <br><small class="text-secondary">Meter: <?php echo $row['meter_no']?:'-'; ?></small>
+                            <?php if($oc > 0) echo "<span class='badge bg-secondary ms-2' data-bs-toggle='tooltip' title='$tt'>+{$oc} Jobs</span>"; ?>
+                            <br>
+                            <!-- Meter made soft secondary -->
+                            <small class="text-secondary">Meter: <?php echo $row['meter_no'] ? $row['meter_no'] : '-'; ?></small>
                             <?php echo $hist_alert; ?>
                         </td>
-                        <td><span class="badge <?php echo $bg; ?> rounded-pill px-3 shadow-sm"><?php echo $row['status']; ?></span></td>
+
+                        <!-- COLUMN 3: Notes & Results -->
                         <td>
-                            <?php if($row['status']!='Pending'): ?>
-                                <ul class="list-unstyled small mb-0 text-muted">
-                                    <?php if($row['status']=='Removed') echo "<li>Read: <b class='text-dark'>{$row['meter_reading']}</b></li><li>Date: {$row['removing_date']}</li>"; ?>
-                                    <?php if($row['done_by']) echo "<li>Done: {$row['done_by']}</li>"; ?>
-                                    <?php if($row['officer_note']) echo "<li class='text-danger mt-1 fst-italic'>\"{$row['officer_note']}\"</li>"; ?>
-                                </ul>
+                            <?php if($row['status'] != 'Pending'): ?>
+                                <div class="bg-light p-2 rounded border border-light shadow-sm">
+                                    <ul class="list-unstyled small mb-0 text-secondary">
+                                        <?php if($row['status'] == 'Removed') {
+                                            echo "<li class='mb-1'><i class='fas fa-tachometer-alt me-2 text-dark opacity-75'></i>Reading: <b class='text-dark'>{$row['meter_reading']}</b></li>";
+                                            echo "<li class='mb-1'><i class='far fa-calendar-check me-2 text-dark opacity-75'></i>Date: <b class='text-dark'>{$row['removing_date']}</b></li>";
+                                        } ?>
+                                        
+                                        <?php if($row['done_by']) {
+                                            echo "<li class='mb-1'><i class='fas fa-user-check me-2 text-dark opacity-75'></i>Done: <span class='text-dark'>{$row['done_by']}</span></li>";
+                                        } ?>
+                                        
+                                        <?php if($row['officer_note']) {
+                                            echo "<li class='text-danger mt-1 fst-italic border-top pt-1 border-secondary'>\"{$row['officer_note']}\"</li>";
+                                        } ?>
+                                    </ul>
+                                </div>
                             <?php else: ?>
-                                <span class="text-muted small fst-italic">Waiting...</span>
-                                <?php if($_SESSION['role']=='Super Admin'): ?>
-                                    <div class="mt-1"><a href="meter_jobs.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Delete?');" class="text-danger small"><i class="fas fa-trash"></i></a></div>
-                                <?php endif; ?>
+                                <span class="text-secondary small fst-italic">Waiting for update...</span>
+                            <?php endif; ?>
+                        </td>
+
+                        <!-- COLUMN 4: Status & Actions -->
+                        <td class="text-center align-middle">
+                            <span class="badge <?php echo $bg; ?> rounded-pill px-3 py-2 shadow-sm d-inline-block mb-2 w-75">
+                                <?php echo $row['status']; ?>
+                            </span>
+                            
+                            <!-- Delete Button (Only for Super Admin) -->
+                            <?php if($_SESSION['role'] == 'Super Admin'): ?>
+                                <div>
+                                    <a href="meter_jobs.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this job?');" class="text-danger small text-decoration-none hover-underline">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </a>
+                                </div>
                             <?php endif; ?>
                         </td>
                     </tr>
-                    <?php } } else { echo "<tr><td colspan='4' class='text-center py-5 text-muted'>No Records Found</td></tr>"; } ?>
+                    <?php 
+                        } 
+                    } else { 
+                        echo "<tr><td colspan='4' class='text-center py-5 text-secondary'>No Records Found</td></tr>"; 
+                    } 
+                    ?>
                 </tbody>
             </table>
         </div>
