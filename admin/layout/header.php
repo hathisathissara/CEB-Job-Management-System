@@ -433,6 +433,11 @@ if ($theme == 'dark') {
                 <i class="fas fa-history nav-icon"></i> Audit Logs
             </a>
             <?php endif; ?>
+
+            <div class="sidebar-section">Support</div>
+            <a href="report_error" class="<?php echo basename($_SERVER['PHP_SELF']) == 'report_error.php' ? 'active' : ''; ?>">
+                <i class="fas fa-bug nav-icon"></i> Report Error
+            </a>
         </div>
 
         <!-- User / Logout -->
