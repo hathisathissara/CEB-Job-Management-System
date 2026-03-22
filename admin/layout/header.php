@@ -414,7 +414,7 @@ if ($theme == 'dark') {
                 <i class="fas fa-chart-line nav-icon"></i> Dashboard
             </a>
             <a href="meter_jobs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_jobs.php' ? 'active' : ''; ?>">
-                <i class="fas fa-tools nav-icon"></i> Meter Jobs
+                <i class="fas fa-tools nav-icon"></i> Meter Remove
             </a>
             <a href="meter_change" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_change.php' ? 'active' : ''; ?>">
                 <i class="fas fa-exchange-alt nav-icon"></i> Meter Change
