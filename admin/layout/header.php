@@ -68,7 +68,7 @@ if ($theme == 'dark') {
     <link rel="icon" href="https://img.icons8.com/color/48/d11212/flash-on.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="manifest" href="/ceb/manifest.json">
-    <link rel="stylesheet" href="../loader.css">
+    <link rel="stylesheet" href="../assets/css/loader.css">
     <!-- SERVICE WORKER REGISTRATION -->
     <script>
         if ('serviceWorker' in navigator) {
