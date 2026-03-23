@@ -581,7 +581,7 @@
     <a href="#about"  onclick="closeMobileMenu()"><i class="fas fa-building"></i> About EDL</a>
     <a href="#tools"  onclick="closeMobileMenu()"><i class="fas fa-th-large"></i> Tools</a>
     <a href="admin/login"><i class="fas fa-user-shield"></i> Officer Login</a>
-    <a href="job"><i class="fas fa-pen-nib"></i> New Job Record</a>
+    <a href="job"><i class="fas fa-pen-nib"></i> Meter Removal</a>
     <a href="change"><i class="fas fa-exchange-alt"></i> Meter Change</a>
 </div>
 
@@ -754,7 +754,7 @@
                 <a href="job" class="tool-big-card d-block">
                     <span class="tbc-badge badge-active">Active</span>
                     <div class="tbc-icon gold"><i class="fas fa-pen-nib"></i></div>
-                    <div class="tbc-title">New Job Record</div>
+                    <div class="tbc-title">Meter Removal</div>
                     <div class="tbc-desc">Submit and track meter removal and disconnection requests. Manage job status and field worker assignments.</div>
                     <div class="tbc-arrow">Enter Record <i class="fas fa-arrow-right tbc-arrow-ico"></i></div>
                 </a>
