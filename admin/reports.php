@@ -1,11 +1,10 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: login.php");
-    exit();
-}
-include '../db_conn.php';
-$current_officer = $_SESSION['full_name'];
+// ============================================
+// 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
+// ============================================
+require_once 'middleware/authGuard.php';
+
+
 include 'layout/header.php';
 ?>
 
