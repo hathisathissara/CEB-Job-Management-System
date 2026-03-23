@@ -10,69 +10,11 @@ include 'functions.php';
 
 $current_officer = $_SESSION['full_name'];
 date_default_timezone_set('Asia/Colombo');
-$msg = "";
-$err = "";
 
-// --- 1. ADD NEW JOB ---
-if (isset($_POST['add_mc_job'])) {
-    $j = $conn->real_escape_string($_POST['job_no']);
-    $a = $conn->real_escape_string($_POST['acc_no']);
-    $om = $conn->real_escape_string($_POST['old_met']);
-    $ph = $_POST['phase'];
-
-    // Check Duplicate
-    if ($conn->query("SELECT id FROM meter_change WHERE job_no='$j'")->num_rows > 0) {
-        $err = "Job Number '$j' already exists!";
-    } else {
-        $now = date('Y-m-d H:i:s');
-        if ($conn->query("INSERT INTO meter_change (job_no, acc_no, old_meter_no, phase_type, created_at) VALUES ('$j','$a','$om','$ph','$now')")) {
-            addLog($conn, $current_officer, 'ADD MC JOB', "Created Change Job: $j");
-            $msg = "Job Added!";
-        } else {
-            $err = "Error: " . $conn->error;
-        }
-    }
-}
-
-// --- 2. UPDATE JOB (COMPLETE) ---
-if (isset($_POST['update_mc_job'])) {
-    $id = intval($_POST['job_id']);
-
-    $ej = $conn->real_escape_string($_POST['e_job']);
-    $ea = $conn->real_escape_string($_POST['e_acc']);
-    $eom = $conn->real_escape_string($_POST['e_omet']);
-    $eph = $_POST['e_phase'];
-    $st = $_POST['status'];
-    $or = $conn->real_escape_string($_POST['old_read']);
-    $nm = $conn->real_escape_string($_POST['new_met']);
-    $nr = $conn->real_escape_string($_POST['new_read']);
-    $db = $conn->real_escape_string($_POST['done_by']);
-    $dd = !empty($_POST['done_date']) ? "'" . $_POST['done_date'] . "'" : "NULL";
-    $nt = $conn->real_escape_string($_POST['note']);
-
-    $sql = "UPDATE meter_change SET 
-            job_no='$ej', acc_no='$ea', old_meter_no='$eom', phase_type='$eph',
-            old_reading='$or', new_meter_no='$nm', new_reading='$nr',
-            done_by='$db', done_date=$dd, officer_note='$nt', status='$st' 
-            WHERE id=$id";
-
-    if ($conn->query($sql)) {
-        addLog($conn, $current_officer, 'UPDATE MC JOB', "Updated Job $ej ($st)");
-        $msg = "Updated Successfully!";
-    }
-}
-
-// --- 3. DELETE JOB ---
-if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
-    $del_id = intval($_GET['del']);
-    $jn_query = $conn->query("SELECT job_no FROM meter_change WHERE id=$del_id");
-    $jn = ($jn_query && $jn_query->num_rows > 0) ? $jn_query->fetch_assoc()['job_no'] : 'Unknown';
-
-    if ($conn->query("DELETE FROM meter_change WHERE id=$del_id")) {
-        addLog($conn, $current_officer, 'DELETE MC JOB', "Deleted Change Job: $jn");
-        $msg = "Job Deleted!";
-    }
-}
+// ==================================================
+// INCLUDE CONTROLLER LOGIC (ADD, UPDATE, DELETE)
+// ==================================================
+include 'controllers/MeterChangeController.php';
 
 // --- DASHBOARD COUNTS ---
 function countMC($conn, $where = "1=1")

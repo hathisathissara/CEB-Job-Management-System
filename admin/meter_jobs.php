@@ -1,44 +1,17 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) { header("Location: login.php"); exit(); }
-include '../db_conn.php'; include 'functions.php';
+include '../db_conn.php'; 
+include 'functions.php';
+
 $current_officer = $_SESSION['full_name'];
 date_default_timezone_set('Asia/Colombo');
-$msg = ""; $err = "";
 
-// 1. ADD NEW
-if (isset($_POST['add_job'])) {
-    $j=trim($_POST['job_no']); $a=trim($_POST['acc_no']); $m=trim($_POST['meter_no']); $now=date('Y-m-d H:i:s');
-    if($conn->query("SELECT id FROM meter_removal WHERE job_no='$j'")->num_rows>0){ $err="Job Number '$j' already exists!"; }
-    else {
-        $dev_time = !empty($_POST['device_time']) ? $_POST['device_time'] : $now;
-        if($conn->query("INSERT INTO meter_removal (job_no,acc_no,meter_no,created_at) VALUES ('$j','$a','$m','$dev_time')")){
-            addLog($conn, $current_officer, 'ADD JOB', "Created: $j"); $msg="Job Registered!";
-        } else { $err=$conn->error; }
-    }
-}
 
-// 2. UPDATE JOB
-if (isset($_POST['update_job'])) {
-    $id=intval($_POST['job_id']); 
-    $nj=$_POST['e_job']; $na=$_POST['e_acc']; $nm=$_POST['e_met'];
-    $st=$_POST['status_opt']; $rd=$_POST['reading']; $nt=$_POST['officer_note']; $dn=$_POST['done_by'];
-    $rm_d = !empty($_POST['rem_date']) ? "'".$_POST['rem_date']."'" : "NULL";
-
-    if($conn->query("UPDATE meter_removal SET job_no='$nj', acc_no='$na', meter_no='$nm', meter_reading='$rd', removing_date=$rm_d, done_by='$dn', officer_note='$nt', status='$st' WHERE id=$id")){
-        addLog($conn, $current_officer, 'UPDATE JOB', "Updated $nj ($st)"); $msg="Updated Successfully!";
-    }
-}
-
-// 3. DELETE JOB
-if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
-    $del_id = intval($_GET['del']);
-    $jn = $conn->query("SELECT job_no FROM meter_removal WHERE id=$del_id")->fetch_assoc()['job_no'] ?? 'Unknown';
-    if ($conn->query("DELETE FROM meter_removal WHERE id=$del_id")) {
-        addLog($conn, $current_officer, 'DELETE JOB', "Deleted Removal Job: $jn");
-        $msg = "Job Deleted!";
-    }
-}
+// ============================================
+// INCLUDE CONTROLLER (Add, Update, Delete Logic)
+// ============================================
+include 'controllers/MeterJobsController.php';
 
 // DASHBOARD COUNTS
 $mj_loc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
