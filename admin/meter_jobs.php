@@ -1,23 +1,14 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) { header("Location: login.php"); exit(); }
-include '../db_conn.php'; 
-include 'functions.php';
-
-$current_officer = $_SESSION['full_name'];
-date_default_timezone_set('Asia/Colombo');
+// ============================================
+// 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
+// ============================================
+require_once 'middleware/authGuard.php';
 
 
 // ============================================
-// INCLUDE CONTROLLER (Add, Update, Delete Logic)
+// INCLUDE CONTROLLER (Add, Update, Delete Logic, Dashboard Counts)
 // ============================================
 include 'controllers/MeterJobsController.php';
-
-// DASHBOARD COUNTS
-$mj_loc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
-$mj_pend = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
-$mj_rem  = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Removed'")->fetch_assoc()['c'];
-$mj_ret  = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Returned - Paid'")->fetch_assoc()['c'];
 
 include 'layout/header.php';
 ?>

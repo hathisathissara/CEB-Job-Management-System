@@ -69,4 +69,21 @@ if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
         $msg = "Job Deleted Successfully!";
     }
 }
+
+// --- DASHBOARD COUNTS ---
+function countMC($conn, $where = "1=1")
+{
+    return $conn->query("SELECT COUNT(*) c FROM meter_change WHERE $where")->fetch_assoc()['c'];
+}
+
+$pend_all = countMC($conn, "status='Pending'");
+$pend_1ph = countMC($conn, "status='Pending' AND phase_type='Single Phase'");
+$pend_3ph = countMC($conn, "status='Pending' AND phase_type='Three Phase'");
+$comp_all = countMC($conn, "status='Completed'");
+$comp_1ph = countMC($conn, "status='Completed' AND phase_type='Single Phase'");
+$comp_3ph = countMC($conn, "status='Completed' AND phase_type='Three Phase'");
+$today_date = date('Y-m-d');
+$new_today = countMC($conn, "DATE(created_at) = '$today_date'");
+
+
 ?>

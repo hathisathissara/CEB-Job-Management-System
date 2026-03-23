@@ -46,4 +46,10 @@ if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
         $msg = "Job Deleted!";
     }
 }
+
+// DASHBOARD COUNTS
+$mj_loc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
+$mj_pend = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
+$mj_rem  = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Removed'")->fetch_assoc()['c'];
+$mj_ret  = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Returned - Paid'")->fetch_assoc()['c'];
 ?>

@@ -1,37 +1,15 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php");
-    exit();
-}
-
-include '../db_conn.php';
-include 'functions.php';
-
-$current_officer = $_SESSION['full_name'];
-date_default_timezone_set('Asia/Colombo');
+// ============================================
+// 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
+// ============================================
+require_once 'middleware/authGuard.php';
 
 // ==================================================
-// INCLUDE CONTROLLER LOGIC (ADD, UPDATE, DELETE)
+// INCLUDE CONTROLLER LOGIC (ADD, UPDATE, DELETE, DASHBOARD COUNTS)
 // ==================================================
 include 'controllers/MeterChangeController.php';
 
-// --- DASHBOARD COUNTS ---
-function countMC($conn, $where = "1=1")
-{
-    return $conn->query("SELECT COUNT(*) c FROM meter_change WHERE $where")->fetch_assoc()['c'];
-}
-
-$pend_all = countMC($conn, "status='Pending'");
-$pend_1ph = countMC($conn, "status='Pending' AND phase_type='Single Phase'");
-$pend_3ph = countMC($conn, "status='Pending' AND phase_type='Three Phase'");
-$comp_all = countMC($conn, "status='Completed'");
-$comp_1ph = countMC($conn, "status='Completed' AND phase_type='Single Phase'");
-$comp_3ph = countMC($conn, "status='Completed' AND phase_type='Three Phase'");
-$today_date = date('Y-m-d');
-$new_today = countMC($conn, "DATE(created_at) = '$today_date'");
-
-include 'layout/header.php';
+include 'layout/header.php'
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">

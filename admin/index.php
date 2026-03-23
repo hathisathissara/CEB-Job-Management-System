@@ -1,11 +1,9 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php");
-    exit();
-}
-include '../db_conn.php';
-$current_officer = $_SESSION['full_name'];
+// ============================================
+// 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
+// ============================================
+require_once 'middleware/authGuard.php';
+
 
 // --- STATS: METER REMOVAL ---
 $r_mloc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Pending'");
