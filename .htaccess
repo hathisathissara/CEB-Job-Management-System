@@ -3,17 +3,15 @@ RewriteEngine On
 RewriteBase /ceb/
 
 
-RewriteRule ^home/?$ index.php [L]
+RewriteRule ^/?$ public/index.php [L]
+RewriteRule ^home/?$ public/index.php [L]
+RewriteRule ^job/?$ public/meter_request.php [L]
+RewriteRule ^change/?$ public/meter_change_request.php [L]
 
-RewriteRule ^status/?$ check_status.php [L]
-
-RewriteRule ^job/?$ meter_request.php [L]
 
 RewriteRule ^admin/?$ admin/login [R=301,L]
 
-RewriteRule ^change/?$ meter_change_request.php [L]
-
-ErrorDocument 404 /ceb/404.php
+ErrorDocument 404 /ceb/includes/404.php
 
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript

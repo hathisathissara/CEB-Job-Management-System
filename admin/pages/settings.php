@@ -2,14 +2,14 @@
 // ============================================
 // 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
 // ============================================
-require_once 'middleware/authGuard.php';
+require_once '../middleware/authGuard.php';
 
 // ============================================
 // 2. CONTROLLER LOGIC (Settings)
 // ============================================
-require_once 'controllers/SettingController.php';
+require_once '../controllers/SettingController.php';
 
-include 'layout/header.php';
+include '../layout/header.php';
 ?>
 
 
@@ -229,4 +229,4 @@ include 'layout/header.php';
 <!-- ANIMATE CSS (Optional) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-<?php include 'layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>

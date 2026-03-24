@@ -3,22 +3,20 @@ RewriteEngine On
 RewriteBase /ceb/admin/
 
 
-RewriteRule ^login/?$ login.php [L]
+RewriteRule ^login/?$ auth/login.php [L]
+RewriteRule ^reset_pass/?$ auth/reset_pass.php [L]
 
 
-RewriteRule ^dashboard/?$ index.php [L]
+RewriteRule ^dashboard/?$ pages/index.php [L]
+
+RewriteRule ^meter_jobs/?$ pages/meter_jobs.php [QSA,L]
+RewriteRule ^meter_change/?$ pages/meter_change.php [QSA,L]
+RewriteRule ^reports/?$ pages/reports.php [QSA,L]
+RewriteRule ^report_error/?$ pages/report_error.php [QSA,L]
+
+RewriteRule ^settings/?$ pages/settings.php [L]
+
+RewriteRule ^logs/?$ pages/activity_logs.php [L]
 
 
-RewriteRule ^complain/?$ complaints_list.php [QSA,L]
-
-RewriteRule ^meter_jobs/?$ meter_jobs.php [QSA,L]
-RewriteRule ^meter_change/?$ meter_change.php [QSA,L]
-RewriteRule ^reports/?$ reports.php [QSA,L]
-RewriteRule ^report_error/?$ report_error.php [QSA,L]
-
-RewriteRule ^settings/?$ settings.php [L]
-
-RewriteRule ^logs/?$ activity_logs.php [L]
-
-
-RewriteRule ^logout/?$ logout.php [L]
+RewriteRule ^logout/?$ auth/logout.php [L]

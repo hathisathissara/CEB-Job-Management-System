@@ -2,15 +2,15 @@
 // ============================================
 // 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
 // ============================================
-require_once 'middleware/authGuard.php';
+require_once '../middleware/authGuard.php';
 
 
 // ============================================
 // INCLUDE CONTROLLER (Add, Update, Delete Logic, Dashboard Counts)
 // ============================================
-include 'controllers/MeterJobsController.php';
+include '../controllers/MeterJobsController.php';
 
-include 'layout/header.php';
+include '../layout/header.php';
 ?>
 
 
@@ -248,4 +248,4 @@ include 'layout/header.php';
     function toggleFields(){ var st=document.getElementById('u_st').value; document.getElementById('remove_fields').style.display=(st==='Removed')?'block':'none'; }
 </script>
 
-<?php include 'layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>

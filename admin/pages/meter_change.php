@@ -2,14 +2,14 @@
 // ============================================
 // 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
 // ============================================
-require_once 'middleware/authGuard.php';
+require_once '../middleware/authGuard.php';
 
 // ==================================================
 // INCLUDE CONTROLLER LOGIC (ADD, UPDATE, DELETE, DASHBOARD COUNTS)
 // ==================================================
-include 'controllers/MeterChangeController.php';
+include '../controllers/MeterChangeController.php';
 
-include 'layout/header.php'
+include '../layout/header.php'
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -408,4 +408,4 @@ include 'layout/header.php'
     }
 </script>
 
-<?php include 'layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>

@@ -6,14 +6,14 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // 2. Security Check (Logged In ද කියලා බලනවා)
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: login.php"); // හෝ login ලින්ක් එක
+    header("Location: ../admin/auth/login.php"); // හෝ login ලින්ක් එක
     exit();
 }
 
 // 3. Database සහ Functions සම්බන්ධ කිරීම
 // (Middleware එක Load වෙන්නේ admin folder එකේ පිටු වලින් නිසා Path එක `../` වෙන්න ඕන)
-include_once '../db_conn.php'; 
-include_once 'functions.php';
+include_once '../../config/db_conn.php'; 
+include_once '../functions.php';
 
 // 4. පොදුවේ පාවිච්චි වෙන විචල්‍යයන් (Variables) සෑදීම
 $current_officer = $_SESSION['full_name'];

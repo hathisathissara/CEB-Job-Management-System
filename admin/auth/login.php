@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../db_conn.php';
+include '../../config/db_conn.php';
 
 // --- 1. AUTO LOGIN (If Cookie Exists) ---
 if (!isset($_SESSION['admin_logged_in']) && isset($_COOKIE['ceb_remember_token'])) {

@@ -1,4 +1,4 @@
-<?php include 'db_conn.php'; ?>
+<?php include '../config/db_conn.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -591,7 +591,7 @@
 ══════════════════════════════════════════ -->
 <section id="hero">
     <!-- NOTIFICATION COMPONENT -->
-<?php include 'notification_component.php'; ?>
+<?php include '../includes/notification_component.php'; ?>
     <!-- Full Background Image Carousel -->
     <div id="heroCarousel" class="carousel slide carousel-fade hero-bg-carousel" data-bs-ride="carousel">
         <div class="carousel-inner h-100">

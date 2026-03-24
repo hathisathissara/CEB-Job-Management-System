@@ -1,6 +1,6 @@
 <?php
 // Ensure DB Connection Exists
-include '../db_conn.php';
+include '../../config/db_conn.php';
 
 // --- THEME SYNC ---
 if (isset($_SESSION['user_id'])) {
@@ -459,4 +459,4 @@ if ($theme == 'dark') {
 
     <!-- MAIN CONTENT WRAPPER -->
     <div class="main-content">
-        <?php include '../notification_component.php'; ?>
+        <?php include '../../includes/notification_component.php'; ?>

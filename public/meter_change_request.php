@@ -1,10 +1,10 @@
-<?php include 'db_conn.php'; ?>
+<?php include '../config/db_conn.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meter Job Request | EDL</title>
+    <title>Change Meter - EDL</title>
     <!-- Favicon -->
     <link rel="icon" href="https://img.icons8.com/color/48/d11212/flash-on.png" type="image/png">
     
@@ -53,11 +53,11 @@
             position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; pointer-events: none;
             animation: floatOrb 9s ease-in-out infinite;
         }
-        .orb-1 { width:400px; height:400px; background: rgba(192,57,43,.15); top:-100px; left:-100px; }
+        .orb-2 { width:400px; height:400px; background: rgba(243, 156, 18, 0.1); bottom:-100px; right:-100px; }
 
         @keyframes floatOrb {
             0%,100%{ transform:translate(0,0) scale(1); }
-            50%    { transform:translate(30px,-20px) scale(1.05); }
+            50%    { transform:translate(-30px,20px) scale(0.95); }
         }
 
         .main-container { flex: 1; position: relative; z-index: 10; padding: 60px 20px; }
@@ -87,57 +87,71 @@
         }
 
         .card-header-edl {
-            background: rgba(192,57,43,0.15);
-            border-bottom: 1px solid rgba(192,57,43,0.3);
+            background: rgba(243, 156, 18, 0.1);
+            border-bottom: 1px solid rgba(243, 156, 18, 0.2);
             padding: 30px 20px;
             text-align: center;
         }
         
         .card-header-edl i {
             font-size: 2.5rem;
-            color: var(--red-l);
+            color: var(--gold);
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(192,57,43,0.4);
+            text-shadow: 0 0 20px rgba(243, 156, 18, 0.4);
         }
 
         .form-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: rgba(255,255,255,0.8);
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            margin-bottom: 6px;
         }
 
-        .input-group-text, .form-control {
-            background: rgba(255,255,255,0.05);
+        .input-group-text, .form-control, .form-select {
+            background-color: rgba(255,255,255,0.05); /* Avoid overriding BS form-select backgrounds completely */
             border: 1px solid var(--border);
             color: white;
-            padding: 14px 20px;
+            padding: 12px 18px;
+        }
+        
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px 12px;
+        }
+        .form-select option {
+            background: var(--dark);
+            color: white;
         }
 
         .input-group-text { color: var(--muted); border-right: none; }
         .form-control { border-left: none; }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             background: rgba(255,255,255,0.08);
-            border-color: var(--red);
+            border-color: var(--gold);
             color: white;
-            box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.15);
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, var(--red) 0%, var(--red-l) 100%);
+            background: linear-gradient(135deg, #d35400 0%, #f39c12 100%);
             border: none;
             border-radius: 12px;
             padding: 16px;
             font-weight: 700;
             letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(192,57,43,0.25);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.2);
             transition: all 0.3s;
+            color: white;
         }
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(192,57,43,0.4);
+            box-shadow: 0 15px 40px rgba(243, 156, 18, 0.35);
+            color: white;
         }
 
         .back-link {
@@ -165,7 +179,7 @@
     <div id="loader-wrapper"><div class="spinner"></div></div>
     <div class="bg-base"></div>
     <div class="bg-grid"></div>
-    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
     <nav class="navbar-edl d-flex justify-content-between align-items-center">
         <a class="text-decoration-none fw-bold" href="home" style="color:white; font-size:1.1rem;">
@@ -180,77 +194,86 @@
 
                 <div class="glass-card">
                     <div class="card-header-edl">
-                        <i class="fas fa-tools"></i>
-                        <h4 class="mb-0 fw-bold">Meter Job Registration</h4>
-                        <p class="small mb-0 mt-1 opacity-75">Submit Removal Request</p>
+                        <i class="fas fa-exchange-alt text-warning"></i>
+                        <h4 class="mb-0 fw-bold text-white">Request Meter Change</h4>
+                        <p class="small mb-0 mt-1" style="color:rgba(255,255,255,0.7);">Submit Replacement Request</p>
                     </div>
                     <div class="card-body p-4 p-md-5">
 
                         <!-- PHP SUBMIT LOGIC START -->
                         <?php
-                        if (isset($_POST['submit_job'])) {
-                            $job = trim($_POST['job_no']);
-                            $acc = trim($_POST['acc_no']);
-                            $met = trim($_POST['meter_no']);
-                            $dev_time = !empty($_POST['device_time']) ? $_POST['device_time'] : date('Y-m-d H:i:s');
+                        if (isset($_POST['submit_mc'])) {
+                            $j = trim($_POST['job_no']);
+                            $a = trim($_POST['acc_no']);
+                            $om = trim($_POST['old_met']);
+                            $p = $_POST['phase'];
 
-                            if (!empty($job) && !empty($acc)) {
-                                $check_sql = "SELECT id FROM meter_removal WHERE job_no = '$job'";
-                                $check_res = $conn->query($check_sql);
-
-                                if ($check_res->num_rows > 0) {
+                            if (!empty($j) && !empty($a) && !empty($om)) {
+                                $chk = $conn->query("SELECT id FROM meter_change WHERE job_no = '$j'");
+                                if ($chk->num_rows > 0) {
                                     echo "<div class='alert' style='background:rgba(192,57,43,0.1); border:1px solid var(--red-l); color:var(--red-l); text-align:center;'>
                                             <i class='fas fa-exclamation-triangle fa-2x d-block mb-2'></i> 
-                                            Job No '<b>$job</b>' already exists!
+                                            Job No '<b>$j</b>' exists!
                                           </div>";
                                 } else {
-                                    $sql = "INSERT INTO meter_removal (job_no, acc_no, meter_no, created_at) VALUES ('$job', '$acc', '$met', '$dev_time')";
+                                    $dev_time = !empty($_POST['dev_time']) ? $_POST['dev_time'] : date('Y-m-d H:i:s');
+                                    $sql = "INSERT INTO meter_change (job_no, acc_no, old_meter_no, phase_type, created_at) VALUES ('$j','$a','$om','$p','$dev_time')";
+
                                     if ($conn->query($sql)) {
                                         echo "<div class='alert' style='background:rgba(46,213,115,0.1); border:1px solid #2ed573; color:#2ed573; text-align:center;'>
                                                 <i class='fas fa-check-circle fa-3x d-block mb-2'></i>
                                                 <h5 class='fw-bold text-white'>Successfully Registered!</h5>
-                                                Job: <b>$job</b> saved at $dev_time.
+                                                Job: <b>$j</b> saved.
                                               </div>";
-                                        echo "<script>if ( window.history.replaceState ) { window.history.replaceState( null, null, window.location.href ); }</script>";
+                                        echo "<script>if(window.history.replaceState){window.history.replaceState(null,null,window.location.href);}</script>";
                                     } else {
-                                        echo "<div class='alert alert-danger'>Database Error: " . $conn->error . "</div>";
+                                        echo "<div class='alert alert-danger'>Error: " . $conn->error . "</div>";
                                     }
                                 }
                             } else {
-                                echo "<div class='alert alert-warning text-dark'>Please fill required fields!</div>";
+                                echo "<div class='alert alert-warning text-dark text-center'>Fill all fields!</div>";
                             }
                         }
                         ?>
                         <!-- PHP LOGIC END -->
 
-                        <form method="POST" onsubmit="setDeviceTime()">
-                            <input type="hidden" name="device_time" id="d_time">
+                        <form method="POST" onsubmit="setTime()">
+                            <input type="hidden" name="dev_time" id="dt">
 
                             <div class="mb-4">
-                                <label class="form-label">Job Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Job Number</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-file-contract"></i></span>
-                                    <input type="text" name="job_no" class="form-control" value="RC/I/26/" required>
+                                    <input type="text" name="job_no" class="form-control" value="MC/I/26/" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Account No</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                        <input type="number" name="acc_no" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Phase</label>
+                                    <select name="phase" class="form-select">
+                                        <option>Single Phase</option>
+                                        <option>Three Phase</option>
+                                    </select>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label">Account Number <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
-                                    <input type="number" name="acc_no" class="form-control" placeholder="10 Digits" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label">Meter Number (Optional)</label>
+                                <label class="form-label">Old Meter No</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-tachometer-alt"></i></span>
-                                    <input type="text" name="meter_no" class="form-control" placeholder="Serial No">
+                                    <input type="text" name="old_met" class="form-control" required>
                                 </div>
                             </div>
 
-                            <button type="submit" name="submit_job" class="btn btn-primary w-100 btn-submit mt-2 text-white">
+                            <button type="submit" name="submit_mc" class="btn btn-primary w-100 btn-submit mt-2">
                                 SUBMIT REQUEST <i class="fas fa-arrow-right ms-2"></i>
                             </button>
                         </form>
@@ -267,28 +290,28 @@
     </div>
 
     <footer class="footer">
-        <div class="container">&copy; <?php echo date('Y'); ?> Electricity Distribution Lanka pvt ltd.</div>
+        <div class="container">&copy; <?php echo date('Y'); ?> EDL SERVICES.</div>
     </footer>
 
     <script>
-        function setDeviceTime() {
-            const now = new Date();
-            const y = now.getFullYear();
-            const m = String(now.getMonth() + 1).padStart(2, '0');
-            const d = String(now.getDate()).padStart(2, '0');
-            const h = String(now.getHours()).padStart(2, '0');
-            const i = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('d_time').value = `${y}-${m}-${d} ${h}:${i}:${s}`;
+        function setTime() {
+            const n = new Date();
+            const f = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')} ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+            document.getElementById('dt').value = f;
         }
 
-        window.addEventListener('load', () => {
-            const ldr = document.getElementById('loader-wrapper');
-            setTimeout(() => {
-                ldr.style.opacity = '0';
-                setTimeout(() => { ldr.style.display='none'; document.body.classList.remove('loading'); }, 500);
+        window.addEventListener('load', function() {
+            var loader = document.getElementById('loader-wrapper');
+            // Slight delay for smooth feeling
+            setTimeout(function() {
+                loader.style.opacity = '0';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                    document.body.classList.remove('loading');
+                }, 500);
             }, 300);
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

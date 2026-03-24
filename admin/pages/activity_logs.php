@@ -2,9 +2,9 @@
 // ============================================
 // 1. GUARDS
 // ============================================
-require_once 'middleware/superAdminGuard.php';
+require_once '../middleware/superAdminGuard.php';
 
-include 'layout/header.php';
+include '../layout/header.php';
 ?>
 
 
@@ -65,4 +65,4 @@ include 'layout/header.php';
 
 </div>
 
-<?php include 'layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>

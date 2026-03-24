@@ -2,14 +2,14 @@
 // ============================================
 // 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
 // ============================================
-require_once 'middleware/authGuard.php';
+require_once '../middleware/authGuard.php';
 
 // ============================================
 // 2. CONTROLLER LOGIC (Dashboard Stats)
 // ============================================
-require_once 'controllers/IndexController.php';
+require_once '../controllers/IndexController.php';
 
-include 'layout/header.php';
+include '../layout/header.php';
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -306,4 +306,4 @@ include 'layout/header.php';
         options: chartOptions
     });
 </script>
-<?php include 'layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>

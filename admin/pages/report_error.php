@@ -2,9 +2,9 @@
 // ============================================
 // 1. AUTH MIDDLEWARE (Security, DB, Session Vars)
 // ============================================
-require_once 'middleware/authGuard.php';
+require_once '../middleware/authGuard.php';
 
-include 'layout/header.php';
+include '../layout/header.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -115,4 +115,4 @@ document.getElementById('errorForm').addEventListener('submit', async function(e
 });
 </script>
 
-<?php include 'layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>

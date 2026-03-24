@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../db_conn.php';
+include '../../db_conn.php';
 
 // 1. DB එකේ Token එක මකන්න (User logged in නම්)
 if (isset($_SESSION['user_id'])) {
