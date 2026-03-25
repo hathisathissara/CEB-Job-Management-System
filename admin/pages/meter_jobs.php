@@ -217,7 +217,35 @@ include '../layout/header.php';
 </div>
 
 <!-- ADD MODAL -->
-<div class="modal fade" id="addJobModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><form method="POST" onsubmit="setDeviceTime()"><div class="modal-header bg-dark text-white"><h5 class="modal-title">New Job Card</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="device_time" id="d_time"><div class="mb-3"><label class="fw-bold small">Job No</label><input type="text" name="job_no" class="form-control" value="RC/I/26/" required></div><div class="mb-3"><label class="fw-bold small">Account No</label><input type="text" name="acc_no" class="form-control" required></div><div class="mb-3"><label class="fw-bold small">Meter No</label><input type="text" name="meter_no" class="form-control"></div></div><div class="modal-footer"><button type="submit" name="add_job" class="btn btn-dark w-100 fw-bold shadow">REGISTER JOB</button></div></form></div></div></div>
+<div class="modal fade" id="addJobModal" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+        <form method="POST" onsubmit="setDeviceTime()">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">New Job Card</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="device_time" id="d_time">
+                <div class="mb-3">
+                    <label class="fw-bold small">Job No</label>
+                    <input type="text" name="job_no" class="form-control" value="RC/I/26/" required>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-bold small">Account No</label>
+                    <input type="text" name="acc_no" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-bold small">Meter No</label>
+                    <input type="text" name="meter_no" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="add_job" class="btn btn-dark w-100 fw-bold shadow">REGISTER JOB</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
 
 <!-- UPDATE MODAL -->
 <div class="modal fade" id="updModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><form method="POST"><div class="modal-header bg-primary text-white"><h5 class="modal-title">Edit / Update Action</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>

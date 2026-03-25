@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin_logged_in'])) exit();
-include '../db_conn.php';
+include '../config/db_conn.php';
 
 $uid = $_SESSION['user_id'];
 $current_theme = $_SESSION['theme'] ?? 'light';

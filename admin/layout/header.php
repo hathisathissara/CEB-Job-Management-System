@@ -333,7 +333,7 @@ if ($theme == 'dark') {
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-size: 0.9rem; flex-shrink: 0;
         }
-        .sidebar-user .user-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+        .sidebar-user .user-name { font-size: 0.82rem; font-weight: 600; color:var(--edl-muted); }
         .sidebar-user .user-role { font-size: 0.7rem; color: var(--edl-muted); }
 
         .logout-btn {
@@ -418,6 +418,9 @@ if ($theme == 'dark') {
             </a>
             <a href="meter_change" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_change.php' ? 'active' : ''; ?>">
                 <i class="fas fa-exchange-alt nav-icon"></i> Meter Change
+            </a>
+            <a href="new_services" class="<?php echo basename($_SERVER['PHP_SELF']) == 'new_services.php' ? 'active' : ''; ?>">
+                <i class="fas fa-plug nav-icon"></i> New Services
             </a>
             <a href="reports" class="<?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>">
                 <i class="fas fa-file-alt nav-icon"></i> Reports Center

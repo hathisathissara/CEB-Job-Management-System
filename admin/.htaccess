@@ -12,6 +12,7 @@ RewriteRule ^dashboard/?$ pages/index.php [L]
 RewriteRule ^meter_jobs/?$ pages/meter_jobs.php [QSA,L]
 RewriteRule ^meter_change/?$ pages/meter_change.php [QSA,L]
 RewriteRule ^reports/?$ pages/reports.php [QSA,L]
+RewriteRule ^new_services/?$ pages/new_services.php [QSA,L]
 RewriteRule ^report_error/?$ pages/report_error.php [QSA,L]
 
 RewriteRule ^settings/?$ pages/settings.php [L]

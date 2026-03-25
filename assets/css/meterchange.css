@@ -1,0 +1,204 @@
+:root {
+  --red: #c0392b;
+  --red-l: #e74c3c;
+  --gold: #f39c12;
+  --dark: #0d0f12;
+  --dark2: #13161c;
+  --border: rgba(255, 255, 255, 0.07);
+  --muted: rgba(255, 255, 255, 0.45);
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--dark);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.loading {
+  overflow: hidden;
+}
+
+/* Background */
+.bg-base {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(135deg, #0d0f12 0%, #13161c 60%, #0f1218 100%);
+}
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+  animation: floatOrb 9s ease-in-out infinite;
+}
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: rgba(243, 156, 18, 0.1);
+  bottom: -100px;
+  right: -100px;
+}
+
+@keyframes floatOrb {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-30px, 20px) scale(0.95);
+  }
+}
+
+.main-container {
+  flex: 1;
+  position: relative;
+  z-index: 10;
+  padding: 60px 20px;
+}
+
+/* Navbar */
+.navbar-edl {
+  background: rgba(13, 15, 18, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 15px 40px;
+}
+
+/* Glass Form Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: slideUp 0.6s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header-edl {
+  background: rgba(243, 156, 18, 0.1);
+  border-bottom: 1px solid rgba(243, 156, 18, 0.2);
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.card-header-edl i {
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px rgba(243, 156, 18, 0.4);
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.input-group-text,
+.form-control,
+.form-select {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); /* Avoid overriding BS form-select backgrounds completely */
+  border: 1px solid var(--border);
+  color: white;
+  padding: 12px 18px;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 12px;
+}
+.form-select option {
+  background: var(--dark);
+  color: white;
+}
+
+.input-group-text {
+  color: var(--muted);
+  border-right: none;
+}
+.form-control {
+  border-left: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--gold);
+  color: white;
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.15);
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #d35400 0%, #f39c12 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 10px 30px rgba(243, 156, 18, 0.2);
+  transition: all 0.3s;
+  color: white;
+}
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(243, 156, 18, 0.35);
+  color: white;
+}
+
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.back-link:hover {
+  color: white;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+  margin-top: auto;
+}

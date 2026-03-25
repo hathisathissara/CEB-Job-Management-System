@@ -61,7 +61,7 @@ if (isset($_POST['login'])) {
             $_SESSION['theme'] = $row['theme'];
 
             // Log
-            include_once 'functions.php';
+            include_once '../functions.php';
             if (function_exists('addLog')) addLog($conn, $row['full_name'], 'LOGIN', 'Manually logged in');
 
             // --- SET COOKIE IF REMEMBER ME CHECKED ---
