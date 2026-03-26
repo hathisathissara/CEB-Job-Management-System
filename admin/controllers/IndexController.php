@@ -14,6 +14,12 @@ $mc_all = $conn->query("SELECT COUNT(*) c FROM meter_change")->fetch_assoc()['c'
 $mc_pend = $conn->query("SELECT COUNT(*) c FROM meter_change WHERE status='Pending'")->fetch_assoc()['c'];
 $mc_comp = $conn->query("SELECT COUNT(*) c FROM meter_change WHERE status='Completed'")->fetch_assoc()['c'];
 
+// --- STATS: NEW CONNECTIONS ---
+$nc_active = $conn->query("SELECT COUNT(*) c FROM new_connections WHERE status != 'Completed'")->fetch_assoc()['c'];
+$nc_adu    = $conn->query("SELECT COUNT(*) c FROM new_connections WHERE status = 'Shortcoming'")->fetch_assoc()['c'];
+$nc_appr   = $conn->query("SELECT COUNT(*) c FROM new_connections WHERE status = 'Pending Approval'")->fetch_assoc()['c'];
+$nc_job    = $conn->query("SELECT COUNT(*) c FROM new_connections WHERE status = 'Job Created'")->fetch_assoc()['c'];
+
 // --- WEEKLY TREND CHART DATA (BOTH REMOVAL & CHANGE) ---
 $week_labels = [];
 $rem_data = [];

@@ -189,6 +189,63 @@ include '../layout/header.php';
     </div>
 </div>
 
+<!-- SECTION 3: NEW CONNECTIONS -->
+<h6 class="text-secondary fw-bold text-uppercase border-bottom pb-2 mb-3 mt-4"><i class="fas fa-plug text-primary me-2"></i> New Connection Applications <a href="new_services" class="btn btn-sm btn-outline-primary ms-2 text-decoration-none" style="font-size:11px; text-transform:none; font-weight:600;">View All →</a></h6>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 border-info border-bottom border-4 port-card">
+            <div class="port-bg-shape bg-info"></div>
+            <div style="position:relative; z-index:1; display:flex; flex-direction:column; height:100%;">
+                <div class="port-icon bg-info bg-opacity-10 text-info">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <div class="port-title text-secondary">ACTIVE FILES</div>
+                <div class="port-value text-dark mb-0"><?php echo $nc_active; ?></div>
+                <div class="port-sub text-info"><i class="fas fa-spinner me-1"></i> Not completed yet</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 border-danger border-bottom border-4 port-card">
+            <div class="port-bg-shape bg-danger"></div>
+            <div style="position:relative; z-index:1; display:flex; flex-direction:column; height:100%;">
+                <div class="port-icon bg-danger bg-opacity-10 text-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="port-title text-secondary">SHORTCOMINGS</div>
+                <div class="port-value text-danger mb-0"><?php echo $nc_adu; ?></div>
+                <div class="port-sub text-danger"><i class="fas fa-times-circle me-1"></i> Adu Padu</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 border-warning border-bottom border-4 port-card">
+            <div class="port-bg-shape bg-warning"></div>
+            <div style="position:relative; z-index:1; display:flex; flex-direction:column; height:100%;">
+                <div class="port-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="port-title text-secondary">PENDING APPROVAL</div>
+                <div class="port-value text-warning mb-0"><?php echo $nc_appr; ?></div>
+                <div class="port-sub text-warning"><i class="fas fa-clock me-1"></i> At Area Office</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 border-success border-bottom border-4 port-card">
+            <div class="port-bg-shape bg-success"></div>
+            <div style="position:relative; z-index:1; display:flex; flex-direction:column; height:100%;">
+                <div class="port-icon bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-hammer"></i>
+                </div>
+                <div class="port-title text-secondary">JOBS CREATED</div>
+                <div class="port-value text-success mb-0"><?php echo $nc_job; ?></div>
+                <div class="port-sub text-success"><i class="fas fa-tools me-1"></i> Fee paid, pending connection</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- CHARTS & TABLES -->
 <div class="row g-3 mb-4">
     <!-- 1. WEEKLY TREND CHART (INTAKE) -->

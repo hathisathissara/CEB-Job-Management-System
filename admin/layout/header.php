@@ -84,7 +84,7 @@ if ($theme == 'dark') {
             --edl-red:      #c0392b;
             --edl-red-l:    #e74c3c;
             --edl-gold:     #f39c12;
-            --sidebar-w:    260px;
+            --sidebar-w:    248px;
 
             --bg-body:    <?php echo $bg_body_fallback; ?>;
             --bg-card:    <?php echo $bg_card; ?>;
@@ -98,7 +98,7 @@ if ($theme == 'dark') {
             --table-head: <?php echo $table_head; ?>;
             --input-focus: <?php echo $input_focus; ?>;
             --card-filter: <?php echo $card_filter; ?>;
-            
+
             --bg-gr-1: <?php echo $bg_gr_1; ?>;
             --bg-gr-2: <?php echo $bg_gr_2; ?>;
             --bg-gr-3: <?php echo $bg_gr_3; ?>;
@@ -236,147 +236,191 @@ if ($theme == 'dark') {
             backdrop-filter: blur(10px);
         }
 
-        /* ─────────────────────────────────────
-           SIDEBAR
-        ───────────────────────────────────── */
+        /* ═══════════════════════════════════════
+           SIDEBAR — Modern Accordion
+        ═══════════════════════════════════════ */
         .sidebar {
             height: 100vh;
             position: fixed;
             width: var(--sidebar-w);
             background: var(--sidebar-bg);
             backdrop-filter: blur(20px);
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             z-index: 1000;
-            transition: 0.3s;
             border-right: 1px solid var(--edl-border);
             display: flex;
             flex-direction: column;
-            padding-top: 0;
-            overflow-y: auto;
+            overflow: hidden;
         }
 
+        /* ── Brand ── */
         .sidebar-brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 22px 24px;
+            padding: 0 18px;
+            height: 66px;
             border-bottom: 1px solid var(--edl-border);
             text-decoration: none;
-        }
-        .sidebar-brand .bolt-icon {
-            width: 38px; height: 38px;
-            background: linear-gradient(135deg, var(--edl-red) 0%, var(--edl-red-l) 100%);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; color: #fff;
-            box-shadow: 0 4px 14px rgba(192,57,43,0.35);
             flex-shrink: 0;
         }
-        .sidebar-brand .brand-text { line-height: 1.2; }
-        .sidebar-brand .brand-name { font-size: 0.9rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; }
-        .sidebar-brand .brand-sub  { font-size: 0.68rem; color: var(--text-muted); font-weight: 500; }
+        .sidebar-brand .bolt-icon {
+            width: 38px; height: 38px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--edl-red) 0%, var(--edl-red-l) 100%);
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: #fff;
+            box-shadow: 0 4px 12px rgba(192,57,43,0.4);
+        }
+        .sidebar-brand .brand-name { font-size: 0.88rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; line-height: 1.2; }
+        .sidebar-brand .brand-sub  { font-size: 0.64rem; color: var(--text-muted); font-weight: 500; }
 
-        .sidebar-nav { padding: 12px 0; flex: 1; }
+        /* ── Scrollable Nav ── */
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 10px 10px;
+        }
+        .sidebar-nav::-webkit-scrollbar { width: 3px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: var(--edl-border); border-radius: 4px; }
 
-        .sidebar-section {
-            font-size: 0.62rem; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--edl-muted);
-            padding: 14px 24px 6px; opacity: 0.6;
+        /* Section labels */
+        .nav-label-group {
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text-muted);
+            padding: 14px 10px 5px;
+            opacity: 0.6;
         }
 
-        .sidebar a {
-            padding: 11px 24px;
+        /* Direct nav link */
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
             color: var(--text-muted);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            border-left: 3px solid transparent;
-            transition: all 0.2s;
+            font-size: 0.845rem; font-weight: 500;
+            transition: background 0.15s, color 0.15s;
+            margin-bottom: 2px;
+        }
+        .nav-item:hover { background: var(--table-strip); color: var(--text-main); }
+        .nav-item.active {
+            background: rgba(192,57,43,0.13);
+            color: var(--edl-red-l);
+            font-weight: 600;
+        }
+        .nav-item .ni { width: 20px; text-align: center; font-size: 0.88rem; flex-shrink: 0; }
+
+        /* ── Accordion Group ── */
+        .nav-group { margin-bottom: 2px; }
+
+        .nav-group-toggle {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-size: 0.845rem; font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s, color 0.15s;
+            list-style: none;
+        }
+        .nav-group-toggle:hover { background: var(--table-strip); color: var(--text-main); }
+        .nav-group-toggle.open { color: var(--text-main); }
+        .nav-group-toggle .ni { width: 20px; text-align: center; font-size: 0.88rem; flex-shrink: 0; }
+        .nav-group-toggle .ng-label { flex: 1; }
+        .nav-group-toggle .chevron {
+            font-size: 0.65rem;
+            transition: transform 0.22s ease;
+            opacity: 0.5;
+        }
+        .nav-group-toggle.open .chevron { transform: rotate(90deg); opacity: 1; }
+
+        /* Has-active state: tint the toggle */
+        .nav-group-toggle.has-active {
+            color: var(--edl-red-l);
+        }
+        .nav-group-toggle.has-active .chevron { opacity: 1; }
+
+        /* Sub-items */
+        .nav-sub {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.28s cubic-bezier(0.4,0,0.2,1);
+        }
+        .nav-sub.open { max-height: 300px; }
+
+        .nav-sub .nav-item {
+            padding-left: 42px;
+            font-size: 0.82rem;
             position: relative;
         }
-        .sidebar a:hover {
-            color: var(--text-main);
-            background: var(--table-strip);
+        .nav-sub .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 26px; top: 50%;
+            transform: translateY(-50%);
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--edl-border);
+            transition: background 0.15s;
         }
-        .sidebar a.active {
-            border-left-color: var(--edl-red);
-            color: var(--text-main);
-            background: rgba(192,57,43,0.1);
-        }
-        .sidebar a .nav-icon {
-            width: 20px; text-align: center;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        .sidebar a.active .nav-icon { opacity: 1; color: var(--edl-red-l); }
+        .nav-sub .nav-item.active::before { background: var(--edl-red-l); }
 
-        /* Sidebar user/logout panel */
+        /* ── Footer ── */
         .sidebar-footer {
-            padding: 16px;
+            padding: 12px 10px;
             border-top: 1px solid var(--edl-border);
-            margin-top: auto;
+            flex-shrink: 0;
         }
         .sidebar-user {
             display: flex; align-items: center; gap: 10px;
-            padding: 10px 12px; border-radius: 12px;
-            background: rgba(255,255,255,0.04);
+            padding: 9px 12px;
+            border-radius: 10px;
+            background: var(--table-strip);
             border: 1px solid var(--edl-border);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .sidebar-user .user-av {
-            width: 34px; height: 34px; border-radius: 9px;
+            width: 32px; height: 32px; flex-shrink: 0;
+            border-radius: 9px;
             background: linear-gradient(135deg, var(--edl-red), var(--edl-red-l));
             display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.9rem; flex-shrink: 0;
+            color: #fff; font-size: 0.8rem;
         }
-        .sidebar-user .user-name { font-size: 0.82rem; font-weight: 600; color:var(--edl-muted); }
-        .sidebar-user .user-role { font-size: 0.7rem; color: var(--edl-muted); }
+        .sidebar-user .user-name { font-size: 0.79rem; font-weight: 600; color: var(--text-main); line-height: 1.2; }
+        .sidebar-user .user-role { font-size: 0.64rem; color: var(--text-muted); }
 
         .logout-btn {
             display: flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 10px; border-radius: 10px;
-            color: #ff6b6b !important;
-            text-decoration: none;
-            font-size: 0.85rem; font-weight: 600;
+            padding: 9px; border-radius: 10px;
+            color: #ff6b6b !important; text-decoration: none;
+            font-size: 0.82rem; font-weight: 600;
             border: 1px solid rgba(255,107,107,0.2);
-            transition: all 0.2s;
+            transition: all 0.18s;
         }
-        .logout-btn:hover {
-            background: rgba(255,107,107,0.1);
-            border-color: rgba(255,107,107,0.4);
-            color: #ff6b6b !important;
-        }
+        .logout-btn:hover { background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.4); }
 
-        /* ─────────────────────────────────────
-           MAIN CONTENT
-        ───────────────────────────────────── */
+        /* ── Main Content ── */
         .main-content {
             margin-left: var(--sidebar-w);
             padding: 30px;
-            transition: 0.3s;
             min-height: 100vh;
         }
 
-        /* ─────────────────────────────────────
-           MOBILE
-        ───────────────────────────────────── */
+        /* ── Mobile ── */
         @media (max-width: 768px) {
-            .sidebar { left: -260px; top: 60px; height: calc(100vh - 60px); }
-            .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+            .sidebar { left: calc(-1 * var(--sidebar-w)); transition: left 0.28s ease; }
+            .sidebar.active { left: 0; box-shadow: 10px 0 40px rgba(0,0,0,0.5); }
             .main-content { margin-left: 0; padding-top: 80px; }
             .mobile-head { display: flex !important; }
         }
-
         .mobile-head {
             display: none;
-            position: fixed; top: 0; width: 100%; height: 60px;
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(20px);
-            z-index: 1001; padding: 0 20px;
+            position: fixed; top: 0; width: 100%; height: 58px;
+            background: var(--sidebar-bg); backdrop-filter: blur(20px);
+            z-index: 1001; padding: 0 18px;
             justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--edl-border);
         }
@@ -390,18 +434,19 @@ if ($theme == 'dark') {
 
     <!-- MOBILE HEADER -->
     <div class="mobile-head">
-        <span class="fw-bold text-white"><i class="fas fa-bolt text-danger me-1"></i> EDL ADMIN</span>
-        <button class="btn btn-sm border-0 text-white" onclick="toggleMenu()" style="background: rgba(255,255,255,0.07); border-radius:8px; padding:6px 12px;">
+        <span class="fw-bold" style="color:var(--text-main);"><i class="fas fa-bolt text-danger me-1"></i> EDL ADMIN</span>
+        <button class="btn btn-sm border-0" onclick="toggleMenu()" style="background:var(--table-strip);border-radius:8px;padding:6px 12px;color:var(--text-main);">
             <i class="fas fa-bars"></i>
         </button>
     </div>
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
+
         <!-- Brand -->
         <a href="dashboard" class="sidebar-brand">
             <div class="bolt-icon"><i class="fas fa-bolt"></i></div>
-            <div class="brand-text">
+            <div>
                 <div class="brand-name">EDL ADMIN</div>
                 <div class="brand-sub">Management Portal</div>
             </div>
@@ -409,41 +454,74 @@ if ($theme == 'dark') {
 
         <!-- Navigation -->
         <div class="sidebar-nav">
-            <div class="sidebar-section">Main</div>
-            <a href="dashboard" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
-                <i class="fas fa-chart-line nav-icon"></i> Dashboard
-            </a>
-            <a href="meter_jobs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_jobs.php' ? 'active' : ''; ?>">
-                <i class="fas fa-tools nav-icon"></i> Meter Remove
-            </a>
-            <a href="meter_change" class="<?php echo basename($_SERVER['PHP_SELF']) == 'meter_change.php' ? 'active' : ''; ?>">
-                <i class="fas fa-exchange-alt nav-icon"></i> Meter Change
-            </a>
-            <a href="new_services" class="<?php echo basename($_SERVER['PHP_SELF']) == 'new_services.php' ? 'active' : ''; ?>">
-                <i class="fas fa-plug nav-icon"></i> New Services
-            </a>
-            <a href="reports" class="<?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>">
-                <i class="fas fa-file-alt nav-icon"></i> Reports Center
+
+            <!-- Dashboard -->
+            <a href="dashboard" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
+                <i class="fas fa-chart-line ni"></i> Dashboard
             </a>
 
-            <div class="sidebar-section">System</div>
-            <a href="settings" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
-                <i class="fas fa-cog nav-icon"></i> Settings
+            <!-- Meter Management (accordion group) -->
+            <div class="nav-group" id="grp-meter">
+                <?php
+                    $meterActive = in_array(basename($_SERVER['PHP_SELF']), ['meter_jobs.php','meter_change.php']);
+                ?>
+                <div class="nav-group-toggle <?php echo $meterActive ? 'open has-active' : ''; ?>" onclick="toggleGroup('grp-meter')">
+                    <i class="fas fa-tachometer-alt ni"></i>
+                    <span class="ng-label">Meter Management</span>
+                    <i class="fas fa-chevron-right chevron"></i>
+                </div>
+                <div class="nav-sub <?php echo $meterActive ? 'open' : ''; ?>" id="sub-grp-meter">
+                    <a href="meter_jobs" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'meter_jobs.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-tools ni"></i> Meter Remove
+                    </a>
+                    <a href="meter_change" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'meter_change.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-exchange-alt ni"></i> Meter Change
+                    </a>
+                </div>
+            </div>
+
+            <!-- New Services -->
+            <a href="new_services" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'new_services.php' ? 'active' : ''; ?>">
+                <i class="fas fa-plug ni"></i> New Services
             </a>
 
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Super Admin'): ?>
-            <a href="logs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>">
-                <i class="fas fa-history nav-icon"></i> Audit Logs
+            <!-- Reports -->
+            <a href="reports" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>">
+                <i class="fas fa-file-alt ni"></i> Reports Center
             </a>
-            <?php endif; ?>
 
-            <div class="sidebar-section">Support</div>
-            <a href="report_error" class="<?php echo basename($_SERVER['PHP_SELF']) == 'report_error.php' ? 'active' : ''; ?>">
-                <i class="fas fa-bug nav-icon"></i> Report Error
+            <!-- System (accordion group) -->
+            <div class="nav-label-group">System</div>
+            <div class="nav-group" id="grp-system">
+                <?php
+                    $sysActive = in_array(basename($_SERVER['PHP_SELF']), ['settings.php','activity_logs.php']);
+                ?>
+                <div class="nav-group-toggle <?php echo $sysActive ? 'open has-active' : ''; ?>" onclick="toggleGroup('grp-system')">
+                    <i class="fas fa-sliders-h ni"></i>
+                    <span class="ng-label">System</span>
+                    <i class="fas fa-chevron-right chevron"></i>
+                </div>
+                <div class="nav-sub <?php echo $sysActive ? 'open' : ''; ?>" id="sub-grp-system">
+                    <a href="settings" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-cog ni"></i> Settings
+                    </a>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Super Admin'): ?>
+                    <a href="logs" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-history ni"></i> Audit Logs
+                    </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Support -->
+            <div class="nav-label-group">Support</div>
+            <a href="report_error" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'report_error.php' ? 'active' : ''; ?>">
+                <i class="fas fa-bug ni"></i> Report Error
             </a>
-        </div>
 
-        <!-- User / Logout -->
+        </div><!-- /sidebar-nav -->
+
+        <!-- Footer: user + logout -->
         <div class="sidebar-footer">
             <?php if(isset($_SESSION['full_name'])): ?>
             <div class="sidebar-user">
@@ -458,7 +536,8 @@ if ($theme == 'dark') {
                 <i class="fas fa-sign-out-alt"></i> Log Out
             </a>
         </div>
-    </div>
+
+    </div><!-- /sidebar -->
 
     <!-- MAIN CONTENT WRAPPER -->
     <div class="main-content">

@@ -308,6 +308,7 @@
                     <a href="admin/login">Officer Login</a>
                     <a href="job">New Job Record</a>
                     <a href="change">Meter Change</a>
+                    <a href="new_service_request">New Connection</a>
                 </div>
             </div>
 

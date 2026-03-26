@@ -31,15 +31,15 @@ include '../layout/header.php';
     <!-- FILTER SECTION -->
     <div class="card shadow-sm border-0 mb-3 bg-white">
         <div class="card-body p-3 bg-light rounded">
-            <form method="GET" class="row g-2 align-items-end">
-                <?php $s=$_GET['s']??''; $f=$_GET['f']??''; $t=$_GET['t']??''; ?>
-                <div class="col-md-4"><label class="small fw-bold text-muted mb-1">Search Keyword</label><input type="text" name="s" class="form-control" placeholder="App No / Name / NIC..." value="<?php echo htmlspecialchars($s); ?>"></div>
+            <form action="new_services" method="GET" class="row g-2 align-items-end">
+                <?php $s=isset($_GET['s'])?trim($_GET['s']):''; $f=isset($_GET['f'])?trim($_GET['f']):''; $t=isset($_GET['t'])?trim($_GET['t']):''; ?>
+                <div class="col-md-4"><label class="small fw-bold text-muted mb-1">Search Keyword</label>
+                <input type="text" name="s" class="form-control" placeholder="App No / EST No / Name / NIC..." value="<?php echo htmlspecialchars($s); ?>"></div>
                 <div class="col-md-3"><label class="small fw-bold text-muted mb-1">Service Type</label><select name="t" class="form-select "><option value="">All Types</option><option value="Normal" <?php if($t=='Normal')echo'selected';?>>Normal</option><option value="3 Phase" <?php if($t=='3 Phase')echo'selected';?>>3 Phase</option><option value="Augmentation" <?php if($t=='Augmentation')echo'selected';?>>Augmentation</option><option value="Over 100k" <?php if($t=='Over 100k')echo'selected';?>>Over 100k</option></select></div>
                 <div class="col-md-3"><label class="small fw-bold text-muted mb-1">Status</label><select name="f" class="form-select"><option value="">All Status</option><option value="Registered" <?php if($f=='Registered')echo'selected';?>>Registered</option><option value="Shortcoming" <?php if($f=='Shortcoming')echo'selected';?>>Shortcoming (Adu Padu)</option><option value="Estimated" <?php if($f=='Estimated')echo'selected';?>>Estimated</option><option value="Pending Approval" <?php if($f=='Pending Approval')echo'selected';?>>Pending Approval</option><option value="Approved" <?php if($f=='Approved')echo'selected';?>>Approved</option><option value="Job Created" <?php if($f=='Job Created')echo'selected';?>>Job Created</option><option value="Completed" <?php if($f=='Completed')echo'selected';?>>Completed</option></select></div>
-                <div class="col-md-2"><button class="btn btn-primary w-100 fw-bold"><i class="fas fa-filter"></i> Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary w-100 fw-bold"><i class="fas fa-filter"></i> Filter</button></div>
             </form>
-            <?php if(isset($_GET['s']) || isset($_GET['f'])) echo '<div class="mt-2"><a href="new_services.php" class="text-danger small fw-bold text-decoration-none">Clear Filters</a></div>'; ?>
-        </div>
+            <?php if(!empty($s) || !empty($f) || !empty($t)) echo '<div class="mt-2"><a href="new_services" class="text-danger small fw-bold text-decoration-none"><i class="fas fa-times me-1"></i>Clear Filters</a></div>'; ?>        </div>
     </div>
 
     <!-- DATA TABLE -->
@@ -49,10 +49,28 @@ include '../layout/header.php';
                 <thead class="table-dark text-uppercase small"><tr><th width="20%">App No (Edit)</th><th width="30%">Customer Details</th><th width="25%">Status & Numbers</th><th width="25%">Dates Log</th></tr></thead>
                 <tbody>
                     <?php
+                    // --- QUERY BUILDER ---
                     $w = "WHERE 1=1";
-                    if(!empty($s)) { $sc = $conn->real_escape_string($s); $w .= " AND (app_no LIKE '%$sc%' OR customer_name LIKE '%$sc%' OR id_number LIKE '%$sc%')"; }
-                    if(!empty($f)) $w .= " AND status='$f'";
-                    if(!empty($t)) $w .= " AND service_type='$t'";
+                    $ignore_filters = false;
+                    
+                    if(!empty($s)) { 
+                        $sc = $conn->real_escape_string($s); 
+                        
+                        // Smart Search: If the user searches an EXACT uniquely identifying number, ignore the dropdown filters
+                        $check = $conn->query("SELECT id FROM new_connections WHERE app_no='$sc' OR est_no='$sc' OR id_number='$sc'");
+                        if($check && $check->num_rows > 0) {
+                            $ignore_filters = true;
+                        }
+                        
+                        $w .= " AND (app_no LIKE '%$sc%' OR customer_name LIKE '%$sc%' OR id_number LIKE '%$sc%' OR est_no LIKE '%$sc%')"; 
+                    }
+                    
+                    if(!$ignore_filters) {
+                        if(!empty($f)) $w .= " AND status='$f'";
+                        if(!empty($t)) $w .= " AND service_type='$t'";
+                    }
+
+                    $results_per_page=15; 
 
                     $results_per_page=15; $page=isset($_GET['page'])?(int)$_GET['page']:1; if($page<1)$page=1; $offset=($page-1)*$results_per_page;
                     $tot_res = $conn->query("SELECT COUNT(*) as t FROM new_connections $w")->fetch_assoc()['t']; $tot_pages = ceil($tot_res/$results_per_page);
@@ -96,7 +114,7 @@ include '../layout/header.php';
                               <!-- NEW: DELETE BUTTON -->
                             <?php if ($_SESSION['role'] == 'Super Admin'): ?>
                                 <div class="mt-2 text-end border-top pt-1">
-                                    <a href="new_services.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to permanently delete App No: <?php echo $row['app_no']; ?>?');" class="text-danger small text-decoration-none hover-underline">
+                                    <a href="new_services?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to permanently delete App No: <?php echo $row['app_no']; ?>?');" class="text-danger small text-decoration-none hover-underline">
                                         <i class="fas fa-trash-alt me-1"></i> Delete
                                     </a>
                                 </div>
@@ -121,7 +139,7 @@ include '../layout/header.php';
 <!-- 1. ADD MODAL (Initial Entry) -->
 <div class="modal fade" id="addModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><form method="POST"><div class="modal-header bg-dark text-white"><h5 class="modal-title">New Application</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
 <div class="modal-body">
-    <div class="mb-3"><label class="fw-bold small">App Number (Req)</label><input type="text" name="app_no" class="form-control" placeholder="Ex: 535.20/26/NC/010" required></div>
+    <div class="mb-3"><label class="fw-bold small">App Number (Req)</label><input type="text" name="app_no" class="form-control" value="535.20/NC/26/000" required></div>
     <div class="mb-3">
         <label class="fw-bold small">Initial Service Type</label>
         <select name="service_type" class="form-select">
@@ -170,8 +188,8 @@ include '../layout/header.php';
 
     <!-- DYNAMIC FIELDS -->
     <div class="row g-3 mb-3">
-        <div class="col-md-6" id="box_est"><label class="small fw-bold text-secondary">Estimate Number</label><input type="text" name="est_no" id="u_est" class="form-control form-control-sm"></div>
-        <div class="col-md-6" id="box_job"><label class="small fw-bold text-secondary">Job Number</label><input type="text" name="job_no" id="u_job" class="form-control form-control-sm"></div>
+        <div class="col-md-6" id="box_est"><label class="small fw-bold text-secondary">Estimate Number</label><input type="text" name="est_no" id="u_est"  class="form-control form-control-sm" ></div>
+        <div class="col-md-6" id="box_job"><label class="small fw-bold text-secondary">Job Number</label><input type="text" name="job_no" id="u_job"  class="form-control form-control-sm" ></div>
     </div>
 
     <!-- DATES BOX (For Approvals & Completion) -->

@@ -17,6 +17,15 @@
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
     }
+
+    function toggleGroup(groupId) {
+        var toggle = document.querySelector('#' + groupId + ' .nav-group-toggle');
+        var sub    = document.getElementById('sub-' + groupId);
+        if (!toggle || !sub) return;
+        var isOpen = sub.classList.contains('open');
+        toggle.classList.toggle('open', !isOpen);
+        sub.classList.toggle('open', !isOpen);
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

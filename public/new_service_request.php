@@ -93,7 +93,7 @@
                                 <label class="form-label">Application Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                                    <input type="text" name="app_no" class="form-control" placeholder="Ex: 535.20/26/NC/010" required>
+                                    <input type="text" name="app_no" class="form-control" value="535.20/NC/26/000" required>
                                 </div>
                             </div>
 
