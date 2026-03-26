@@ -73,6 +73,15 @@ include '../layout/header.php';
                         </button>
                     </div>
                 </form>
+
+                <hr class="my-4 border-secondary opacity-25">
+                
+                <div class="text-center">
+                    <p class="small text-muted mb-2 fw-semibold">Need immediate direct support?</p>
+                    <a href="https://wa.me/94701207991?text=Hello,%20I%20need%20some%20assistance%20regarding%20the%20EDL%20System." target="_blank" rel="noopener" class="btn text-uppercase fw-bold w-100 py-2 d-flex align-items-center justify-content-center" style="border-radius: 8px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #fff; border: none; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); transition: transform 0.2s;">
+                        <i class="fab fa-whatsapp fs-5 me-2"></i> Contact on WhatsApp
+                    </a>
+                </div>
             </div>
         </div>
     </div>

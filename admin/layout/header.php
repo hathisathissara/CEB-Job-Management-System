@@ -119,7 +119,7 @@ if ($theme == 'dark') {
 
         /* ── Ambient Background ── */
         body::before {
-            content: '';
+            content: ''
             position: fixed; inset: 0; z-index: -2;
             background: linear-gradient(135deg, var(--bg-gr-1) 0%, var(--bg-gr-2) 60%, var(--bg-gr-3) 100%);
         }
@@ -132,6 +132,11 @@ if ($theme == 'dark') {
             background-size: 56px 56px;
             pointer-events: none;
         }
+        /* ── Custom Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(192, 57, 43, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(192, 57, 43, 0.6); }
 
         /* ── Dark mode card overrides ── */
         .card, .modal-content, .list-group-item {

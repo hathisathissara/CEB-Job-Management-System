@@ -24,6 +24,84 @@
 <!-- LOADER -->
 <div id="loader-wrapper"><div class="spinner"></div></div>
 
+<!-- ── FLOATING WHATSAPP BUTTON ── -->
+<a id="whatsappFab" href="https://wa.me/94701207991?text=Hello,%20I%20need%20some%20assistance%20regarding%20the%20EDL%20System." target="_blank" rel="noopener" aria-label="WhatsApp Support">
+    <span class="fab-tooltip">WhatsApp Support</span>
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- ── FLOATING SUPPORT BUTTON ── -->
+<button id="supportFab" data-bs-toggle="modal" data-bs-target="#supportModal" aria-label="Report an issue">
+    <span class="fab-tooltip">Report Issue</span>
+    <i class="fas fa-headset"></i>
+</button>
+
+<!-- ── SUPPORT MODAL ── -->
+<div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:490px;">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <div class="modal-title d-flex align-items-center gap-2" id="supportModalLabel">
+                    <span style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#c0392b,#e74c3c);display:flex;align-items:center;justify-content:center;font-size:.8rem;"><i class="fas fa-bug" style="color:#fff;"></i></span>
+                    Report System Issue
+                </div>
+                <button class="btn-close-custom" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Alert messages -->
+                <div id="supSuccess" class="sup-alert success mb-3 d-none">
+                    <i class="fas fa-check-circle me-1"></i> Report submitted successfully. Thank you!
+                </div>
+                <div id="supError" class="sup-alert error mb-3 d-none">
+                    <i class="fas fa-exclamation-circle me-1"></i> Oops! Could not submit. Please try again.
+                </div>
+
+                <form id="supportForm" action="https://formspree.io/f/xyzzzwkg" method="POST">
+
+                    <div class="mb-3">
+                        <label>Your Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="yourname@domain.com" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Issue Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <select name="type" class="form-select">
+                                <option value="System Error / Bug">System Error / Bug</option>
+                                <option value="UI Issue">Design / UI Issue</option>
+                                <option value="Feature Request">Feature Request</option>
+                                <option value="Other">Other Feedback</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label>Describe the Issue</label>
+                        <textarea name="message" class="form-control" rows="4"
+                            placeholder="What page? What happened? Please describe in detail…" required style="resize:none;"></textarea>
+                    </div>
+
+                    <input type="hidden" name="reporting_user" value="Public Portal">
+                    <input type="hidden" name="system_time" value="<?php echo date('Y-m-d H:i:s'); ?>">
+                    <input type="hidden" name="source" value="Public Index">
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn-support-submit" id="supSubmitBtn">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Report
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- BACKGROUND -->
 <div class="bg-base"></div>
 <div class="bg-grid"></div>
@@ -380,5 +458,46 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ── Support Form Submit ── */
+document.getElementById('supportForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = document.getElementById('supSubmitBtn');
+    const ok   = document.getElementById('supSuccess');
+    const err  = document.getElementById('supError');
+    const orig = btn.innerHTML;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending…';
+    ok.classList.add('d-none');
+    err.classList.add('d-none');
+
+    try {
+        const res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+            ok.classList.remove('d-none');
+            form.reset();
+        } else {
+            err.classList.remove('d-none');
+        }
+    } catch(_) {
+        err.classList.remove('d-none');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+    }
+});
+
+/* Reset alerts when modal closes */
+document.getElementById('supportModal').addEventListener('hidden.bs.modal', function() {
+    document.getElementById('supSuccess').classList.add('d-none');
+    document.getElementById('supError').classList.add('d-none');
+});
+</script>
 </body>
 </html>
