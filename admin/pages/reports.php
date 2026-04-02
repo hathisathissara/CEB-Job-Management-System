@@ -21,7 +21,7 @@ include '../layout/header.php';
         <div class="card shadow-sm border-0 border-top border-4 border-danger h-100">
             <div class="card-header bg-white fw-bold py-3"><i class="fas fa-tools me-2 text-danger"></i> Meter Removal Reports</div>
             <div class="card-body p-4">
-                <form action="../exports/export_meter.php" method="GET">
+                <form action="../admin/exports/export_meter.php" method="GET">
 
                     <div class="mb-3">
                         <label class="small fw-bold text-muted">Date Range (Created At)</label>
@@ -64,7 +64,7 @@ include '../layout/header.php';
         <div class="card shadow-sm border-0 border-top border-4 border-primary h-100">
             <div class="card-header bg-white fw-bold py-3"><i class="fas fa-exchange-alt me-2 text-primary"></i> Meter Change Reports</div>
             <div class="card-body p-4">
-                <form action="../exports/export_change.php" method="GET">
+                <form action="../admin/exports/export_change.php" method="GET">
 
                     <div class="mb-3">
                         <label class="small fw-bold text-muted">Date Range</label>
