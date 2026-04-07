@@ -121,8 +121,9 @@
                                 <label class="form-label">NIC Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                    <input type="text" name="nic" class="form-control" placeholder="9 digits + V or 12 digits" required>
+                                    <input type="text" name="nic" id="nicInput" class="form-control" placeholder="9 digits + V or 12 digits" oninput="validateNIC(this)" required>
                                 </div>
+                                <div id="nic-feedback" class="mt-1"></div>
                             </div>
 
                             <div class="mb-4">
@@ -133,7 +134,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" name="submit_app" class="btn btn-primary w-100 btn-submit mt-2">
+                            <button type="submit" name="submit_app" id="submitBtn" class="btn btn-primary w-100 btn-submit mt-2">
                                 REGISTER APPLICATION <i class="fas fa-arrow-right ms-2"></i>
                             </button>
                         </form>
@@ -155,6 +156,40 @@
     </footer>
 
     <script>
+        function validateNIC(input) {
+            const val = input.value.trim();
+            const feedback = document.getElementById('nic-feedback');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Regex for old NIC: 9 digits + V/X
+            const oldNicRegex = /^[0-9]{9}[vVxX]$/;
+            // Regex for new NIC: 12 digits
+            const newNicRegex = /^[0-9]{12}$/;
+
+            if (val === "") {
+                feedback.innerText = "";
+                input.classList.remove('is-invalid', 'is-valid');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            if (oldNicRegex.test(val) || newNicRegex.test(val)) {
+                feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> Valid NIC Format';
+                feedback.style.color = "#2ed573";
+                feedback.className = "small fst-italic fw-bold";
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+                submitBtn.disabled = false;
+            } else {
+                feedback.innerHTML = '<i class="fas fa-times-circle me-1"></i> Invalid NIC Format (Old: 9 digits+V/X, New: 12 digits)';
+                feedback.style.color = "#ff4757";
+                feedback.className = "small fst-italic fw-bold";
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+                submitBtn.disabled = true;
+            }
+        }
+
         window.addEventListener('load', function() {
             var loader = document.getElementById('loader-wrapper');
             setTimeout(function() {

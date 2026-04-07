@@ -149,9 +149,13 @@ include '../layout/header.php';
         <small class="text-muted" style="font-size:11px;">(Augmentation/Over 100k can be updated later)</small>
     </div>
     <div class="mb-3"><label class="fw-bold small">Customer Name (Req)</label><input type="text" name="name" class="form-control" required></div>
-    <div class="mb-3"><label class="fw-bold small">NIC Number (Req)</label><input type="text" name="nic" class="form-control" required></div>
+    <div class="mb-3">
+        <label class="fw-bold small">NIC Number (Req)</label>
+        <input type="text" name="nic" id="nicInput" class="form-control" oninput="validateNIC(this)" required>
+        <div id="nic-feedback" class="mt-1"></div>
+    </div>
     <div class="mb-3"><label class="fw-bold small">Address (Opt)</label><textarea name="address" class="form-control" rows="2"></textarea></div>
-</div><div class="modal-footer"><button type="submit" name="add_app" class="btn btn-primary w-100 fw-bold">Register Application</button></div></form></div></div></div>
+</div><div class="modal-footer"><button type="submit" name="add_app" id="addAppBtn" class="btn btn-primary w-100 fw-bold">Register Application</button></div></form></div></div></div>
 
 <!-- 2. UPDATE MODAL (Dynamic Workflow) -->
 <div class="modal fade" id="updModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><form method="POST"><div class="modal-header bg-primary text-white"><h5 class="modal-title">Update Workflow</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
@@ -205,6 +209,38 @@ include '../layout/header.php';
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    function validateNIC(input) {
+        const val = input.value.trim();
+        const feedback = document.getElementById('nic-feedback');
+        const registerBtn = document.getElementById('addAppBtn');
+        
+        // Regex for old NIC: 9 digits + V/X
+        const oldNicRegex = /^[0-9]{9}[vVxX]$/;
+        // Regex for new NIC: 12 digits
+        const newNicRegex = /^[0-9]{12}$/;
+
+        if (val === "") {
+            feedback.innerText = "";
+            input.classList.remove('is-invalid', 'is-valid');
+            registerBtn.disabled = false;
+            return;
+        }
+
+        if (oldNicRegex.test(val) || newNicRegex.test(val)) {
+            feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> Valid NIC Format';
+            feedback.className = "text-success small fst-italic";
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+            registerBtn.disabled = false;
+        } else {
+            feedback.innerHTML = '<i class="fas fa-times-circle me-1"></i> Invalid NIC Format (Old: 9 digits+V/X, New: 12 digits)';
+            feedback.className = "text-danger small fst-italic";
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+            registerBtn.disabled = true;
+        }
+    }
+
     function edit(d) {
         document.getElementById('u_id').value = d.id;
         document.getElementById('u_app').innerText = d.app_no;
