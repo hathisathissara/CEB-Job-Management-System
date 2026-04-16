@@ -3,8 +3,8 @@ RewriteEngine On
 RewriteBase /ceb/
 
 
-RewriteRule ^/?$ public/index.php [L]
-RewriteRule ^home/?$ public/index.php [L]
+RewriteRule ^/?$ index.php [L]
+RewriteRule ^home/?$ index.php [L]
 RewriteRule ^job/?$ public/meter_request.php [L]
 RewriteRule ^change/?$ public/meter_change_request.php [L]
 RewriteRule ^new_service_request/?$ public/new_service_request.php [L]
