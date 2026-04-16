@@ -102,7 +102,7 @@ if (isset($_POST['reset_btn'])) {
         </form>
 
         <br>
-        <a href="login.php">Go back to Login Page</a>
+        <a href="../../home">Go back to Login Page</a>
     </div>
 
 </body>
