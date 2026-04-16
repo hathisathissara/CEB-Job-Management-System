@@ -1,5 +1,5 @@
 <?php
-include '../db_conn.php';
+include '../../config/db_conn.php';
 $message = "";
 
 if (isset($_POST['reset_btn'])) {
@@ -8,10 +8,10 @@ if (isset($_POST['reset_btn'])) {
 
     if (!empty($target_user) && !empty($new_raw_pass)) {
 
-        // මේ ෆන්ෂන් එකෙන් ඔයාගේ සර්වර් එකට ගැලපෙන විදියට හරියටම HASH එක හැදෙනවා
+        // This function generates the correct HASH suitable for your server environment
         $new_hash = password_hash($new_raw_pass, PASSWORD_DEFAULT);
 
-        // Database එක Update කිරීම
+        // Update the Database
         $sql = "UPDATE users SET password = '$new_hash' WHERE username = '$target_user'";
 
         if ($conn->query($sql) === TRUE) {
@@ -84,7 +84,7 @@ if (isset($_POST['reset_btn'])) {
             <label style="float:left; font-weight:bold;">Select User:</label>
             <select name="username">
                 <?php
-                // Database එකේ ඉන්න userla ඔක්කොම drop down එකට ගන්නවා
+                // Get all users from the database for the dropdown
                 $sql = "SELECT username FROM users";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {

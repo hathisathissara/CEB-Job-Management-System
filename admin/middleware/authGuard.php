@@ -1,25 +1,25 @@
 <?php
-// 1. Session එක Start කරලා නැත්නම් විතරක් Start කරන්න. (Error වැළැක්වීමට)
+// 1. Start the session only if it hasn't been started yet (to prevent errors)
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Security Check (Logged In ද කියලා බලනවා)
+// 2. Security Check (Check if the user is logged in)
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: ../admin/auth/login.php"); // හෝ login ලින්ක් එක
+    header("Location: ../admin/auth/login.php"); // or login link
     exit();
 }
 
-// 3. Database සහ Functions සම්බන්ධ කිරීම
-// (Middleware එක Load වෙන්නේ admin folder එකේ පිටු වලින් නිසා Path එක `../` වෙන්න ඕන)
+// 3. Connect Database and Functions
+// (Middleware is loaded from pages within the admin folder, so the path should be '../')
 include_once '../../config/db_conn.php'; 
 include_once '../functions.php';
 
-// 4. පොදුවේ පාවිච්චි වෙන විචල්‍යයන් (Variables) සෑදීම
+// 4. Define commonly used variables
 $current_officer = $_SESSION['full_name'];
 $current_user_id = $_SESSION['user_id'];
 $my_role = $_SESSION['role'];
 
-// 5. Timezone එක ලංකාවට හැදීම
+// 5. Set the timezone to Sri Lanka
 date_default_timezone_set('Asia/Colombo');
 ?>

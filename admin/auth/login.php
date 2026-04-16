@@ -42,7 +42,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $remember = isset($_POST['remember_me']); // Checkbox click kalada?
+    $remember = isset($_POST['remember_me']); // Was the 'Remember Me' checkbox clicked?
 
     $stmt = $conn->prepare("SELECT id, username, password, full_name, role, theme FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -66,7 +66,7 @@ if (isset($_POST['login'])) {
 
             // --- SET COOKIE IF REMEMBER ME CHECKED ---
             if ($remember) {
-                // Random Token ekak hadanawa
+                // Generate a random token
                 $token = bin2hex(random_bytes(32));
 
                 // 1. Save token in DB for this user
