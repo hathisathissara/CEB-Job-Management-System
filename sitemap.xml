@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://ceb.unaux.com/</loc>
+    <lastmod>2026-04-16</lastmod>
+    <priority>1.00</priority>
+  </url>
+
+  <!-- Add other pages manually like this -->
+  <url>
+    <loc>https://ceb.unaux.com/admin/login</loc>
+    <lastmod>2026-04-16</lastmod>
+    <priority>0.80</priority>
+  </url>
+<url>
+    <loc>https://ceb.unaux.com/job</loc>
+    <lastmod>2026-04-16</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://ceb.unaux.com/change</loc>
+    <lastmod>2026-04-16</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+<loc>https://ceb.unaux.com/new_service_request</loc>
+    <lastmod>2026-04-16</lastmod>
+    <priority>0.80</priority>
+</url>
+
+</urlset>
