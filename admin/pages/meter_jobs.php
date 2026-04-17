@@ -189,7 +189,7 @@ include '../layout/header.php';
                             <!-- Delete Button (Only for Super Admin) -->
                             <?php if($_SESSION['role'] == 'Super Admin'): ?>
                                 <div>
-                                    <a href="meter_jobs.php?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this job?');" class="text-danger small text-decoration-none hover-underline">
+                                    <a href="meter_jobs?del=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this job?');" class="text-danger small text-decoration-none hover-underline">
                                         <i class="fas fa-trash-alt me-1"></i> Delete
                                     </a>
                                 </div>
