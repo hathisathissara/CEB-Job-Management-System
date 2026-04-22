@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // 2. Security Check (Check if the user is logged in)
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header("Location: ../admin/auth/login.php"); // or login link
+    header("Location: login"); // or login link
     exit();
 }
 

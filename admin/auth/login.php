@@ -44,7 +44,7 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
     $remember = isset($_POST['remember_me']); // Was the 'Remember Me' checkbox clicked?
 
-    $stmt = $conn->prepare("SELECT id, username, password, full_name, role, theme FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, full_name, role, theme, is_active FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -53,31 +53,31 @@ if (isset($_POST['login'])) {
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['password'])) {
 
-            // Login Success
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['full_name'] = $row['full_name'];
-            $_SESSION['role'] = $row['role'];
-            $_SESSION['theme'] = $row['theme'];
+            // --- CHECK IF ACCOUNT IS ACTIVE ---
+            if ($row['is_active'] != 1) {
+                $pending_msg = true; // Show the special pending warning
+            } else {
+                // Login Success
+                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['full_name'] = $row['full_name'];
+                $_SESSION['role'] = $row['role'];
+                $_SESSION['theme'] = $row['theme'];
 
-            // Log
-            include_once '../functions.php';
-            if (function_exists('addLog')) addLog($conn, $row['full_name'], 'LOGIN', 'Manually logged in');
+                // Log
+                include_once '../functions.php';
+                if (function_exists('addLog')) addLog($conn, $row['full_name'], 'LOGIN', 'Manually logged in');
 
-            // --- SET COOKIE IF REMEMBER ME CHECKED ---
-            if ($remember) {
-                // Generate a random token
-                $token = bin2hex(random_bytes(32));
+                // --- SET COOKIE IF REMEMBER ME CHECKED ---
+                if ($remember) {
+                    $token = bin2hex(random_bytes(32));
+                    $conn->query("UPDATE users SET remember_token='$token' WHERE id={$row['id']}");
+                    setcookie('ceb_remember_token', $token, time() + (86400 * 30), "/");
+                }
 
-                // 1. Save token in DB for this user
-                $conn->query("UPDATE users SET remember_token='$token' WHERE id={$row['id']}");
-
-                // 2. Save token in Browser Cookie (30 Days)
-                setcookie('ceb_remember_token', $token, time() + (86400 * 30), "/");
+                header("Location: dashboard");
+                exit();
             }
-
-            header("Location: dashboard");
-            exit();
         } else {
             $error_msg = "Incorrect Password! Please try again.";
         }
@@ -267,6 +267,17 @@ if (isset($_POST['login'])) {
                 </div>
             <?php endif; ?>
 
+            <?php if (isset($pending_msg)): ?>
+                <div class="text-center p-3 mb-2" style="background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.5); border-radius:12px;">
+                    <div class="mb-2" style="font-size:2rem;">⏳</div>
+                    <div class="fw-bold text-warning mb-1" style="font-size:.95rem;">Account Pending Activation</div>
+                    <div class="text-white-50" style="font-size:.82rem; line-height:1.6;">
+                        Your account has been registered but is <b class="text-warning">not yet activated</b>.<br>
+                        Please wait until a <b class="text-white">Super Admin</b> activates your account before logging in.
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <form method="POST" action="">
                 <div class="mb-3">
                     <label class="form-label">Username</label>
@@ -288,9 +299,14 @@ if (isset($_POST['login'])) {
                 </button>
             </form>
             
-            <div class="text-center">
-                <a href="../home" class="back-link"><i class="fas fa-arrow-left me-2"></i>Back to Main Site</a>
-            </div>
+             <div class="d-flex justify-content-between mt-3 px-1">
+            <a href="forgot_password" class="small text-decoration-none text-danger fw-bold">Forgot Password?</a>
+            <a href="register" class="small text-decoration-none text-primary fw-bold">Register Account</a>
+        </div>
+        
+        <div class="text-center mt-3 pt-2 border-top">
+            <a href="../home" class="text-decoration-none small text-white">← Back to Site</a>
+        </div>
         </div>
     </div>
 

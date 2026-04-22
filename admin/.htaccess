@@ -4,7 +4,8 @@ RewriteBase /ceb/admin/
 
 
 RewriteRule ^login/?$ auth/login.php [L]
-RewriteRule ^reset_pass/?$ auth/reset_pass.php [L]
+RewriteRule ^register/?$ auth/register.php [L]
+RewriteRule ^forgot_password/?$ auth/forgot_password.php [L]
 
 
 RewriteRule ^dashboard/?$ pages/index.php [L]
