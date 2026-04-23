@@ -193,7 +193,7 @@ include '../layout/header.php';
                 <div class="table-responsive">
                     <table class="table align-middle mb-0" id="usersTable">
                         <thead style="background:var(--table-head);">
-                            <tr class="text-uppercase small text-muted" style="font-size:.72rem;letter-spacing:.5px;">
+                            <tr class="text-uppercase small text-primary" style="font-size:.72rem;letter-spacing:.5px;">
                                 <th class="ps-4 py-3">Officer</th>
                                 <th class="py-3">Role</th>
                                 <th class="py-3">Status</th>
@@ -220,7 +220,7 @@ include '../layout/header.php';
                                                 <?php echo htmlspecialchars($rw['full_name']); ?>
                                                 <?php if ($isCurrent): ?><span class="badge bg-primary bg-opacity-10 text-primary border ms-1" style="font-size:.65rem;">You</span><?php endif; ?>
                                             </div>
-                                            <div class="small text-muted">@<?php echo $rw['username']; ?> &bull; <?php echo $rw['email']; ?></div>
+                                            <div class="small text-primary">@<?php echo $rw['username']; ?> &bull; <?php echo $rw['email']; ?></div>
                                         </div>
                                     </div>
                                 </td>
