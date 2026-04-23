@@ -40,6 +40,21 @@ if (isset($_POST['change_pass'])) {
     } else { $err = "Incorrect Current Password!"; }
 }
 
+// 3. UPDATE NOTICE
+// --- 5. UPDATE SYSTEM NOTICE (Super Admin Only) ---
+if (isset($_POST['update_notice']) && $my_role == 'Super Admin') {
+    $notice_text = $conn->real_escape_string(trim($_POST['notice_msg']));
+    $is_active = isset($_POST['notice_status']) ? 1 : 0; 
+    $sql = "UPDATE system_settings SET notice_text='$notice_text', is_active='$is_active' WHERE id=1";
+    if ($conn->query($sql)) {
+        addLog($conn, $current_officer, 'UPDATE NOTICE', 'Updated Public Notification Bar');
+        $msg = "System Notice Updated Successfully!";
+    } else {
+        $err = "Failed to update notice: " . $conn->error;
+    }
+}
+
+
 // Fetch current user info for profile display
 $me = $conn->query("SELECT full_name, email, role, username FROM users WHERE id='$current_user_id'")->fetch_assoc();
 $initials = strtoupper(implode('', array_map(fn($w) => $w[0], explode(' ', trim($me['full_name'])))));

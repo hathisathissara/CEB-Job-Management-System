@@ -32,7 +32,7 @@ function sendOTP($to_email, $otp_code) {
     try {
         $mail = _getMailer();
         $mail->addAddress($to_email);
-        $mail->Subject = 'Your OTP Verification Code — EDL Portal';
+        $mail->Subject = 'Your OTP Verification Code  EDL Portal';
         $mail->Body = "
         <div style='font-family:Inter,sans-serif;background:#f4f4f4;padding:30px;'>
           <div style='max-width:480px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);'>
