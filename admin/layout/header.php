@@ -481,13 +481,15 @@ if ($theme == 'dark') {
             <!-- System -->
             <div class="nav-label-group">System</div>
             <div class="nav-group" id="grp-system">
-                <?php $sysActive = in_array(basename($_SERVER['PHP_SELF']), ['settings.php','activity_logs.php']); ?>
+                <?php $sysActive = in_array(basename($_SERVER['PHP_SELF']), ['settings.php','add_user.php','manage_users.php','activity_logs.php']); ?>
                 <div class="nav-group-toggle <?php echo $sysActive ? 'open has-active' : ''; ?>" onclick="toggleGroup('grp-system')">
                     <i class="fas fa-sliders-h ni"></i><span class="ng-label">System</span><i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="nav-sub <?php echo $sysActive ? 'open' : ''; ?>" id="sub-grp-system">
-                    <a href="settings" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>"><i class="fas fa-cog ni"></i> Settings</a>
+                    <a href="settings" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>"><i class="fas fa-user-shield ni"></i> Account Security</a>
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Super Admin'): ?>
+                    <a href="add_user" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'add_user.php' ? 'active' : ''; ?>"><i class="fas fa-user-plus ni"></i> Add Officer</a>
+                    <a href="manage_users" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'manage_users.php' ? 'active' : ''; ?>"><i class="fas fa-users-cog ni"></i> Manage Users</a>
                     <a href="logs" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>"><i class="fas fa-history ni"></i> Audit Logs</a>
                     <?php endif; ?>
                 </div>

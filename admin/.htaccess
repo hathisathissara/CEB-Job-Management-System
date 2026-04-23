@@ -15,6 +15,8 @@ RewriteRule ^meter_change/?$ pages/meter_change.php [QSA,L]
 RewriteRule ^reports/?$ pages/reports.php [QSA,L]
 RewriteRule ^new_services/?$ pages/new_services.php [QSA,L]
 RewriteRule ^report_error/?$ pages/report_error.php [QSA,L]
+RewriteRule ^add_user/?$ pages/add_user.php [QSA,L]
+RewriteRule ^manage_users/?$ pages/manage_users.php [QSA,L]
 
 RewriteRule ^settings/?$ pages/settings.php [L]
 
