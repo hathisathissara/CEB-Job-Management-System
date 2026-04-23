@@ -99,7 +99,7 @@ function sendWelcomeCredentials($to_email, $full_name, $username, $plain_passwor
               </div>
 
               <div style='text-align:center;'>
-                <a href='http://localhost/CEB/admin/auth/login'
+                <a href='http://localhost/CEB/admin/login'
                    style='display:inline-block;background:linear-gradient(135deg,#1e293b,#475569);color:#fff;text-decoration:none;padding:13px 34px;border-radius:10px;font-weight:600;font-size:.9rem;'>
                   Login to Portal &rarr;
                 </a>
