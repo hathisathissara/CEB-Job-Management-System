@@ -273,7 +273,7 @@ if (isset($_POST['login'])) {
                     <div class="fw-bold text-warning mb-1" style="font-size:.95rem;">Account Pending Activation</div>
                     <div class="text-white-50" style="font-size:.82rem; line-height:1.6;">
                         Your account has been registered but is <b class="text-warning">not yet activated</b>.<br>
-                        Please wait until a <b class="text-white">Super Admin</b> activates your account before logging in.
+                        Please wait until a <b class="text-white">Super Admin</b> activates your account. You will receive the activation email with further instructions.
                     </div>
                 </div>
             <?php endif; ?>
