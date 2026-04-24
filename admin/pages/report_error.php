@@ -4,6 +4,11 @@
 // ============================================
 require_once '../middleware/authGuard.php';
 
+// Fetch the current user's email
+$user_q = $conn->query("SELECT email FROM users WHERE id='$current_user_id'");
+$user_data = $user_q->fetch_assoc();
+$my_email = $user_data['email'] ?? '';
+
 include '../layout/header.php';
 ?>
 
@@ -41,7 +46,7 @@ include '../layout/header.php';
                         <label class="form-label fw-bold small text-secondary text-uppercase mb-1">Your Email Address</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-muted"></i></span>
-                            <input type="email" name="email" class="form-control border-start-0 ps-0" placeholder="e.g. yourname@domain.com" required>
+                            <input type="email" name="email" class="form-control border-start-0 ps-0 bg-light" value="<?php echo htmlspecialchars($my_email); ?>" readonly required>
                         </div>
                     </div>
 
