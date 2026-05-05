@@ -5,41 +5,83 @@ include '../PHPMailer/mailer.php';
 date_default_timezone_set('Asia/Colombo');
 
 $step = isset($_GET['step']) ? $_GET['step'] : 1;
-$reg_email = isset($_GET['email']) ? $_GET['email'] : '';
 $msg = ""; $err = "";
 
-// --- STEP 1: HANDLE REGISTRATION FORM ---
+// ඊමේල් එක URL එකෙන් නැතුව ආරක්ෂිතව Session එකෙන් ගන්නවා
+$reg_email = isset($_SESSION['temp_reg']['email']) ? $_SESSION['temp_reg']['email'] : '';
+
+// ==========================================
+// --- STEP 1: REGISTRATION FORM ---
+// ==========================================
 if (isset($_POST['register'])) {
-    $n = $conn->real_escape_string(trim($_POST['full_name']));
-    $u = $conn->real_escape_string(trim($_POST['username']));
-    $e = $conn->real_escape_string(trim($_POST['email']));
+    $n = trim($_POST['full_name']);
+    $u = trim($_POST['username']);
+    $e = trim($_POST['email']);
     $p = password_hash($_POST['password'], PASSWORD_DEFAULT);
     
-    $chk = $conn->query("SELECT id FROM users WHERE username='$u' OR email='$e'");
-    if ($chk->num_rows > 0) { $err = "Username or Email already taken!"; } 
-    else {
+    // Check if Username or Email exists in REAL Database
+    $chk = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
+    $chk->bind_param("ss", $u, $e);
+    $chk->execute();
+    
+    if ($chk->get_result()->num_rows > 0) { 
+        $err = "Username or Email already taken in the system!"; 
+    } else {
+        // Generate 6 Digit OTP
         $otp = rand(100000, 999999);
-        $expiry = date('Y-m-d H:i:s', strtotime('+15 minutes')); 
+        $expiry = time() + (15 * 60); // Expire in 15 mins
         
-        $sql = "INSERT INTO users (username, email, password, full_name, role, is_active, otp_code, otp_expiry) VALUES ('$u', '$e', '$p', '$n', 'Officer', 0, '$otp', '$expiry')";
-        if ($conn->query($sql)) {
-            if (sendOTP($e, $otp)) { header("Location: register?step=2&email=$e"); exit(); } 
-            else { $err = "User saved, but failed to send OTP email."; }
-        } else { $err = "Database Error: " . $conn->error; }
+        // 🚨 වෙනස: Database එකට යවන්නේ නෑ, තාවකාලිකව SESSION එකක සේව් කරගන්නවා
+        $_SESSION['temp_reg'] = [
+            'name'  => $n,
+            'user'  => $u,
+            'email' => $e,
+            'pass'  => $p,
+            'otp'   => $otp,
+            'exp'   => $expiry
+        ];
+        
+        // Email යවනවා
+        if (sendOTP($e, $otp)) { 
+            header("Location: register?step=2"); 
+            exit(); 
+        } else { 
+            $err = "Failed to send OTP email. Please check internet/SMTP."; 
+            unset($_SESSION['temp_reg']); // Failed, so clear memory
+        }
     }
 }
 
-// --- STEP 2: HANDLE OTP VERIFICATION ---
+// ==========================================
+// --- STEP 2: VERIFY OTP & DB INSERT ---
+// ==========================================
 if (isset($_POST['verify_otp'])) {
-    $e = $conn->real_escape_string($_POST['email']);
-    $entered_otp = $conn->real_escape_string(trim($_POST['otp']));
-    $now = date('Y-m-d H:i:s');
-
-    $res = $conn->query("SELECT id FROM users WHERE email='$e' AND otp_code='$entered_otp' AND otp_expiry >= '$now'");
-    if ($res->num_rows > 0) {
-        $conn->query("UPDATE users SET otp_code=NULL, otp_expiry=NULL WHERE email='$e'");
-        $step = 3; 
-    } else { $err = "Invalid or Expired OTP Code!"; }
+    $entered_otp = trim($_POST['otp']);
+    
+    // Session එකේ විස්තර තියෙනවද බලනවා (browser එක වැහුවොත් මේවා මැකෙනවා)
+    if(isset($_SESSION['temp_reg'])) {
+        $t_data = $_SESSION['temp_reg'];
+        
+        // ගහපු OTP එකයි, කාලයයි (විනාඩි 15) හරිද බලනවා
+        if ($entered_otp == $t_data['otp'] && time() <= $t_data['exp']) {
+            
+            // 🚨 OTP හරි! දැන් තමයි Database එකට සේව් කරන්නේ (is_active = 0 සමග)
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password, full_name, role, is_active) VALUES (?, ?, ?, ?, 'Officer', 0)");
+            $stmt->bind_param("ssss", $t_data['user'], $t_data['email'], $t_data['pass'], $t_data['name']);
+            
+            if ($stmt->execute()) {
+                unset($_SESSION['temp_reg']); // Session එකේ දත්ත මකනවා
+                $step = 3; 
+            } else {
+                $err = "Database Error: " . $conn->error;
+            }
+        } else {
+            $err = "Invalid or Expired OTP Code!";
+        }
+    } else {
+        $err = "Session expired! Please restart registration.";
+        $step = 1;
+    }
 }
 ?>
 
@@ -62,7 +104,6 @@ if (isset($_POST['verify_otp'])) {
         .orb-2 { width:300px; height:300px; background: rgba(52,152,219,.08); bottom:-50px; right:-50px; animation-delay:4s;}
         @keyframes floatOrb { 0%,100%{ transform:translate(0,0) scale(1); } 50% { transform:translate(30px,-20px) scale(1.05); } }
 
-        /* A slightly wider card for register */
         .glass-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; backdrop-filter: blur(20px); box-shadow: 0 40px 80px rgba(0,0,0,0.5); padding: 40px; width: 100%; max-width: 550px; z-index: 10; }
         
         .login-header i { font-size: 3rem; color: var(--red-l); margin-bottom: 12px; text-shadow: 0 0 20px rgba(192,57,43,0.4); }
@@ -109,17 +150,21 @@ if (isset($_POST['verify_otp'])) {
                     <small class="text-white-50 d-block mb-1">We sent a verification code to</small>
                     <b class="text-white"><?php echo htmlspecialchars($reg_email); ?></b>
                 </div>
-                <input type="hidden" name="email" value="<?php echo htmlspecialchars($reg_email); ?>">
-                <div class="mb-4 text-center"><label class="form-label mb-2">Enter OTP Code</label><input type="text" name="otp" class="form-control text-center fw-bold text-white fs-4 py-3" style="letter-spacing:10px;" maxlength="6" required autofocus></div>
-                <button type="submit" name="verify_otp" class="btn btn-submit bg-primary" style="background:linear-gradient(135deg, #0d6efd, #0dcaf0);">VERIFY NOW <i class="fas fa-check-circle ms-1"></i></button>
+                
+                <div class="mb-4 text-center">
+                    <label class="form-label mb-2">Enter OTP Code</label>
+                    <input type="text" name="otp" class="form-control text-center fw-bold text-white fs-4 py-3" style="letter-spacing:10px;" maxlength="6" required autofocus>
+                </div>
+                <button type="submit" name="verify_otp" class="btn btn-submit bg-primary" style="background:linear-gradient(135deg, #0d6efd, #0dcaf0);">VERIFY EMAIL <i class="fas fa-check-circle ms-1"></i></button>
+                <div class="text-center mt-3"><a href="register" class="small text-decoration-none text-danger">Cancel and try again</a></div>
             </form>
 
             <?php elseif($step == 3): ?>
             <!-- WAIT FOR ADMIN -->
             <div class="text-center py-4">
                 <div style="font-size:3.5rem; color:#f39c12; text-shadow:0 0 20px rgba(243,156,18,0.5);"><i class="fas fa-user-clock"></i></div>
-                <h5 class="fw-bold text-white mt-3">Almost There!</h5>
-                <p class="text-white-50 small mt-2 lh-lg">Your email has been verified. However, a <b class="text-warning">Super Admin</b> must approve your access level before you can login to the portal.</p>
+                <h5 class="fw-bold text-white mt-3">Account Pending!</h5>
+                <p class="text-white-50 small mt-2 lh-lg">Your email has been verified and registered. Please inform your <b>Super Admin</b> to activate your account access.</p>
                 <a href="login" class="btn btn-submit mt-4 d-block bg-transparent border text-white hover-border-white" style="background:transparent; box-shadow:none; border-color:var(--border);">RETURN TO LOGIN</a>
             </div>
             <?php endif; ?>
