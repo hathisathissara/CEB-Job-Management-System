@@ -123,6 +123,7 @@
         <a href="#hero" class="active">Home</a>
         <a href="#about">About</a>
         <a href="#tools">Tools</a>
+        <a href="#app-download">Download App</a>
         <a href="admin/login" class="nav-tool-btn"><i class="fas fa-user-shield"></i> Officer Login</a>
     </div>
 
@@ -138,6 +139,7 @@
     <a href="#hero"   onclick="closeMobileMenu()"><i class="fas fa-home"></i> Home</a>
     <a href="#about"  onclick="closeMobileMenu()"><i class="fas fa-building"></i> About EDL</a>
     <a href="#tools"  onclick="closeMobileMenu()"><i class="fas fa-th-large"></i> Tools</a>
+    <a href="#app-download" onclick="closeMobileMenu()"><i class="fab fa-android"></i> Download App</a>
     <a href="admin/login"><i class="fas fa-user-shield"></i> Officer Login</a>
     <a href="job"><i class="fas fa-pen-nib"></i> Meter Removal</a>
     <a href="change"><i class="fas fa-exchange-alt"></i> Meter Change</a>
@@ -346,6 +348,278 @@
 </section>
 
 <!-- ══════════════════════════════════════════
+     ANDROID APP DOWNLOAD SECTION
+══════════════════════════════════════════ -->
+<section id="app-download" style="padding: 80px 0;">
+    <div class="container">
+        <div class="app-download-card reveal">
+            <!-- Decorative orbs -->
+            <div class="app-orb app-orb-1"></div>
+            <div class="app-orb app-orb-2"></div>
+
+            <div class="row align-items-center g-5 position-relative">
+                <!-- Left: Text -->
+                <div class="col-lg-7">
+                    <div class="section-tag" style="margin-bottom:18px;">
+                        <i class="fab fa-android"></i> Mobile Application
+                    </div>
+                    <h2 class="section-heading" style="margin-bottom:16px;">
+                        EDL Field App for <span class="accent">Android</span>
+                    </h2>
+                    <p class="section-sub" style="margin-bottom:28px;max-width:520px;">
+                        Download the official EDL Mobile App to manage field jobs, meter records
+                        and service requests directly from your Android device. Built for EDL field
+                        officers — fast, secure and offline-capable.
+                    </p>
+
+                    <!-- Feature pills -->
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;">
+                        <span class="app-feat-pill"><i class="fas fa-wifi-slash"></i> Offline Ready</span>
+                        <span class="app-feat-pill"><i class="fas fa-lock"></i> Secure Access</span>
+                        <span class="app-feat-pill"><i class="fas fa-bolt"></i> Fast & Lightweight</span>
+                        <span class="app-feat-pill"><i class="fas fa-sync-alt"></i> Auto Sync</span>
+                    </div>
+
+                    <!-- Download Button -->
+                    <!-- ⚠️  APK LINK: Replace the href below with your actual .apk download URL -->
+                    <!-- Example: Google Drive direct download or your server path like "assets/downloads/edl-app.apk" -->
+                    <a href="assets/downloads/edl-app.apk"
+                       id="apkDownloadBtn"
+                       class="apk-download-btn"
+                       download
+                       aria-label="Download EDL Android App">
+                        <div class="apk-btn-icon">
+                            <i class="fab fa-android"></i>
+                        </div>
+                        <div class="apk-btn-text">
+                            <span class="apk-sub">Download for</span>
+                            <span class="apk-main">Android APK</span>
+                        </div>
+                        <i class="fas fa-download apk-arrow"></i>
+                    </a>
+
+                    <p style="margin-top:14px;font-size:.78rem;color:var(--muted);">
+                        <i class="fas fa-info-circle me-1"></i>
+                        For Android 7.0+ &bull; Enable "Install from Unknown Sources" if prompted &bull; Internal use only
+                    </p>
+                </div>
+
+                <!-- Right: Phone Mockup -->
+                <div class="col-lg-5 text-center">
+                    <div class="phone-mockup-wrap">
+                        <div class="phone-mockup">
+                            <div class="phone-screen">
+                                <div class="phone-screen-content">
+                                    <div class="phone-notch"></div>
+                                    <div style="padding:16px 12px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                                            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#c0392b,#e74c3c);display:flex;align-items:center;justify-content:center;">
+                                                <i class="fas fa-bolt" style="color:#fff;font-size:.65rem;"></i>
+                                            </div>
+                                            <span style="font-weight:700;font-size:.75rem;color:#fff;">EDL Field App</span>
+                                        </div>
+                                        <!-- Mini dashboard blocks -->
+                                        <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;margin-bottom:8px;">
+                                            <div style="font-size:.55rem;color:rgba(255,255,255,.5);margin-bottom:4px;">TODAY'S JOBS</div>
+                                            <div style="font-size:1.1rem;font-weight:800;color:#e74c3c;">12</div>
+                                            <div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:6px;">
+                                                <div style="width:65%;height:3px;background:linear-gradient(90deg,#c0392b,#e74c3c);border-radius:2px;"></div>
+                                            </div>
+                                        </div>
+                                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+                                            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;">
+                                                <i class="fas fa-pen-nib" style="color:#e74c3c;font-size:.7rem;"></i>
+                                                <div style="font-size:.5rem;color:rgba(255,255,255,.6);margin-top:3px;">Removals</div>
+                                                <div style="font-size:.85rem;font-weight:700;color:#fff;">7</div>
+                                            </div>
+                                            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;">
+                                                <i class="fas fa-exchange-alt" style="color:#3498db;font-size:.7rem;"></i>
+                                                <div style="font-size:.5rem;color:rgba(255,255,255,.6);margin-top:3px;">Changes</div>
+                                                <div style="font-size:.85rem;font-weight:700;color:#fff;">5</div>
+                                            </div>
+                                        </div>
+                                        <div style="background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);border-radius:8px;padding:8px;">
+                                            <div style="font-size:.5rem;color:rgba(255,255,255,.5);margin-bottom:2px;">SYNC STATUS</div>
+                                            <div style="display:flex;align-items:center;gap:4px;">
+                                                <div style="width:6px;height:6px;border-radius:50%;background:#2ecc71;animation:blink 1.5s infinite;"></div>
+                                                <span style="font-size:.6rem;color:#2ecc71;">Synced • Just now</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Glow effect -->
+                        <div class="phone-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* ── App Download Card ── */
+.app-download-card {
+    background: linear-gradient(135deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,.01) 100%);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 28px;
+    padding: 56px 52px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 80px rgba(192,57,43,.08), 0 32px 64px rgba(0,0,0,.25);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.app-download-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 100px rgba(192,57,43,.14), 0 40px 80px rgba(0,0,0,.3);
+}
+.app-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+}
+.app-orb-1 {
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(192,57,43,.18), transparent 70%);
+    top: -100px; right: -80px;
+}
+.app-orb-2 {
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(52,152,219,.12), transparent 70%);
+    bottom: -80px; left: -60px;
+}
+
+/* Feature pills */
+.app-feat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px;
+    font-size: .78rem;
+    color: rgba(255,255,255,.75);
+    font-weight: 500;
+    transition: background .2s, border-color .2s;
+}
+.app-feat-pill:hover {
+    background: rgba(192,57,43,.15);
+    border-color: rgba(192,57,43,.35);
+    color: #fff;
+}
+.app-feat-pill i { color: #e74c3c; }
+
+/* Download Button */
+.apk-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    border-radius: 16px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(192,57,43,.45);
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    position: relative;
+    overflow: hidden;
+}
+.apk-download-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.15), transparent);
+    opacity: 0;
+    transition: opacity .25s;
+}
+.apk-download-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(192,57,43,.55);
+    color: #fff;
+}
+.apk-download-btn:hover::before { opacity: 1; }
+.apk-btn-icon {
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,.18);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+.apk-btn-text { display: flex; flex-direction: column; line-height: 1.2; }
+.apk-sub  { font-size: .72rem; opacity: .8; font-weight: 400; }
+.apk-main { font-size: 1.05rem; font-weight: 700; }
+.apk-arrow { font-size: 1rem; margin-left: 8px; opacity: .85; animation: bounceX 1.6s infinite; }
+@keyframes bounceX {
+    0%,100% { transform: translateX(0); }
+    50%      { transform: translateX(5px); }
+}
+
+/* Phone Mockup */
+.phone-mockup-wrap {
+    position: relative;
+    display: inline-block;
+}
+.phone-mockup {
+    width: 200px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, #1a1a2e, #16213e);
+    border: 2px solid rgba(255,255,255,.12);
+    border-radius: 36px;
+    padding: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
+    position: relative;
+    z-index: 1;
+    animation: phoneFloat 4s ease-in-out infinite;
+}
+@keyframes phoneFloat {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+.phone-screen {
+    background: #0d0d1a;
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 380px;
+    position: relative;
+}
+.phone-notch {
+    width: 70px; height: 22px;
+    background: #0d0d1a;
+    border-radius: 0 0 14px 14px;
+    margin: 0 auto 8px;
+    position: relative;
+    z-index: 2;
+}
+.phone-glow {
+    position: absolute;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(231,76,60,.3), transparent 70%);
+    bottom: -40px; left: 50%; transform: translateX(-50%);
+    filter: blur(30px);
+    z-index: 0;
+}
+@keyframes blink {
+    0%,100% { opacity:1; }
+    50%      { opacity:.3; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-download-card { padding: 36px 24px; }
+    .apk-download-btn  { width: 100%; justify-content: center; }
+    .phone-mockup      { width: 160px; }
+    .phone-screen      { min-height: 300px; }
+}
+</style>
+
+<!-- ══════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════ -->
 <footer>
@@ -425,7 +699,7 @@ window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 40);
 
     /* Active nav link by section */
-    const sections = ['hero','about','tools'];
+    const sections = ['hero','about','tools','app-download'];
     const links = document.querySelectorAll('.nav-links a:not(.nav-tool-btn)');
     let cur = '';
     sections.forEach(id => {
