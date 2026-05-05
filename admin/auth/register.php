@@ -12,7 +12,7 @@ $reg_email = isset($_SESSION['temp_reg']['email']) ? $_SESSION['temp_reg']['emai
 
 // ==========================================
 // --- STEP 1: REGISTRATION FORM ---
-// ==========================================
+// ==========================================meke user kenek otp verification eka nokara acc ekak create krnna puluwan eka nisa ekata mokakdda krnna puluwao
 if (isset($_POST['register'])) {
     $n = trim($_POST['full_name']);
     $u = trim($_POST['username']);
