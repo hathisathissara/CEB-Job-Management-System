@@ -106,7 +106,9 @@ include '../layout/header.php'
                 <input type="text" name="s" class="form-control" placeholder="Job/Acc/Meter..." value="<?php echo htmlspecialchars($s); ?>">
             </div>
             <div class="col-md-3">
-                <label class="small fw-bold text-muted mb-1">Date Range</label>
+                <label class="small fw-bold text-muted mb-1">
+                    <?php echo ($f == 'Completed') ? '<i class="fas fa-calendar-check text-success me-1"></i> Completion Date' : '<i class="fas fa-calendar-plus text-primary me-1"></i> Request Date'; ?>
+                </label>
                 <div class="input-group">
                     <input type="date" name="d1" class="form-control form-control-sm" value="<?php echo $d1; ?>">
                     <span class="input-group-text">-</span>
@@ -141,7 +143,38 @@ include '../layout/header.php'
         <?php endif; ?>
     </div>
 </div>
+<?php
+    // Build WHERE clause early so $tot_res can be computed for the result counter
+    $w_early = "WHERE 1=1";
+    if (!empty($s)) {
+        $s_esc = $conn->real_escape_string($s);
+        $w_early .= " AND (job_no LIKE '%$s_esc%' OR acc_no LIKE '%$s_esc%' OR old_meter_no LIKE '%$s_esc%' OR new_meter_no LIKE '%$s_esc%')";
+    }
+    if (!empty($f)) $w_early .= " AND status='$f'";
+    if (!empty($p)) $w_early .= " AND phase_type='$p'";
+    // Use done_date when filtering Completed jobs, otherwise use created_at
+    if (!empty($d1) && !empty($d2)) {
+        $date_col = ($f == 'Completed') ? 'done_date' : 'created_at';
+        $w_early .= " AND $date_col BETWEEN '$d1' AND '$d2'";
+    }
 
+    $tot_res_q = $conn->query("SELECT COUNT(*) as t FROM meter_change $w_early");
+    $tot_res   = $tot_res_q ? $tot_res_q->fetch_assoc()['t'] : 0;
+    $nodup     = (!empty($s) || !empty($f) || !empty($p) || !empty($d1)) ? 1 : 0;
+?>
+ <!-- RESULT COUNTER -->
+    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+        <div>
+            <?php if(isset($_GET['btn_filter']) || !empty($s) || !empty($f) || $nodup==1): ?>
+                <span class="badge bg-info text-dark shadow-sm py-2 px-3 border border-info">
+                    <i class="fas fa-search me-1"></i> Found <b><?php echo $tot_res; ?></b> Records
+                </span>
+                <a href="meter_jobs" class="text-danger small fw-bold text-decoration-none ms-3"><i class="fas fa-times-circle"></i> Clear</a>
+            <?php else: ?>
+                <span class="text-muted small fw-bold"><i class="fas fa-list-ul me-1"></i> Total Records: <?php echo $tot_res; ?></span>
+            <?php endif; ?>
+        </div>
+    </div>
 <!-- TABLE -->
 <!-- DATA TABLE -->
     <div class="card shadow-sm border-0">
@@ -158,16 +191,8 @@ include '../layout/header.php'
                 </thead>
                 <tbody>
                     <?php
-                    // --- FILTER QUERY ---
-                    $w = "WHERE 1=1";
-                    if(!empty($_GET['s'])) {
-                        // FIX: Escape String to prevent SQL Error with '
-                        $s = $conn->real_escape_string($_GET['s']); 
-                        $w .= " AND (job_no LIKE '%$s%' OR acc_no LIKE '%$s%' OR old_meter_no LIKE '%$s%' OR new_meter_no LIKE '%$s%')";
-                    }
-                    if (!empty($f)) $w .= " AND status='$f'";
-                    if (!empty($p)) $w .= " AND phase_type='$p'";
-                    if (!empty($d1) && !empty($d2)) $w .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
+                    // --- FILTER QUERY --- reuse $w_early already built above
+                    $w = $w_early;
 
                     // Pagination
                     $results_per_page = 10;
@@ -175,8 +200,7 @@ include '../layout/header.php'
                     if ($page < 1) $page = 1;
                     $offset = ($page - 1) * $results_per_page;
 
-                    $tot_res_query = $conn->query("SELECT COUNT(*) as t FROM meter_change $w");
-                    $tot_res = $tot_res_query ? $tot_res_query->fetch_assoc()['t'] : 0;
+                    // $tot_res already fetched above; just compute pages
                     $tot_pages = ceil($tot_res / $results_per_page);
 
                     $res = $conn->query("SELECT * FROM meter_change $w ORDER BY id DESC LIMIT $results_per_page OFFSET $offset");

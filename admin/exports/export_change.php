@@ -24,7 +24,9 @@ if (!empty($p)) {
     $w .= " AND phase_type='$p_cl'";
 }
 if (!empty($d1) && !empty($d2)) {
-    $w .= " AND created_at BETWEEN '$d1 00:00:00' AND '$d2 23:59:59'";
+    // Use done_date when filtering Completed jobs, otherwise use created_at
+    $date_col = ($f == 'Completed') ? 'done_date' : 'created_at';
+    $w .= " AND $date_col BETWEEN '$d1' AND '$d2'";
 }
 
 $sql = "SELECT * FROM meter_change $w ORDER BY id DESC";
@@ -35,7 +37,8 @@ $total_count = $res ? $res->num_rows : 0;
 
 $status_print = empty($f) ? 'All Status' : htmlspecialchars($f);
 $phase_print = empty($p) ? 'All Phases' : htmlspecialchars($p);
-$date_print = (!empty($d1) && !empty($d2)) ? htmlspecialchars("$d1 to $d2") : 'All Time';
+$date_col_label = ($f == 'Completed') ? 'Completion Date' : 'Request Date';
+$date_print = (!empty($d1) && !empty($d2)) ? htmlspecialchars("$d1 to $d2") . " ($date_col_label)" : 'All Time';
 $search_print = empty($s) ? 'None' : htmlspecialchars($s);
 $generated_by = isset($_SESSION['full_name']) ? htmlspecialchars($_SESSION['full_name']) : '';
 
