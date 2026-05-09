@@ -10,13 +10,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/loader.css">
     <link rel="stylesheet" href="assets/css/style.css">   
 </head>
 <body class="loading">
 
 <!-- LOADER -->
-<div id="loader-wrapper"><div class="spinner"></div></div>
+<div id="loader-wrapper"></div>
 
 <!-- ── FLOATING WHATSAPP BUTTON ── -->
 <a id="whatsappFab" href="https://wa.me/94701207991?text=Hello,%20I%20need%20some%20assistance%20regarding%20the%20EDL%20System." target="_blank" rel="noopener" aria-label="WhatsApp Support">
@@ -157,16 +156,16 @@
     <div id="heroCarousel" class="carousel slide carousel-fade hero-bg-carousel" data-bs-ride="carousel">
         <div class="carousel-inner h-100">
             <div class="carousel-item active h-100" data-bs-interval="4000">
-                <img src="assets/images/edl_power_grid.png" class="d-block w-100 h-100" alt="EDL Power Grid" style="object-fit: cover;">
+                <img src="assets/images/edl_power_grid.webp" class="d-block w-100 h-100" alt="EDL Power Grid" style="object-fit: cover;">
             </div>
             <div class="carousel-item h-100" data-bs-interval="4000">
-                <img src="assets/images/edl_smart_meter.png" class="d-block w-100 h-100" alt="EDL Smart Meter" style="object-fit: cover;">
+                <img src="assets/images/edl_smart_meter.webp" class="d-block w-100 h-100" alt="EDL Smart Meter" style="object-fit: cover;">
             </div>
             <div class="carousel-item h-100" data-bs-interval="4000">
-                <img src="assets/images/edl_team.png" class="d-block w-100 h-100" alt="EDL Field Team" style="object-fit: cover;">
+                <img src="assets/images/edl_team.webp" class="d-block w-100 h-100" alt="EDL Field Team" style="object-fit: cover;">
             </div>
             <div class="carousel-item h-100" data-bs-interval="4000">
-                <img src="assets/images/edl_substation.png" class="d-block w-100 h-100" alt="EDL Substation" style="object-fit: cover;">
+                <img src="assets/images/edl_substation.webp" class="d-block w-100 h-100" alt="EDL Substation" style="object-fit: cover;">
             </div>
         </div>
         <div class="hero-overlay"></div>
@@ -265,13 +264,13 @@
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="about-img-wrap">
-                            <img src="assets/images/edl_team.png" alt="EDL Field Team at work" loading="lazy">
+                            <img src="assets/images/edl_team.webp" alt="EDL Field Team at work" loading="lazy">
                             <div class="img-label"><i class="fas fa-users"></i>Our Field Team</div>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="about-img-wrap">
-                            <img src="assets/images/edl_substation.png" alt="EDL Substation Control Room" loading="lazy">
+                            <img src="assets/images/edl_substation.webp" alt="EDL Substation Control Room" loading="lazy">
                             <div class="img-label"><i class="fas fa-microchip"></i>Control Infrastructure</div>
                         </div>
                     </div>
