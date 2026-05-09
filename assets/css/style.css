@@ -32,20 +32,7 @@ body {
   color: var(--white);
   overflow-x: hidden;
 }
-body.loading {
-  overflow: hidden;
-}
-/* Full screen loader overlay */
-#loader-wrapper {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #fff;
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease-out;
-}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 6px;
