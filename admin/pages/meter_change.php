@@ -34,18 +34,31 @@ include '../layout/header.php'
 
     <!-- CARD 1: PENDING -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-start border-4 border-warning h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+        <div class="card shadow-sm border-0 border-start border-4 border-warning h-100 p-2">
+            <div class="card-body pb-2 pt-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <h6 class="text-secondary small fw-bold text-uppercase">Pending Jobs</h6>
-                        <h2 class="fw-bold text-warning mb-0"><?php echo $pend_all; ?></h2>
+                        <h2 class="fw-bold text-warning mb-0 lh-1"><?php echo $pend_all; ?></h2>
                     </div>
-                    <i class="fas fa-clock fa-2x text-warning opacity-25"></i>
+                    <i class="fas fa-clock fa-2x text-warning opacity-25 mt-1"></i>
                 </div>
-                <div class="mt-3 pt-2 border-top d-flex justify-content-between small text-muted">
-                    <span title="Single Phase"><i class="fas fa-plug me-1 text-warning"></i> 1-Ph: <b><?php echo $pend_1ph; ?></b></span>
-                    <span title="Three Phase"><i class="fas fa-industry me-1 text-danger"></i> 3-Ph: <b><?php echo $pend_3ph; ?></b></span>
+                
+                <div class="border-top pt-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted" style="font-size:10px; font-weight:800; letter-spacing:0.5px;">THIS M:</span>
+                        <div>
+                            <span class="me-2 text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-plug text-warning me-1"></i> 1-Ph: <b><?php echo $p_tm_1p; ?></b></span>
+                            <span class="text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-industry text-danger me-1"></i> 3-Ph: <b><?php echo $p_tm_3p; ?></b></span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted" style="font-size:10px; font-weight:800; letter-spacing:0.5px;">LAST M:</span>
+                        <div class="opacity-75">
+                            <span class="me-2 text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-plug me-1"></i> 1-Ph: <b><?php echo $p_lm_1p; ?></b></span>
+                            <span class="text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-industry me-1"></i> 3-Ph: <b><?php echo $p_lm_3p; ?></b></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,36 +66,63 @@ include '../layout/header.php'
 
     <!-- CARD 2: COMPLETED -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-start border-4 border-success h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+        <div class="card shadow-sm border-0 border-start border-4 border-success h-100 p-2">
+            <div class="card-body pb-2 pt-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <h6 class="text-secondary small fw-bold text-uppercase">Completed Jobs</h6>
-                        <h2 class="fw-bold text-success mb-0"><?php echo $comp_all; ?></h2>
+                        <h2 class="fw-bold text-success mb-0 lh-1"><?php echo $comp_all; ?></h2>
                     </div>
-                    <i class="fas fa-check-circle fa-2x text-success opacity-25"></i>
+                    <i class="fas fa-check-circle fa-2x text-success opacity-25 mt-1"></i>
                 </div>
-                <div class="mt-3 pt-2 border-top d-flex justify-content-between small text-muted">
-                    <span title="Single Phase"><i class="fas fa-plug me-1 text-success"></i> 1-Ph: <b><?php echo $comp_1ph; ?></b></span>
-                    <span title="Three Phase"><i class="fas fa-industry me-1 text-success"></i> 3-Ph: <b><?php echo $comp_3ph; ?></b></span>
+                
+                <div class="border-top pt-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted" style="font-size:10px; font-weight:800; letter-spacing:0.5px;">THIS M:</span>
+                        <div>
+                            <span class="me-2 text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-plug text-success me-1"></i> 1-Ph: <b><?php echo $c_tm_1p; ?></b></span>
+                            <span class="text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-industry text-danger me-1"></i> 3-Ph: <b><?php echo $c_tm_3p; ?></b></span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted" style="font-size:10px; font-weight:800; letter-spacing:0.5px;">LAST M:</span>
+                        <div class="opacity-75">
+                            <span class="me-2 text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-plug me-1"></i> 1-Ph: <b><?php echo $c_lm_1p; ?></b></span>
+                            <span class="text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-industry me-1"></i> 3-Ph: <b><?php echo $c_lm_3p; ?></b></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CARD 3: NEW TODAY -->
+    <!-- CARD 3: NEW REQUESTS (MONTHLY) -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-start border-4 border-primary h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+        <div class="card shadow-sm border-0 border-start border-4 border-primary h-100 p-2">
+            <div class="card-body pb-2 pt-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
-                        <h6 class="text-secondary small fw-bold text-uppercase">New Requests Today</h6>
-                        <h2 class="fw-bold text-dark mb-0"><?php echo $new_today; ?></h2>
+                        <h6 class="text-secondary small fw-bold text-uppercase">New This Month</h6>
+                        <h2 class="fw-bold text-dark mb-0 lh-1"><?php echo $new_month_total; ?></h2>
                     </div>
-                    <i class="fas fa-calendar-day fa-2x text-primary opacity-25"></i>
+                    <i class="fas fa-folder-open fa-2x text-primary opacity-25 mt-1"></i>
                 </div>
-                <div class="mt-3 pt-2 border-top text-muted small">
-                    Daily Intake Summary
+                
+                <div class="border-top pt-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted" style="font-size:10px; font-weight:800; letter-spacing:0.5px;">THIS M:</span>
+                        <div>
+                            <span class="me-2 text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-plug text-primary me-1"></i> 1-Ph: <b><?php echo $req_tm_1p; ?></b></span>
+                            <span class="text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-industry text-danger me-1"></i> 3-Ph: <b><?php echo $req_tm_3p; ?></b></span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted" style="font-size:10px; font-weight:800; letter-spacing:0.5px;">LAST M:</span>
+                        <div class="opacity-75">
+                            <span class="me-2 text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-plug me-1"></i> 1-Ph: <b><?php echo $req_lm_1p; ?></b></span>
+                            <span class="text-dark" style="font-size:12px; font-weight:600;"><i class="fas fa-industry me-1"></i> 3-Ph: <b><?php echo $req_lm_3p; ?></b></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

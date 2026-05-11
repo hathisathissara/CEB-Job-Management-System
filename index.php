@@ -512,7 +512,7 @@
             <div>&copy; <?php echo date('Y'); ?> Electricity Distribution Lanka pvt ltd. All rights reserved.</div>
             <div style="display:flex;align-items:center;gap:10px;">
                 Developed by <a href="https://hathisathissara.unaux.com/" target="_blank">Hathisa Thissara</a>
-                <span class="ver-pill">v3.0</span>
+                <span class="ver-pill">v4.0</span>
             </div>
         </div>
     </div>

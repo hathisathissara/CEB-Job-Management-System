@@ -71,19 +71,44 @@ if (isset($_GET['del']) && $_SESSION['role'] == 'Super Admin') {
 }
 
 // --- DASHBOARD COUNTS ---
-function countMC($conn, $where = "1=1")
-{
+function countMC($conn, $where = "1=1") {
     return $conn->query("SELECT COUNT(*) c FROM meter_change WHERE $where")->fetch_assoc()['c'];
 }
 
+// දින සඳහා Condition String සකසා ගැනීම
+$tm_c = "MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())"; // මේ මාසයේ හැදුන ඒවා
+$lm_c = "MONTH(created_at) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(created_at) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)"; // ගිය මාසයේ හැදුන ඒවා
+
+$tm_d = "MONTH(done_date) = MONTH(CURRENT_DATE()) AND YEAR(done_date) = YEAR(CURRENT_DATE())"; // මේ මාසයේ ඉවර කරපු ඒවා
+$lm_d = "MONTH(done_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(done_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)"; // ගිය මාසයේ ඉවර කරපු ඒවා
+
+
+// 1. PENDING STATS
 $pend_all = countMC($conn, "status='Pending'");
-$pend_1ph = countMC($conn, "status='Pending' AND phase_type='Single Phase'");
-$pend_3ph = countMC($conn, "status='Pending' AND phase_type='Three Phase'");
+// Pending This Month
+$p_tm_1p = countMC($conn, "status='Pending' AND phase_type='Single Phase' AND $tm_c");
+$p_tm_3p = countMC($conn, "status='Pending' AND phase_type='Three Phase' AND $tm_c");
+// Pending Last Month
+$p_lm_1p = countMC($conn, "status='Pending' AND phase_type='Single Phase' AND $lm_c");
+$p_lm_3p = countMC($conn, "status='Pending' AND phase_type='Three Phase' AND $lm_c");
+
+// 2. COMPLETED STATS (Using done_date)
 $comp_all = countMC($conn, "status='Completed'");
-$comp_1ph = countMC($conn, "status='Completed' AND phase_type='Single Phase'");
-$comp_3ph = countMC($conn, "status='Completed' AND phase_type='Three Phase'");
-$today_date = date('Y-m-d');
-$new_today = countMC($conn, "DATE(created_at) = '$today_date'");
+// Completed This Month
+$c_tm_1p = countMC($conn, "status='Completed' AND phase_type='Single Phase' AND $tm_d");
+$c_tm_3p = countMC($conn, "status='Completed' AND phase_type='Three Phase' AND $tm_d");
+// Completed Last Month
+$c_lm_1p = countMC($conn, "status='Completed' AND phase_type='Single Phase' AND $lm_d");
+$c_lm_3p = countMC($conn, "status='Completed' AND phase_type='Three Phase' AND $lm_d");
+
+// 3. NEW REQUESTS (Based on creation date)
+$req_tm_1p = countMC($conn, "phase_type='Single Phase' AND $tm_c");
+$req_tm_3p = countMC($conn, "phase_type='Three Phase' AND $tm_c");
+$req_lm_1p = countMC($conn, "phase_type='Single Phase' AND $lm_c");
+$req_lm_3p = countMC($conn, "phase_type='Three Phase' AND $lm_c");
+
+$new_month_total = $req_tm_1p + $req_tm_3p; // මේ මාසයේ මුළු ගණන
+?>
 
 
 ?>
