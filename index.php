@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDL Office Portal | Electricity Distribution Lanka pvt ltd</title>
-    <meta name="description" content="Electricity Distribution Lanka pvt ltd – Official Internal Job Management Portal for field operations, meter management and service requests.">
+    <title>EDL Office Portal | Bandarawela Consumer Service Center</title>
+    <meta name="description" content="EDL Bandarawela Consumer Service Center – Official Internal Job Management Portal for field operations, meter management and service requests.">
     <link rel="icon" href="https://img.icons8.com/color/48/d11212/flash-on.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">   
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">   
 </head>
 <body class="loading">
 
@@ -113,7 +113,7 @@
         <div class="nav-bolt"><i class="fas fa-bolt"></i></div>
         <div class="nav-brand-text">
             <div class="t1">EDL PORTAL</div>
-            <div class="t2">Electricity Distribution Lanka</div>
+            <div class="t2">Bandarawela Consumer Service Center</div>
         </div>
     </a>
 
@@ -186,7 +186,7 @@
         </h1>
 
         <p class="hero-sub mx-auto" style="max-width: 600px;">
-            Electricity Distribution Lanka pvt ltd — secure digital platform
+            EDL Bandarawela Consumer Service Center — secure digital platform
             for field operations, meter management and service coordination.
         </p>
     </div>
@@ -224,11 +224,10 @@
             <!-- Left – Text -->
             <div class="col-lg-6 reveal">
                 <div class="section-tag"><i class="fas fa-building"></i>About EDL</div>
-                <h2 class="section-heading">Powering Lives Across<br><span class="accent">Sri Lanka</span></h2>
+                <h2 class="section-heading">Powering Lives Across<br><span class="accent">Bandarawela</span></h2>
                 <p class="section-sub mb-4">
-                    Electricity Distribution Lanka pvt ltd (EDL) is a leading electricity distribution 
-                    company in Sri Lanka committed to delivering reliable, affordable and sustainable 
-                    power supply to homes and businesses across the region.
+                    The EDL Bandarawela Consumer Service Center is committed to delivering reliable, affordable and sustainable 
+                    power supply to homes and businesses across the Bandarawela region as a core part of Electricity Distribution Lanka.
                 </p>
                 <p class="section-sub mb-36" style="margin-bottom:32px;">
                     Our mission is to modernise distribution infrastructure, 
@@ -282,7 +281,98 @@
 </section>
 
 <div class="divider" style="max-width:900px;"></div>
+<!-- ══════════════════════════════════════════
+     GREETING POPUP MODAL (One-time per session)
+══════════════════════════════════════════ -->
+<?php
+$greeting_q = $conn->query("SELECT * FROM company_events WHERE category='Greeting' ORDER BY id DESC LIMIT 1");
+if ($greeting_q && $greeting_q->num_rows > 0):
+    $gr = $greeting_q->fetch_assoc();
+    $grImgSrc = str_replace('../../uploads/', 'uploads/', $gr['image_path']);
+?>
+<div class="modal fade" id="greetingPopup" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:480px;">
+        <div class="modal-content border-0 overflow-hidden greeting-modal-card">
+            
+            <!-- Animated close button -->
+            <button type="button" data-bs-dismiss="modal" aria-label="Close" class="greeting-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
 
+            <!-- Sparkle decorations -->
+            <div class="greeting-sparkle" style="top:15%; left:10%;"></div>
+            <div class="greeting-sparkle" style="top:25%; right:15%; animation-delay:0.5s;"></div>
+            <div class="greeting-sparkle" style="top:8%; left:55%; animation-delay:1s;"></div>
+
+            <!-- Hero Image with overlay -->
+            <div class="greeting-img-wrap">
+                <img src="<?php echo $grImgSrc; ?>" alt="<?php echo htmlspecialchars($gr['title']); ?>">
+                <div class="greeting-img-overlay"></div>
+                <div class="greeting-img-badge">
+                    <i class="fas fa-gift me-1"></i> <?php echo $gr['category']; ?>
+                </div>
+            </div>
+            
+            <!-- Content body -->
+            <div class="greeting-body">
+                <h4 class="greeting-title"><?php echo htmlspecialchars($gr['title']); ?></h4>
+                <div class="greeting-divider"></div>
+                <p class="greeting-msg"><?php echo nl2br(htmlspecialchars($gr['message'])); ?></p>
+                <div class="greeting-date">
+                    <i class="far fa-calendar-alt me-1"></i> <?php echo date('F d, Y', strtotime($gr['created_at'])); ?>
+                </div>
+                <div class="greeting-brand">
+                    <i class="fas fa-bolt"></i> EDL Bandarawela Consumer Service Center
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const _greetId = '<?php echo $gr["id"]; ?>';
+</script>
+<?php else: ?>
+<script>
+    const _greetId = null;
+</script>
+<?php endif; ?>
+
+<!-- ══════════════════════════════════════════
+     CSR & ALERTS SECTION (Page Section)
+══════════════════════════════════════════ -->
+<?php
+$csr_q = $conn->query("SELECT * FROM company_events WHERE category IN ('CSR','Alert') ORDER BY id DESC LIMIT 6");
+if ($csr_q && $csr_q->num_rows > 0):
+?>
+<section id="updates" style="background:#fff; padding: 70px 0;">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <div class="section-tag"><i class="fas fa-heart text-danger"></i> Community & Updates</div>
+            <h2 class="section-heading">EDL in the <span class="accent">Society</span></h2>
+            <p class="section-sub mx-auto">Community welfare drives, public notices and recent organizational updates.</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center reveal">
+            <?php while($ev = $csr_q->fetch_assoc()): ?>
+            <div class="col-md-4">
+                <div style="background:var(--bg-body); border-radius:15px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); height:100%;">
+                    <?php $imgSrc = str_replace('../../uploads/', 'uploads/', $ev['image_path']); ?>
+                    <img src="<?php echo $imgSrc; ?>" style="width:100%; height:200px; object-fit:cover; border-bottom:4px solid <?php echo ($ev['category']=='Alert') ? '#e53e3e' : '#3182ce'; ?>;" loading="lazy">
+                    <div class="p-4">
+                        <?php $bcat = ($ev['category']=='Alert') ? 'bg-danger' : 'bg-primary'; ?>
+                        <span class="badge <?php echo $bcat; ?> mb-2"><?php echo $ev['category']; ?></span>
+                        <h5 class="fw-bold mb-2 text-dark"><?php echo htmlspecialchars($ev['title']); ?></h5>
+                        <p class="text-muted small" style="line-height:1.6; margin-bottom:15px;"><?php echo nl2br(htmlspecialchars($ev['message'])); ?></p>
+                        <small class="text-muted d-block" style="font-size:0.75rem;"><i class="far fa-clock"></i> <?php echo date('M d, Y', strtotime($ev['created_at'])); ?></small>
+                    </div>
+                </div>
+            </div>
+            <?php endwhile; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 <!-- ══════════════════════════════════════════
      TOOLS SECTION
 ══════════════════════════════════════════ -->
@@ -367,7 +457,7 @@
                     </h2>
                     <p class="section-sub" style="margin-bottom:28px;max-width:520px;">
                         Download the official EDL Mobile App to manage field jobs, meter records
-                        and service requests directly from your Android device. Built for EDL field
+                        and service requests for the Bandarawela Consumer Service Center directly from your Android device. Built for EDL field
                         officers — fast, secure and offline-capable.
                     </p>
 
@@ -468,7 +558,7 @@
                     <div class="bolt"><i class="fas fa-bolt" style="color:#fff;font-size:.9rem;"></i></div>
                     <div>
                         <div style="font-weight:800;font-size:.95rem;">EDL PORTAL</div>
-                        <div style="font-size:.72rem;color:var(--muted);">Electricity Distribution Lanka pvt ltd</div>
+                        <div style="font-size:.72rem;color:var(--muted);">Bandarawela Consumer Service Center</div>
                     </div>
                 </div>
                 <p class="footer-desc">
@@ -604,6 +694,21 @@ document.getElementById('supportModal').addEventListener('hidden.bs.modal', func
     document.getElementById('supSuccess').classList.add('d-none');
     document.getElementById('supError').classList.add('d-none');
 });
+
+/* ── Greeting Popup (One-time per session) ── */
+if (_greetId && document.getElementById('greetingPopup')) {
+    const seenKey = 'edl_greeting_seen';
+    const lastSeen = sessionStorage.getItem(seenKey);
+    
+    if (lastSeen !== _greetId) {
+        // Show popup after loader finishes (1.5s delay for smooth UX)
+        setTimeout(function() {
+            const greetModal = new bootstrap.Modal(document.getElementById('greetingPopup'));
+            greetModal.show();
+            sessionStorage.setItem(seenKey, _greetId);
+        }, 1500);
+    }
+}
 </script>
 </body>
 </html>

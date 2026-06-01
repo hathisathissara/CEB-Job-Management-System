@@ -477,7 +477,9 @@ if ($theme == 'dark') {
             <a href="reports" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>">
                 <i class="fas fa-file-alt ni"></i> Reports Center
             </a>
-
+            <a href="manage_events" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'manage_events.php' ? 'active' : ''; ?>">
+                <i class="fas fa-bullhorn ni"></i> EDL News / CSR
+            </a>
             <!-- System -->
             <div class="nav-label-group">System</div>
             <div class="nav-group" id="grp-system">
