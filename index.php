@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">   
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body class="loading">
 
@@ -338,40 +340,110 @@ if ($greeting_q && $greeting_q->num_rows > 0):
 </script>
 <?php endif; ?>
 
+
 <!-- ══════════════════════════════════════════
-     CSR & ALERTS SECTION (Page Section)
+     CSR & ALERTS SLIDER SECTION
 ══════════════════════════════════════════ -->
 <?php
-$csr_q = $conn->query("SELECT * FROM company_events WHERE category IN ('CSR','Alert') ORDER BY id DESC LIMIT 6");
+$csr_q = $conn->query("SELECT * FROM company_events WHERE category IN ('CSR','Alert') ORDER BY id DESC LIMIT 10");
 if ($csr_q && $csr_q->num_rows > 0):
 ?>
-<section id="updates" style="background:#fff; padding: 70px 0;">
+<section class="updates-section" id="updates">
+
     <div class="container">
+
         <div class="text-center mb-5 reveal">
-            <div class="section-tag"><i class="fas fa-heart text-danger"></i> Community & Updates</div>
+            <div class="section-tag"><i class="fas fa-heart text-danger"></i> Community &amp; Updates</div>
             <h2 class="section-heading">EDL in the <span class="accent">Society</span></h2>
-            <p class="section-sub mx-auto">Community welfare drives, public notices and recent organizational updates.</p>
+            <p class="section-sub mx-auto">
+                Community welfare drives, public notices and recent organizational updates.
+            </p>
         </div>
-        
-        <div class="row g-4 justify-content-center reveal">
-            <?php while($ev = $csr_q->fetch_assoc()): ?>
-            <div class="col-md-4">
-                <div style="background:var(--bg-body); border-radius:15px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); height:100%;">
-                    <?php $imgSrc = str_replace('../../uploads/', 'uploads/', $ev['image_path']); ?>
-                    <img src="<?php echo $imgSrc; ?>" style="width:100%; height:200px; object-fit:cover; border-bottom:4px solid <?php echo ($ev['category']=='Alert') ? '#e53e3e' : '#3182ce'; ?>;" loading="lazy">
-                    <div class="p-4">
-                        <?php $bcat = ($ev['category']=='Alert') ? 'bg-danger' : 'bg-primary'; ?>
-                        <span class="badge <?php echo $bcat; ?> mb-2"><?php echo $ev['category']; ?></span>
-                        <h5 class="fw-bold mb-2 text-dark"><?php echo htmlspecialchars($ev['title']); ?></h5>
-                        <p class="text-muted small" style="line-height:1.6; margin-bottom:15px;"><?php echo nl2br(htmlspecialchars($ev['message'])); ?></p>
-                        <small class="text-muted d-block" style="font-size:0.75rem;"><i class="far fa-clock"></i> <?php echo date('M d, Y', strtotime($ev['created_at'])); ?></small>
+
+        <!-- SLIDER -->
+        <div class="swiper news-slider">
+            <div class="swiper-wrapper">
+
+                <?php 
+                $events = [];
+                while($ev = $csr_q->fetch_assoc()) {
+                    $events[] = $ev;
+                }
+                // Duplicate if too few for smooth loop
+                if (count($events) > 0 && count($events) < 4) {
+                    $events = array_merge($events, $events, $events);
+                }
+                foreach($events as $ev): 
+                ?>
+
+                <?php
+                    $imgSrc = str_replace('../../uploads/', 'uploads/', $ev['image_path']);
+                ?>
+
+                <div class="swiper-slide">
+                    <div class="news-card" onclick="openNewsModal('<?php echo htmlspecialchars($imgSrc, ENT_QUOTES); ?>', <?php echo htmlspecialchars(json_encode($ev), ENT_QUOTES, 'UTF-8'); ?>)">
+
+                        <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>" loading="lazy">
+
+                        <div class="news-overlay"></div>
+
+                        <div class="news-content">
+
+                            <?php if($ev['category'] == 'Alert'): ?>
+                                <span class="news-badge badge-alert">NEWS</span>
+                            <?php else: ?>
+                                <span class="news-badge badge-csr">CSR</span>
+                            <?php endif; ?>
+
+                            <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
+
+                            <div class="news-date">
+                                <?php echo date('F d, Y', strtotime($ev['created_at'])); ?>
+                            </div>
+
+                            <span class="read-more-btn">
+                                <i class="fas fa-arrow-right"></i>
+                                Read More
+                            </span>
+
+                        </div>
                     </div>
                 </div>
+
+                <?php endforeach; ?>
+
             </div>
-            <?php endwhile; ?>
+
+            <!-- NAVIGATION -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Single reusable modal for news -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-hidden="true" style="z-index:10005;">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="newsModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <img id="newsModalImg" src="" alt="" style="width:100%;height:300px;object-fit:cover;border-radius:15px;margin-bottom:20px;">
+                <div class="mb-3">
+                    <span id="newsModalBadge" class="badge"></span>
+                    <small class="text-muted ms-2"><i class="far fa-clock"></i> <span id="newsModalDate"></span></small>
+                </div>
+                <p id="newsModalMessage" style="line-height:1.9;color:#444;"></p>
+            </div>
         </div>
     </div>
-</section>
+</div>
+
 <?php endif; ?>
 <!-- ══════════════════════════════════════════
      TOOLS SECTION
@@ -589,7 +661,7 @@ if ($csr_q && $csr_q->num_rows > 0):
             <div class="col-lg-2 col-md-6">
                 <div class="footer-link-group">
                     <h6>System</h6>
-                    <a href="#">Version 3.0</a>
+                    <a href="#">Version 4.0</a>
                     <a href="#">Internal Use Only</a>
                     <div style="margin-top:14px;">
                         <div class="nav-status" style="display:inline-flex;"><div class="status-dot"></div>System Online</div>
@@ -654,6 +726,8 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
 /* ── Support Form Submit ── */
 document.getElementById('supportForm').addEventListener('submit', async function(e) {
@@ -708,6 +782,51 @@ if (_greetId && document.getElementById('greetingPopup')) {
             sessionStorage.setItem(seenKey, _greetId);
         }, 1500);
     }
+}
+
+/* ── News Slider (Swiper) ── */
+if (document.querySelector('.news-slider')) {
+    const newsSwiper = new Swiper('.news-slider', {
+        loop: true,
+        spaceBetween: 30,
+        centeredSlides: true,
+        observer: true,
+        observeParents: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            0:    { slidesPerView: 1.1 },
+            768:  { slidesPerView: 2 },
+            1200: { slidesPerView: 2.5 }
+        }
+    });
+
+    // Force autoplay start after DOM settles
+    setTimeout(() => {
+        if (newsSwiper && newsSwiper.autoplay) newsSwiper.autoplay.start();
+    }, 800);
+}
+
+/* ── News Modal Handler ── */
+function openNewsModal(imgSrc, data) {
+    document.getElementById('newsModalImg').src = imgSrc;
+    document.getElementById('newsModalTitle').innerText = data.title;
+    document.getElementById('newsModalMessage').innerHTML = data.message.replace(/\n/g, '<br>');
+    document.getElementById('newsModalDate').innerText = new Date(data.created_at).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+
+    const badge = document.getElementById('newsModalBadge');
+    badge.innerText = data.category.toUpperCase();
+    badge.className = data.category === 'Alert' ? 'badge bg-danger' : 'badge bg-primary';
+
+    const modal = new bootstrap.Modal(document.getElementById('newsDetailModal'));
+    modal.show();
 }
 </script>
 </body>
