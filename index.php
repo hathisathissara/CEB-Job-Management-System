@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">   
-    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+
 </head>
 <body class="loading">
 
@@ -121,10 +122,9 @@
 
     <!-- Desktop links -->
     <div class="nav-links">
-        <a href="#hero" class="active">Home</a>
-        <a href="#about">About</a>
+        <a href="#hero" class="active">Home</a>       
         <a href="#tools">Tools</a>
-        <a href="#app-download">Download App</a>
+        <a href="#about">About</a>
         <a href="admin/login" class="nav-tool-btn"><i class="fas fa-user-shield"></i> Officer Login</a>
     </div>
 
@@ -137,10 +137,9 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
-    <a href="#hero"   onclick="closeMobileMenu()"><i class="fas fa-home"></i> Home</a>
-    <a href="#about"  onclick="closeMobileMenu()"><i class="fas fa-building"></i> About EDL</a>
+    <a href="#hero"   onclick="closeMobileMenu()"><i class="fas fa-home"></i> Home</a>  
     <a href="#tools"  onclick="closeMobileMenu()"><i class="fas fa-th-large"></i> Tools</a>
-    <a href="#app-download" onclick="closeMobileMenu()"><i class="fab fa-android"></i> Download App</a>
+     <a href="#about"  onclick="closeMobileMenu()"><i class="fas fa-building"></i> About EDL</a>
     <a href="admin/login"><i class="fas fa-user-shield"></i> Officer Login</a>
     <a href="job"><i class="fas fa-pen-nib"></i> Meter Removal</a>
     <a href="change"><i class="fas fa-exchange-alt"></i> Meter Change</a>
@@ -196,89 +195,6 @@
     <div class="scroll-hint z-index-2">
         <span>Scroll to explore</span>
         <i class="fas fa-chevron-down arrow"></i>
-    </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     STATS BAR
-══════════════════════════════════════════ -->
-<div class="stats-bar">
-    <div class="container">
-        <div class="row justify-content-center align-items-center g-0">
-            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">2005</div><div class="stat-label">Established</div></div></div>
-            <div class="col-auto d-none d-md-block"><div class="stat-divider" style="height:60px;"></div></div>
-            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">500K+</div><div class="stat-label">Consumers Served</div></div></div>
-            <div class="col-auto d-none d-md-block"><div class="stat-divider" style="height:60px;"></div></div>
-            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">25+</div><div class="stat-label">Service Areas</div></div></div>
-            <div class="col-auto d-none d-md-block"><div class="stat-divider" style="height:60px;"></div></div>
-            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">4</div><div class="stat-label">Active Tools</div></div></div>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     ABOUT SECTION
-══════════════════════════════════════════ -->
-<section id="about">
-    <div class="container">
-        <div class="row align-items-center g-5">
-
-            <!-- Left – Text -->
-            <div class="col-lg-6 reveal">
-                <div class="section-tag"><i class="fas fa-building"></i>About EDL</div>
-                <h2 class="section-heading">Powering Lives Across<br><span class="accent">Bandarawela</span></h2>
-                <p class="section-sub mb-4">
-                    The EDL Bandarawela Consumer Service Center is committed to delivering reliable, affordable and sustainable 
-                    power supply to homes and businesses across the Bandarawela region as a core part of Electricity Distribution Lanka.
-                </p>
-                <p class="section-sub mb-36" style="margin-bottom:32px;">
-                    Our mission is to modernise distribution infrastructure, 
-                    reduce technical losses and provide excellent customer service through 
-                    cutting-edge technology and a dedicated workforce.
-                </p>
-
-                <div class="about-feature">
-                    <div class="about-feat-icon"><i class="fas fa-network-wired"></i></div>
-                    <div class="about-feat-text">
-                        <strong>Modern Distribution Network</strong>
-                        <span>State-of-the-art grid infrastructure covering urban and rural areas island-wide.</span>
-                    </div>
-                </div>
-                <div class="about-feature">
-                    <div class="about-feat-icon"><i class="fas fa-leaf"></i></div>
-                    <div class="about-feat-text">
-                        <strong>Sustainable Energy</strong>
-                        <span>Committed to green energy integration and reducing carbon footprint.</span>
-                    </div>
-                </div>
-                <div class="about-feature">
-                    <div class="about-feat-icon"><i class="fas fa-headset"></i></div>
-                    <div class="about-feat-text">
-                        <strong>24/7 Customer Support</strong>
-                        <span>Round-the-clock service teams ensuring uninterrupted power supply.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right – Images -->
-            <div class="col-lg-6 reveal">
-                <div class="row g-3">
-                    <div class="col-12">
-                        <div class="about-img-wrap">
-                            <img src="assets/images/edl_team.webp" alt="EDL Field Team at work" loading="lazy">
-                            <div class="img-label"><i class="fas fa-users"></i>Our Field Team</div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="about-img-wrap">
-                            <img src="assets/images/edl_substation.webp" alt="EDL Substation Control Room" loading="lazy">
-                            <div class="img-label"><i class="fas fa-microchip"></i>Control Infrastructure</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </div>
 </section>
 
@@ -425,21 +341,42 @@ if ($csr_q && $csr_q->num_rows > 0):
 </section>
 
 <!-- Single reusable modal for news -->
-<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-hidden="true" style="z-index:10005;">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="newsModalTitle"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <img id="newsModalImg" src="" alt="" style="width:100%;height:300px;object-fit:cover;border-radius:15px;margin-bottom:20px;">
-                <div class="mb-3">
-                    <span id="newsModalBadge" class="badge"></span>
-                    <small class="text-muted ms-2"><i class="far fa-clock"></i> <span id="newsModalDate"></span></small>
+<!-- =================================
+     MODERN NEWS / ALERT MODAL
+================================= -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-hidden="true" style="z-index: 10005;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
+        <!-- Modal Content Container -->
+        <div class="modal-content shadow-lg border-0 overflow-hidden" style="border-radius: 24px;">
+            
+            <!-- Hero Image with Absolute Floating Header Area -->
+            <div class="position-relative w-100 bg-light">
+                <img id="newsModalImg" src="" alt="Post Cover" class="w-100" style="height: 380px; object-fit: cover;">
+                
+                <!-- Dark Gradient top overlay for button visibility -->
+                <div class="position-absolute top-0 start-0 w-100 p-3 d-flex justify-content-end" style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent); height: 80px;">
+                    <!-- App-style rounded floating Close button -->
+                    <button type="button" class="btn-close-custom shadow-sm" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
                 </div>
-                <p id="newsModalMessage" style="line-height:1.9;color:#444;"></p>
             </div>
+
+            <!-- Content Area (Body) -->
+            <div class="modal-body bg-white p-4 p-md-5 pt-md-4">
+                
+                <!-- Tags & Meta Info -->
+                <div class="d-flex align-items-center flex-wrap gap-3 mb-3 border-bottom pb-3">
+                    <span id="newsModalBadge" class="badge rounded-pill px-3 py-2 fw-bold text-uppercase shadow-sm" style="letter-spacing: 0.8px;"></span>
+                    <span class="text-muted small fw-bold">
+                        <i class="far fa-calendar-alt text-danger me-1"></i> Published: <span id="newsModalDate" class="text-secondary"></span>
+                    </span>
+                </div>
+                
+                <!-- Title & Body Message -->
+                <h2 id="newsModalTitle" class="fw-bolder mb-4 text-dark" style="font-size: 2rem; letter-spacing: -0.5px; line-height: 1.3;"></h2>
+                
+                <div id="newsModalMessage" style="color: #4a5568; font-size: 1.05rem; line-height: 1.8; word-wrap: break-word;"></div>
+            </div>
+            
         </div>
     </div>
 </div>
@@ -509,116 +446,86 @@ if ($csr_q && $csr_q->num_rows > 0):
 </section>
 
 <!-- ══════════════════════════════════════════
-     ANDROID APP DOWNLOAD SECTION
+     ABOUT SECTION
 ══════════════════════════════════════════ -->
-<section id="app-download" style="padding: 80px 0;">
+<section id="about">
     <div class="container">
-        <div class="app-download-card reveal">
-            <!-- Decorative orbs -->
-            <div class="app-orb app-orb-1"></div>
-            <div class="app-orb app-orb-2"></div>
+        <div class="row align-items-center g-5">
 
-            <div class="row align-items-center g-5 position-relative">
-                <!-- Left: Text -->
-                <div class="col-lg-7">
-                    <div class="section-tag" style="margin-bottom:18px;">
-                        <i class="fab fa-android"></i> Mobile Application
+            <!-- Left – Text -->
+            <div class="col-lg-6 reveal">
+                <div class="section-tag"><i class="fas fa-building"></i>About EDL</div>
+                <h2 class="section-heading">Powering Lives Across<br><span class="accent">Bandarawela</span></h2>
+                <p class="section-sub mb-4">
+                    The EDL Bandarawela Consumer Service Center is committed to delivering reliable, affordable and sustainable 
+                    power supply to homes and businesses across the Bandarawela region as a core part of Electricity Distribution Lanka.
+                </p>
+                <p class="section-sub mb-36" style="margin-bottom:32px;">
+                    Our mission is to modernise distribution infrastructure, 
+                    reduce technical losses and provide excellent customer service through 
+                    cutting-edge technology and a dedicated workforce.
+                </p>
+
+                <div class="about-feature">
+                    <div class="about-feat-icon"><i class="fas fa-network-wired"></i></div>
+                    <div class="about-feat-text">
+                        <strong>Modern Distribution Network</strong>
+                        <span>State-of-the-art grid infrastructure covering urban and rural areas island-wide.</span>
                     </div>
-                    <h2 class="section-heading" style="margin-bottom:16px;">
-                        EDL Field App for <span class="accent">Android</span>
-                    </h2>
-                    <p class="section-sub" style="margin-bottom:28px;max-width:520px;">
-                        Download the official EDL Mobile App to manage field jobs, meter records
-                        and service requests for the Bandarawela Consumer Service Center directly from your Android device. Built for EDL field
-                        officers — fast, secure and offline-capable.
-                    </p>
-
-                    <!-- Feature pills -->
-                    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;">
-                        <span class="app-feat-pill"><i class="fas fa-wifi-slash"></i> Offline Ready</span>
-                        <span class="app-feat-pill"><i class="fas fa-lock"></i> Secure Access</span>
-                        <span class="app-feat-pill"><i class="fas fa-bolt"></i> Fast & Lightweight</span>
-                        <span class="app-feat-pill"><i class="fas fa-sync-alt"></i> Auto Sync</span>
-                    </div>
-
-                    <!-- Download Button -->
-                    <!-- ⚠️  APK LINK: Replace the href below with your actual .apk download URL -->
-                    <!-- Example: Google Drive direct download or your server path like "assets/downloads/edl-app.apk" -->
-                    <a href="https://drive.google.com/file/d/1DkC_5GqLkqj_E-50c_LwtIjEv6ltpB1s/view?usp=sharing"
-                       id="apkDownloadBtn"
-                       class="apk-download-btn"
-                       download
-                       aria-label="Download EDL Android App">
-                        <div class="apk-btn-icon">
-                            <i class="fab fa-android"></i>
-                        </div>
-                        <div class="apk-btn-text">
-                            <span class="apk-sub">Download for</span>
-                            <span class="apk-main">Android APK</span>
-                        </div>
-                        <i class="fas fa-download apk-arrow"></i>
-                    </a>
-
-                    <p style="margin-top:14px;font-size:.78rem;color:var(--muted);">
-                        <i class="fas fa-info-circle me-1"></i>
-                        For Android 7.0+ &bull; Enable "Install from Unknown Sources" if prompted &bull; Internal use only
-                    </p>
                 </div>
-
-                <!-- Right: Phone Mockup -->
-                <div class="col-lg-5 text-center">
-                    <div class="phone-mockup-wrap">
-                        <div class="phone-mockup">
-                            <div class="phone-screen">
-                                <div class="phone-screen-content">
-                                    <div class="phone-notch"></div>
-                                    <div style="padding:16px 12px;">
-                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
-                                            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#c0392b,#e74c3c);display:flex;align-items:center;justify-content:center;">
-                                                <i class="fas fa-bolt" style="color:#fff;font-size:.65rem;"></i>
-                                            </div>
-                                            <span style="font-weight:700;font-size:.75rem;color:#fff;">EDL Field App</span>
-                                        </div>
-                                        <!-- Mini dashboard blocks -->
-                                        <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px;margin-bottom:8px;">
-                                            <div style="font-size:.55rem;color:rgba(255,255,255,.5);margin-bottom:4px;">TODAY'S JOBS</div>
-                                            <div style="font-size:1.1rem;font-weight:800;color:#e74c3c;">12</div>
-                                            <div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:6px;">
-                                                <div style="width:65%;height:3px;background:linear-gradient(90deg,#c0392b,#e74c3c);border-radius:2px;"></div>
-                                            </div>
-                                        </div>
-                                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
-                                            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;">
-                                                <i class="fas fa-pen-nib" style="color:#e74c3c;font-size:.7rem;"></i>
-                                                <div style="font-size:.5rem;color:rgba(255,255,255,.6);margin-top:3px;">Removals</div>
-                                                <div style="font-size:.85rem;font-weight:700;color:#fff;">7</div>
-                                            </div>
-                                            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;">
-                                                <i class="fas fa-exchange-alt" style="color:#3498db;font-size:.7rem;"></i>
-                                                <div style="font-size:.5rem;color:rgba(255,255,255,.6);margin-top:3px;">Changes</div>
-                                                <div style="font-size:.85rem;font-weight:700;color:#fff;">5</div>
-                                            </div>
-                                        </div>
-                                        <div style="background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);border-radius:8px;padding:8px;">
-                                            <div style="font-size:.5rem;color:rgba(255,255,255,.5);margin-bottom:2px;">SYNC STATUS</div>
-                                            <div style="display:flex;align-items:center;gap:4px;">
-                                                <div style="width:6px;height:6px;border-radius:50%;background:#2ecc71;animation:blink 1.5s infinite;"></div>
-                                                <span style="font-size:.6rem;color:#2ecc71;">Synced • Just now</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Glow effect -->
-                        <div class="phone-glow"></div>
+                <div class="about-feature">
+                    <div class="about-feat-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="about-feat-text">
+                        <strong>Sustainable Energy</strong>
+                        <span>Committed to green energy integration and reducing carbon footprint.</span>
+                    </div>
+                </div>
+                <div class="about-feature">
+                    <div class="about-feat-icon"><i class="fas fa-headset"></i></div>
+                    <div class="about-feat-text">
+                        <strong>24/7 Customer Support</strong>
+                        <span>Round-the-clock service teams ensuring uninterrupted power supply.</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Right – Images -->
+            <div class="col-lg-6 reveal">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="about-img-wrap">
+                            <img src="assets/images/edl_team.webp" alt="EDL Field Team at work" loading="lazy">
+                            <div class="img-label"><i class="fas fa-users"></i>Our Field Team</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="about-img-wrap">
+                            <img src="assets/images/edl_substation.webp" alt="EDL Substation Control Room" loading="lazy">
+                            <div class="img-label"><i class="fas fa-microchip"></i>Control Infrastructure</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
-
+<!-- ══════════════════════════════════════════
+     STATS BAR
+══════════════════════════════════════════ -->
+<div class="stats-bar">
+    <div class="container">
+        <div class="row justify-content-center align-items-center g-0">
+            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">2005</div><div class="stat-label">Established</div></div></div>
+            <div class="col-auto d-none d-md-block"><div class="stat-divider" style="height:60px;"></div></div>
+            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">35K+</div><div class="stat-label">Consumers Served</div></div></div>
+            <div class="col-auto d-none d-md-block"><div class="stat-divider" style="height:60px;"></div></div>
+            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">25+</div><div class="stat-label">Service Areas</div></div></div>
+            <div class="col-auto d-none d-md-block"><div class="stat-divider" style="height:60px;"></div></div>
+            <div class="col-6 col-md-3"><div class="stat-item reveal"><div class="stat-num">4</div><div class="stat-label">Active Tools</div></div></div>
+        </div>
+    </div>
+</div>
 <!-- ══════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════ -->
@@ -684,14 +591,6 @@ if ($csr_q && $csr_q->num_rows > 0):
      SCRIPTS
 ══════════════════════════════ -->
 <script>
-/* ── Loader ── */
-window.addEventListener('load', () => {
-    const ldr = document.getElementById('loader-wrapper');
-    setTimeout(() => {
-        ldr.style.opacity = '0';
-        setTimeout(() => { ldr.style.display='none'; document.body.classList.remove('loading'); }, 500);
-    }, 300);
-});
 
 /* ── Navbar scroll ── */
 const nav = document.getElementById('mainNav');
@@ -699,16 +598,19 @@ window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 40);
 
     /* Active nav link by section */
-    const sections = ['hero','about','tools','app-download'];
     const links = document.querySelectorAll('.nav-links a:not(.nav-tool-btn)');
+    const sections = Array.from(links)
+        .map(link => link.getAttribute('href'))
+        .filter(href => href && href.startsWith('#'))
+        .map(href => href.slice(1));
     let cur = '';
     sections.forEach(id => {
         const el = document.getElementById(id);
-        if(el && window.scrollY >= el.offsetTop - 100) cur = id;
+        if (el && window.scrollY >= el.offsetTop - 100) cur = id;
     });
     links.forEach(a => {
         a.classList.remove('active');
-        if(a.getAttribute('href') === '#'+cur) a.classList.add('active');
+        if (a.getAttribute('href') === '#'+cur) a.classList.add('active');
     });
 });
 
@@ -817,35 +719,21 @@ if (document.querySelector('.news-slider')) {
 /* ── News Modal Handler ── */
 function openNewsModal(imgSrc, data) {
     document.getElementById('newsModalImg').src = imgSrc;
-    document.getElementById('newsModalTitle').innerText = data.title;
-    
-    // ==========================================
-    // 🔴 නව Link කියවන කොටස (Auto Link Parser)
-    // ==========================================
-    
-    // 1. මුලින්ම Message එකේ තියෙන Links (http:// හෝ https://) හොයලා Clickable <a> tag බවට පත් කරනවා.
+    document.getElementById('newsModalTitle').innerText = data.title;   
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     let processedMessage = data.message.replace(urlRegex, function(url) {
-        // ලින්ක් එක ඉස්සරහින් පුංචි Arrow icon එකකුත් එක්කම හැදෙන විදියට
+
         return `<a href="${url}" target="_blank" style="color: #d11212; font-weight: 600; word-break: break-all;">
                     <i class="fas fa-external-link-alt small me-1"></i>${url}
                 </a>`;
     });
 
-    // 2. ඊට පස්සේ පේළි කැඩුණු තැන් (Enter එබූ තැන්) වලට <br> දානවා
     processedMessage = processedMessage.replace(/\n/g, '<br>');
-
-    // 3. සැකසූ අවසන් Message එක HTML වලට යවනවා
     document.getElementById('newsModalMessage').innerHTML = processedMessage;
-    // ==========================================
-
-
     document.getElementById('newsModalDate').innerText = new Date(data.created_at).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
-
     const badge = document.getElementById('newsModalBadge');
     badge.innerText = data.category.toUpperCase();
     badge.className = data.category === 'Alert' ? 'badge bg-danger' : 'badge bg-primary';
-
     const modal = new bootstrap.Modal(document.getElementById('newsDetailModal'));
     modal.show();
 }
