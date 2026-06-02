@@ -818,7 +818,28 @@ if (document.querySelector('.news-slider')) {
 function openNewsModal(imgSrc, data) {
     document.getElementById('newsModalImg').src = imgSrc;
     document.getElementById('newsModalTitle').innerText = data.title;
-    document.getElementById('newsModalMessage').innerHTML = data.message.replace(/\n/g, '<br>');
+    
+    // ==========================================
+    // 🔴 නව Link කියවන කොටස (Auto Link Parser)
+    // ==========================================
+    
+    // 1. මුලින්ම Message එකේ තියෙන Links (http:// හෝ https://) හොයලා Clickable <a> tag බවට පත් කරනවා.
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    let processedMessage = data.message.replace(urlRegex, function(url) {
+        // ලින්ක් එක ඉස්සරහින් පුංචි Arrow icon එකකුත් එක්කම හැදෙන විදියට
+        return `<a href="${url}" target="_blank" style="color: #d11212; font-weight: 600; word-break: break-all;">
+                    <i class="fas fa-external-link-alt small me-1"></i>${url}
+                </a>`;
+    });
+
+    // 2. ඊට පස්සේ පේළි කැඩුණු තැන් (Enter එබූ තැන්) වලට <br> දානවා
+    processedMessage = processedMessage.replace(/\n/g, '<br>');
+
+    // 3. සැකසූ අවසන් Message එක HTML වලට යවනවා
+    document.getElementById('newsModalMessage').innerHTML = processedMessage;
+    // ==========================================
+
+
     document.getElementById('newsModalDate').innerText = new Date(data.created_at).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
 
     const badge = document.getElementById('newsModalBadge');
