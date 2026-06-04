@@ -258,125 +258,108 @@ if ($greeting_q && $greeting_q->num_rows > 0):
 
 
 <!-- ══════════════════════════════════════════
-     CSR & ALERTS SLIDER SECTION
+     CSR & ALERTS — BENTO MAGAZINE SECTION
 ══════════════════════════════════════════ -->
 <?php
 $csr_q = $conn->query("SELECT * FROM company_events WHERE category IN ('CSR','Alert') ORDER BY id DESC LIMIT 10");
 if ($csr_q && $csr_q->num_rows > 0):
+    $ev_all = [];
+    while($ev = $csr_q->fetch_assoc()) $ev_all[] = $ev;
 ?>
-<section class="updates-section" id="updates">
+<section class="csr-section" id="updates">
 
-    <div class="container">
+    <!-- Ambient glow blobs -->
+    <div class="csr-blob csr-blob-1"></div>
+    <div class="csr-blob csr-blob-2"></div>
 
-        <div class="text-center mb-5 reveal">
-            <div class="section-tag"><i class="fas fa-heart text-danger"></i> Community &amp; Updates</div>
+    <div class="container position-relative">
+
+        <!-- Header -->
+        <div class="csr-header reveal">
+            <div class="csr-tag">
+                <span class="csr-tag-dot"></span>
+                Community &amp; Updates
+            </div>
             <h2 class="section-heading">EDL in the <span class="accent">Society</span></h2>
-            <p class="section-sub mx-auto">
-                Community welfare drives, public notices and recent organizational updates.
-            </p>
+            <p class="section-sub mx-auto">Community welfare drives, public notices and recent organizational updates.</p>
         </div>
 
-        <!-- SLIDER -->
-        <div class="swiper news-slider">
+        <!-- CAROUSEL -->
+        <div class="swiper news-slider reveal">
             <div class="swiper-wrapper">
-
                 <?php 
-                $events = [];
-                while($ev = $csr_q->fetch_assoc()) {
-                    $events[] = $ev;
-                }
+                $events = $ev_all;
                 // Duplicate if too few for smooth loop
                 if (count($events) > 0 && count($events) < 4) {
                     $events = array_merge($events, $events, $events);
                 }
                 foreach($events as $ev): 
-                ?>
-
-                <?php
                     $imgSrc = str_replace('../../uploads/', 'uploads/', $ev['image_path']);
+                    $isAlert = $ev['category'] == 'Alert';
+                    $dataJson = htmlspecialchars(json_encode($ev), ENT_QUOTES, 'UTF-8');
+                    $dataImg  = htmlspecialchars($imgSrc, ENT_QUOTES);
                 ?>
-
                 <div class="swiper-slide">
-                    <div class="news-card" onclick="openNewsModal('<?php echo htmlspecialchars($imgSrc, ENT_QUOTES); ?>', <?php echo htmlspecialchars(json_encode($ev), ENT_QUOTES, 'UTF-8'); ?>)">
-
+                    <div class="news-card <?php echo $isAlert ? 'news-card--alert' : 'news-card--csr'; ?>"
+                         onclick="openNewsModal('<?php echo $dataImg; ?>', <?php echo $dataJson; ?>)">
+                        
                         <img src="<?php echo htmlspecialchars($imgSrc); ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>" loading="lazy">
-
                         <div class="news-overlay"></div>
-
+                        
                         <div class="news-content">
-
-                            <?php if($ev['category'] == 'Alert'): ?>
-                                <span class="news-badge badge-alert">NEWS</span>
-                            <?php else: ?>
-                                <span class="news-badge badge-csr">CSR</span>
-                            <?php endif; ?>
-
-                            <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
-
-                            <div class="news-date">
-                                <?php echo date('F d, Y', strtotime($ev['created_at'])); ?>
-                            </div>
-
-                            <span class="read-more-btn">
-                                <i class="fas fa-arrow-right"></i>
-                                Read More
+                            <span class="news-badge">
+                                <?php echo $isAlert ? '<i class="fas fa-bolt"></i> NEWS' : '<i class="fas fa-heart"></i> CSR'; ?>
                             </span>
-
+                            <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
+                            <div class="news-date">
+                                <i class="far fa-calendar"></i> <?php echo date('d M Y', strtotime($ev['created_at'])); ?>
+                            </div>
+                            <div class="read-more-btn">
+                                Read More <i class="fas fa-arrow-right"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <?php endforeach; ?>
-
             </div>
-
             <!-- NAVIGATION -->
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
-
+            <div class="swiper-pagination"></div>
         </div>
 
     </div>
-
 </section>
 
-<!-- Single reusable modal for news -->
-<!-- =================================
-     MODERN NEWS / ALERT MODAL
-================================= -->
-<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-hidden="true" style="z-index: 10005;">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
-        <!-- Modal Content Container -->
-        <div class="modal-content shadow-lg border-0 overflow-hidden" style="border-radius: 24px;">
-            
-            <!-- Hero Image with Absolute Floating Header Area -->
-            <div class="position-relative w-100 bg-light">
-                <img id="newsModalImg" src="" alt="Post Cover" class="w-100" style="height: 380px; object-fit: cover;">
-                
-                <!-- Dark Gradient top overlay for button visibility -->
-                <div class="position-absolute top-0 start-0 w-100 p-3 d-flex justify-content-end" style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent); height: 80px;">
-                    <!-- App-style rounded floating Close button -->
-                    <button type="button" class="btn-close-custom shadow-sm" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
-                </div>
+<!-- ═══════════════════════════════════════════════════
+     CINEMATIC NEWS MODAL
+═══════════════════════════════════════════════════ -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-hidden="true" style="z-index:10005;">
+    <div class="modal-dialog modal-dialog-centered ndm-dialog">
+        <div class="ndm-card">
+
+            <!-- Ambient colour bar -->
+            <div class="ndm-colorbar" id="ndmColorbar"></div>
+
+            <!-- Hero image + close -->
+            <div class="ndm-hero">
+                <img id="newsModalImg" src="" alt="Cover">
+                <div class="ndm-hero-shade"></div>
+                <button class="ndm-close" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                <span class="ndm-hero-badge" id="ndmHeroBadge"></span>
             </div>
 
-            <!-- Content Area (Body) -->
-            <div class="modal-body bg-white p-4 p-md-5 pt-md-4">
-                
-                <!-- Tags & Meta Info -->
-                <div class="d-flex align-items-center flex-wrap gap-3 mb-3 border-bottom pb-3">
-                    <span id="newsModalBadge" class="badge rounded-pill px-3 py-2 fw-bold text-uppercase shadow-sm" style="letter-spacing: 0.8px;"></span>
-                    <span class="text-muted small fw-bold">
-                        <i class="far fa-calendar-alt text-danger me-1"></i> Published: <span id="newsModalDate" class="text-secondary"></span>
-                    </span>
+            <!-- Body -->
+            <div class="ndm-body" id="ndmBody">
+                <div class="ndm-meta">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="newsModalDate"></span>
                 </div>
-                
-                <!-- Title & Body Message -->
-                <h2 id="newsModalTitle" class="fw-bolder mb-4 text-dark" style="font-size: 2rem; letter-spacing: -0.5px; line-height: 1.3;"></h2>
-                
-                <div id="newsModalMessage" style="color: #4a5568; font-size: 1.05rem; line-height: 1.8; word-wrap: break-word;"></div>
+                <h2 class="ndm-title" id="newsModalTitle"></h2>
+                <div class="ndm-divider"></div>
+                <div class="ndm-message" id="newsModalMessage"></div>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -686,16 +669,23 @@ if (_greetId && document.getElementById('greetingPopup')) {
     }
 }
 
-/* ── News Slider (Swiper) ── */
+/* ── News Slider (Coverflow Swiper) ── */
 if (document.querySelector('.news-slider')) {
     const newsSwiper = new Swiper('.news-slider', {
-        loop: true,
-        spaceBetween: 30,
+        effect: 'coverflow',
+        grabCursor: true,
         centeredSlides: true,
-        observer: true,
-        observeParents: true,
+        slidesPerView: 'auto',
+        loop: true,
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 2,
+            slideShadows: true,
+        },
         autoplay: {
-            delay: 5000,
+            delay: 4000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true
         },
@@ -703,39 +693,53 @@ if (document.querySelector('.news-slider')) {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
         },
-        breakpoints: {
-            0:    { slidesPerView: 1.1 },
-            768:  { slidesPerView: 2 },
-            1200: { slidesPerView: 2.5 }
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
         }
     });
-
-    // Force autoplay start after DOM settles
-    setTimeout(() => {
-        if (newsSwiper && newsSwiper.autoplay) newsSwiper.autoplay.start();
-    }, 800);
 }
 
-/* ── News Modal Handler ── */
+/* ── News Modal Handler (Bento Grid) ── */
 function openNewsModal(imgSrc, data) {
+    const isAlert = data.category === 'Alert';
+
+    // Image
     document.getElementById('newsModalImg').src = imgSrc;
-    document.getElementById('newsModalTitle').innerText = data.title;   
+
+    // Title
+    document.getElementById('newsModalTitle').innerText = data.title;
+
+    // Date
+    document.getElementById('newsModalDate').innerText = new Date(data.created_at)
+        .toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' });
+
+    // Hero badge
+    const heroBadge = document.getElementById('ndmHeroBadge');
+    heroBadge.innerHTML = isAlert
+        ? '<i class="fas fa-bolt me-1"></i> NEWS'
+        : '<i class="fas fa-heart me-1"></i> CSR';
+    heroBadge.className = 'ndm-hero-badge ' + (isAlert ? 'is-alert' : 'is-csr');
+
+    // Top colour bar tint per category
+    const colorbar = document.getElementById('ndmColorbar');
+    colorbar.style.background = isAlert
+        ? 'linear-gradient(90deg,#c0392b,#ff6b6b)'
+        : 'linear-gradient(90deg,#2563eb,#38bdf8)';
+
+    // Process message – linkify URLs + line breaks
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    let processedMessage = data.message.replace(urlRegex, function(url) {
+    let msg = (data.message || '').replace(urlRegex, url =>
+        `<a href="${url}" target="_blank" rel="noopener">` +
+        `<i class="fas fa-external-link-alt small me-1"></i>${url}</a>`
+    ).replace(/\n/g, '<br>');
+    document.getElementById('newsModalMessage').innerHTML = msg;
 
-        return `<a href="${url}" target="_blank" style="color: #d11212; font-weight: 600; word-break: break-all;">
-                    <i class="fas fa-external-link-alt small me-1"></i>${url}
-                </a>`;
-    });
+    // Scroll body back to top on reopen
+    const body = document.getElementById('ndmBody');
+    if (body) body.scrollTop = 0;
 
-    processedMessage = processedMessage.replace(/\n/g, '<br>');
-    document.getElementById('newsModalMessage').innerHTML = processedMessage;
-    document.getElementById('newsModalDate').innerText = new Date(data.created_at).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
-    const badge = document.getElementById('newsModalBadge');
-    badge.innerText = data.category.toUpperCase();
-    badge.className = data.category === 'Alert' ? 'badge bg-danger' : 'badge bg-primary';
-    const modal = new bootstrap.Modal(document.getElementById('newsDetailModal'));
-    modal.show();
+    new bootstrap.Modal(document.getElementById('newsDetailModal')).show();
 }
 </script>
 </body>

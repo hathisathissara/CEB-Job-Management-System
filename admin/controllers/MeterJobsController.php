@@ -52,4 +52,10 @@ $mj_loc = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE
 $mj_pend = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE status='Pending'")->fetch_assoc()['c'];
 $mj_rem  = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Removed'")->fetch_assoc()['c'];
 $mj_ret  = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Returned - Paid'")->fetch_assoc()['c'];
+
+$mj_total_tm = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())")->fetch_assoc()['c'];
+$mj_total_lm = $conn->query("SELECT COUNT(*) c FROM meter_removal WHERE MONTH(created_at) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(created_at) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)")->fetch_assoc()['c'];
+
+$mj_rem_tm = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Removed' AND MONTH(removing_date) = MONTH(CURRENT_DATE()) AND YEAR(removing_date) = YEAR(CURRENT_DATE())")->fetch_assoc()['c'];
+$mj_rem_lm = $conn->query("SELECT COUNT(DISTINCT acc_no) c FROM meter_removal WHERE status='Removed' AND MONTH(removing_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(removing_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)")->fetch_assoc()['c'];
 ?>
