@@ -8,9 +8,9 @@ require 'PHPMailer.php';
 require 'SMTP.php';
 
 // ─── SMTP CONFIG (shared) ─────────────────────────────────────
-define('SMTP_USER', 'htbuwaneka@gmail.com');
-define('SMTP_PASS', 'siip ugsh jzya appe');
-define('SMTP_FROM', 'htbuwaneka@gmail.com');
+define('SMTP_USER', 'noreply.sysmail.lk@gmail.com');
+define('SMTP_PASS', 'coaa ajdf qjdv bpwz');
+define('SMTP_FROM', 'noreply.sysmail.lk@gmail.com');
 define('SMTP_NAME', 'EDL Admin Portal');
 
 function _getMailer(): PHPMailer {
