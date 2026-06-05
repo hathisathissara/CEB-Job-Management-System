@@ -7,47 +7,67 @@ date_default_timezone_set('Asia/Colombo');
 $step = isset($_GET['step']) ? $_GET['step'] : 1;
 $msg = ""; $err = "";
 
-// ඊමේල් එක URL එකෙන් නැතුව ආරක්ෂිතව Session එකෙන් ගන්නවා
+
 $reg_email = isset($_SESSION['temp_reg']['email']) ? $_SESSION['temp_reg']['email'] : '';
 
 // ==========================================
 // --- STEP 1: REGISTRATION FORM ---
 // ==========================================meke user kenek otp verification eka nokara acc ekak create krnna puluwan eka nisa ekata mokakdda krnna puluwao
+// ==========================================
+// --- STEP 1: REGISTRATION FORM ---
+// ==========================================
 if (isset($_POST['register'])) {
+    
+    // 🛑 1. HONEYPOT CHECK (ANTI-BOT)
+    // බොට් කෙනෙක් මේ hidden ෆීල්ඩ් එක පුරවලා තිබුනොත් මේක ඇතුලට යනවා
+    if (!empty($_POST['contact_fax'])) {
+        die("<div style='text-align:center; margin-top:50px; color:red;'><h2>Security Warning</h2><p>Bot behavior detected. Connection terminated.</p></div>");
+    }
+
     $n = trim($_POST['full_name']);
     $u = trim($_POST['username']);
     $e = trim($_POST['email']);
     $p = password_hash($_POST['password'], PASSWORD_DEFAULT);
     
-    // Check if Username or Email exists in REAL Database
-    $chk = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
-    $chk->bind_param("ss", $u, $e);
-    $chk->execute();
+    // 🛑 2. ANTI TEMP-EMAIL CHECK (ALLOWED DOMAINS ONLY)
+    // තාවකාලික ඊමේල් නැවැත්වීම සඳහා අනුමත කරන ලද ඩොමේන් ලිස්ට් එක.
+    $allowed_domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'edl.com', 'edl.lk'];
     
-    if ($chk->get_result()->num_rows > 0) { 
-        $err = "Username or Email already taken in the system!"; 
-    } else {
-        // Generate 6 Digit OTP
-        $otp = rand(100000, 999999);
-        $expiry = time() + (15 * 60); // Expire in 15 mins
+    // ගැහුව ඊමේල් එකෙන් '@' ලකුණෙන් පස්සේ තියෙන කෑල්ල කපා ගන්නවා
+    $email_domain = strtolower(substr(strrchr($e, "@"), 1));
+
+    if (!in_array($email_domain, $allowed_domains)) {
+        // Temp mail එකක් හෝ ලැයිස්තුවේ නැති එකක් නම්
+        $err = "Security Alert: Disposable or untrusted emails are blocked. Use official email or Gmail.";
+    } 
+    else {
+        // මේ කොටසට එන්නේ ඊමේල් එක Trust කරන එකක් සහ Bot කෙනෙක් නෙවෙයි නම් විතරයි!
         
-        // 🚨 වෙනස: Database එකට යවන්නේ නෑ, තාවකාලිකව SESSION එකක සේව් කරගන්නවා
-        $_SESSION['temp_reg'] = [
-            'name'  => $n,
-            'user'  => $u,
-            'email' => $e,
-            'pass'  => $p,
-            'otp'   => $otp,
-            'exp'   => $expiry
-        ];
+        // Check if Username or Email exists in REAL Database
+        $chk = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
+        $chk->bind_param("ss", $u, $e);
+        $chk->execute();
         
-        // Email යවනවා
-        if (sendOTP($e, $otp)) { 
-            header("Location: register?step=2"); 
-            exit(); 
-        } else { 
-            $err = "Failed to send OTP email. Please check internet/SMTP."; 
-            unset($_SESSION['temp_reg']); // Failed, so clear memory
+        if ($chk->get_result()->num_rows > 0) { 
+            $err = "Username or Email already taken in the system!"; 
+        } else {
+            // Generate 6 Digit OTP
+            $otp = rand(100000, 999999);
+            $expiry = time() + (15 * 60); // Expire in 15 mins
+            
+            $_SESSION['temp_reg'] = [
+                'name'  => $n, 'user'  => $u, 'email' => $e, 
+                'pass'  => $p, 'otp'   => $otp, 'exp'   => $expiry
+            ];
+            
+            // Email යවනවා
+            if (sendOTP($e, $otp)) { 
+                header("Location: register?step=2"); 
+                exit(); 
+            } else { 
+                $err = "Failed to send OTP email. Please check internet/SMTP."; 
+                unset($_SESSION['temp_reg']);
+            }
         }
     }
 }
@@ -133,6 +153,8 @@ if (isset($_POST['verify_otp'])) {
             <?php if($step == 1): ?>
             <!-- FORM -->
             <form method="POST">
+                  <!-- 🔴 HONEYPOT FIELD FOR BOTS (INVISIBLE) 🔴 -->
+                <input type="text" name="contact_fax" value="" style="display:none !important;" tabindex="-1" autocomplete="off">
                 <div class="mb-3"><label class="form-label">Full Legal Name</label><input type="text" name="full_name" class="form-control" placeholder="John Doe" required></div>
                 <div class="mb-3"><label class="form-label">Office Email Address</label><input type="email" name="email" class="form-control" placeholder="name@edl.com" required></div>
                 <div class="row g-2 mb-3">
