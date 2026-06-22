@@ -20,12 +20,6 @@
 <!-- LOADER -->
 <div id="loader-wrapper"></div>
 
-<!-- ── FLOATING WHATSAPP BUTTON ── -->
-<a id="whatsappFab" href="https://wa.me/94701207991?text=Hello,%20I%20need%20some%20assistance%20regarding%20the%20EDL%20System." target="_blank" rel="noopener" aria-label="WhatsApp Support">
-    <span class="fab-tooltip">WhatsApp Support</span>
-    <i class="fab fa-whatsapp"></i>
-</a>
-
 <!-- ── FLOATING SUPPORT BUTTON ── -->
 <button id="supportFab" data-bs-toggle="modal" data-bs-target="#supportModal" aria-label="Report an issue">
     <span class="fab-tooltip">Report Issue</span>
