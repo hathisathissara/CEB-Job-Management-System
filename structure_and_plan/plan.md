@@ -1,7 +1,9 @@
-# CEB Job Management System - Overview & Plan
+# EDL Office Portal (CEB Job Management System) - Overview & Plan
+
+**Live Website:** [https://edl.unaux.com/](https://edl.unaux.com/)
 
 ## 1. System Overview (මෙම පද්ධතිය ක්‍රියාත්මක වන ආකාරය)
-The CEB Job Management System is a dynamic PHP/MySQL-based web application designed to digitize and manage daily operations at the CEB Customer Service Center (CSC). It replaces manual record-keeping with a secure, centralized database, streamlining tasks like meter operations and new electricity connections.
+The EDL Office Portal (CEB Job Management System) is a dynamic PHP/MySQL-based web application designed to digitize and manage daily operations at the Bandarawela CEB Customer Service Center (CSC). It replaces manual record-keeping with a secure, centralized database, streamlining tasks like meter operations and new electricity connections.
 
 ### Architecture & Technology Stack:
 * **Frontend:** HTML, CSS, JavaScript (Bootstrap 5 for responsive design). Support for Light and Dark modes.
@@ -54,4 +56,4 @@ The CEB Job Management System is a dynamic PHP/MySQL-based web application desig
 5. **Role-Based Access Control (RBAC):** Refine permissions so Officers cannot delete records, maintaining Super Admin exclusivity on critical actions.
 
 
-siip ugsh jzya appe
+
